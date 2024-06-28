@@ -79,9 +79,8 @@ sudo make install-strip
 
 2. Librerías geográficas (Windows)
 - GEOS, PROJ, GDAL
-<br>
-    - Usa https://trac.osgeo.org/osgeo4w/
-    - Actualiza el PATH con esto (esto considera una instalación express, caso contrario las rutas deben cambiar)
+    - Usar https://trac.osgeo.org/osgeo4w/
+    - Actualizar el PATH con esto (esto considera una instalación express, caso contrario las rutas deben cambiar)
 
 ```bash
 set OSGEO4W_ROOT=C:\OSGeo4W
@@ -94,6 +93,5 @@ reg ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v P
 ```
 
 - SpatiaLite
-<br>
-    - Usa http://www.gaia-gis.it/gaia-sins/windows-bin-amd64/mod_spatialite-5.1.0-win-amd64.7z
-    - Actualiza el PATH (todo)
+    - Usar http://www.gaia-gis.it/gaia-sins/windows-bin-amd64/mod_spatialite-5.1.0-win-amd64.7z
+    - Actualizar el PATH (todo)
