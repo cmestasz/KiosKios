@@ -1,31 +1,46 @@
+from django import forms
 from django.forms import ModelForm
-from django.contrib.auth.forms import BaseUserCreationForm
-from .models import Administrador, Cliente, Dueño, Tienda, Producto, Venta
+from .models import Usuario, Dueño, Tienda, Producto, Venta
 
-class AdministradorForm(BaseUserCreationForm):
+
+class UsuarioForm(ModelForm):
+    password1 = forms.CharField(label='Contraseña', widget=forms.PasswordInput)
+    password2 = forms.CharField(label='Confirmar contraseña', widget=forms.PasswordInput)
+
     class Meta:
-        model = Administrador
-        fields = '__all__'
+        model = Usuario
+        fields = ['correo', 'telefono', 'password1', 'password2']
 
-class ClienteForm(BaseUserCreationForm):
-    class Meta:
-        model = Cliente
-        fields = '__all__'
+    def clean_password2(self):
+        password1 = self.cleaned_data.get('password1')
+        password2 = self.cleaned_data.get('password2')
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError('Las contraseñas no coinciden')
+        return password2
+    
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data['password1'])
+        if commit:
+            user.save()
+        return user
 
-class DueñoForm(BaseUserCreationForm):
+class DueñoForm(UsuarioForm):
     class Meta:
         model = Dueño
-        fields = '__all__'
+        fields = ['correo', 'telefono', 'password1', 'password2', 'yape_qr']
 
 class TiendaForm(ModelForm):
     class Meta:
         model = Tienda
         fields = '__all__'
 
+
 class ProductoForm(ModelForm):
     class Meta:
         model = Producto
         fields = '__all__'
+
 
 class VentaForm(ModelForm):
     class Meta:
