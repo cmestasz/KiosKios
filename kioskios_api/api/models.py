@@ -1,22 +1,19 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import User
 
 # Create your models here.
 
-class Usuario(AbstractUser):
-    nombres = models.CharField(max_length=100)
-    apellidos = models.CharField(max_length=100)
-    correo = models.EmailField(unique=True)
+class Usuario(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     telefono = models.CharField(max_length=9)
 
-class Administrador(models.Model):
-    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
+class Administrador(Usuario):
+    pass
 
-class Cliente(models.Model):
-    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
+class Cliente(Usuario):
+    pass
 
-class Dueño(models.Model):
-    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
+class Dueño(Usuario):
     yape_qr = models.ImageField(upload_to='yape_qrs', blank=True, null=True)
 
 class Tienda(models.Model):
