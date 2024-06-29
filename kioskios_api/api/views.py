@@ -22,12 +22,18 @@ def create_usuario(request):
         form = UsuarioForm(request.POST)
         if form.is_valid():
             form.save()
+        else:
+            print(form.errors)
+        return forms_test(request)
 
 def create_dueño(request):
     if request.method == 'POST':
-        form = DueñoForm(request.POST)
+        form = DueñoForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
+        else:
+            print(form.errors)
+        return forms_test(request)
 
 
 def create_tienda(request):
@@ -35,6 +41,9 @@ def create_tienda(request):
         form = TiendaForm(request.POST)
         if form.is_valid():
             form.save()
+        else:
+            print(form.errors)
+        return forms_test(request)
 
 
 def create_producto(request):
@@ -42,6 +51,9 @@ def create_producto(request):
         form = ProductoForm(request.POST)
         if form.is_valid():
             form.save()
+        else:
+            print(form.errors)
+        return forms_test(request)
 
 
 def create_venta(request):
@@ -49,3 +61,7 @@ def create_venta(request):
         form = VentaForm(request.POST)
         if form.is_valid():
             form.save()
+        else:
+            print(form.errors)
+        return forms_test(request)
+

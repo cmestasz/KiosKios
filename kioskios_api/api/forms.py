@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Usuario, Dueño, Tienda, Producto, Venta
+from .models import Usuario, Tienda, Producto, Venta
 
 
 class UsuarioForm(ModelForm):
@@ -9,7 +9,7 @@ class UsuarioForm(ModelForm):
 
     class Meta:
         model = Usuario
-        fields = ['correo', 'telefono', 'password1', 'password2']
+        fields = ['username', 'telefono', 'password1', 'password2']
 
     def clean_password2(self):
         password1 = self.cleaned_data.get('password1')
@@ -27,8 +27,27 @@ class UsuarioForm(ModelForm):
 
 class DueñoForm(UsuarioForm):
     class Meta:
-        model = Dueño
-        fields = ['correo', 'telefono', 'password1', 'password2', 'yape_qr']
+        model = Usuario
+        fields = ['username', 'telefono', 'password1', 'password2', 'yape_qr']
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.tipo = Usuario.Types.DUEÑO
+        if commit:
+            user.save()
+        return user
+
+class AdminForm(UsuarioForm):
+    class Meta:
+        model = Usuario
+        fields = ['username', 'telefono', 'password1', 'password2']
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.tipo = Usuario.Types.ADMIN
+        if commit:
+            user.save()
+        return user
 
 class TiendaForm(ModelForm):
     class Meta:
