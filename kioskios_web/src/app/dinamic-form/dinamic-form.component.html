@@ -1,0 +1,40 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  @for (field of fields; track $index) {
+    <label [for]="field.name">{{ field.name }}</label>
+    @switch (field.tipoCampo) {
+      @case ('input') {
+        <input [type]="field.type" 
+               [formControlName]="field.name"
+               [attr.placeholder]="field.label"
+        >
+      }
+      @case ('select') {
+        <select [formControlName]="field.name">
+          @for (option of field.options; track $index) {
+            <option [value]="option.value">
+              {{ option.label }}
+            </option>
+          }
+        </select>
+      }
+      @case ('textarea') {
+        <textarea [formControlName]="field.name"
+          [attr.rows]="field.validators?.['rows'] || 4"
+          [attr.cols]="field.validators?.['cols'] || 50"
+        ></textarea>
+      }
+    }
+
+    @if (form.get(field.name)?.invalid && form.get(field.name)?.touched) {
+      <div>
+        <small>
+          @if (form.get(field.name)?.errors?.['required']) {Este campo es obligatorio}
+          @if (form.get(field.name)?.errors?.['maxlength']) {El texto es demasiado largo}
+          @if (form.get(field.name)?.errors?.['minlength']) {El texto es demasiado corto}
+          @if (form.get(field.name)?.errors?.['email']) {Por favor, introduce un email correcto}
+        </small>
+      </div>
+    }
+  }
+  <button>Guardar</button>
+</form>
