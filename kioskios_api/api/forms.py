@@ -1,5 +1,6 @@
 from django import forms
 from django.forms import ModelForm
+from leaflet.forms.widgets import LeafletWidget
 from .models import Usuario, Tienda, Producto, Venta
 
 
@@ -53,6 +54,9 @@ class TiendaForm(ModelForm):
     class Meta:
         model = Tienda
         fields = '__all__'
+        widgets = {
+            'ubication': LeafletWidget()
+        }
 
 
 class ProductoForm(ModelForm):

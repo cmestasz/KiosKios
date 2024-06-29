@@ -38,8 +38,17 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.gis',
+    'leaflet',
     'api',
 ]
+
+LEAFLET_CONFIG = {
+    'DEFAULT_CENTER': (-16.404602266688986, -71.5247326359642),
+    'DEFAULT_ZOOM': 15,
+    'MIN_ZOOM': 15,
+    'MAX_ZOOM': 50,
+    'SCALE': 'metric',
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

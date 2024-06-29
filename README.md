@@ -9,6 +9,8 @@
 pip install -r requirements.txt
 ```
 
+**Si es posible instalar los siguientes en version dev con el administrador de paquetes se puede saltar este paso**
+
 2. Librerías geográficas (Linux)
 - Instalar GEOS
 
@@ -74,7 +76,7 @@ cd libspatialite-5.1.0
 
 ./configure --disable-geos3100 --disable-rttopo --disable-gcp
 make -j8
-sudo make install-strip
+sudo make install
 ```
 
 2. Librerías geográficas (Windows)
