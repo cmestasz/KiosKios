@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+{% load leaflet_tags %}
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        {% leaflet_css plugins="forms"%}
+        {% leaflet_js plugins="forms"%}
+    </head>
+    <body>
+        {% for form in forms %}
+        <h1>Form</h1>
+        <form action="{{ form.url }}" method="POST">
+            {% csrf_token %}
+            <table>
+                {{ form.form.as_table }}
+            </table>
+            <button type="submit">Submit</button>
+        </form>
+        {% endfor %}
+    </body>
+</html>
