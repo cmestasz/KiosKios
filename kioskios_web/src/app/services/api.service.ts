@@ -12,7 +12,8 @@ export class ApiService {
     { tipoCampo: 'input', name: 'nombre', label: 'Nombre', type: 'text', validators: {maxlength: '10'} },
     { tipoCampo: 'input', name: 'apellidos', label: 'Apellidos', type: 'text', validators: {minlength: '2'}},
     { tipoCampo: 'input', name: 'email', label: 'Email',  type: 'email'},
-    { tipoCampo: 'select', name: 'foreign', label: 'Foreign', validators: {required: 'true'}, options: [{label: 'Option1', value: 'Option1'}, {label: 'Option2', value: 'Option2'}, {label: 'Option2', value: 'Option2'}]}
+    { tipoCampo: 'select', name: 'foreign', label: 'Foreign', validators: {required: 'true'}, options: [{label: 'Option1', value: 'Option1'}, {label: 'Option2', value: 'Option2'}, {label: 'Option2', value: 'Option2'}]},
+    { tipoCampo: 'textarea', name: 'text', label: 'Text', validators: {required: 'true'}, attributes: {rows: '20', cols:'20'} }
   ];
 
 

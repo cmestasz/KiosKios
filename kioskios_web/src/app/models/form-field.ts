@@ -4,12 +4,17 @@ export interface FormField {
   label: string;
   type?: string;
   validators?: Validators;
+  attributes?: Attributes;
   options?: Option[];
 }
 
 export type TipoCampo = 'input' | 'select' | 'textarea';
 
 export interface Validators {
+  [key : string]: string;
+}
+
+export interface Attributes {
   [key : string]: string;
 }
 

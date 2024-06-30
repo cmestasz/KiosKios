@@ -1,15 +1,16 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
   @for (field of fields; track $index) {
-    <label [for]="field.name">{{ field.name }}</label>
+    <label [for]="field.name">{{ field.label }}</label>
     @switch (field.tipoCampo) {
       @case ('input') {
         <input [type]="field.type" 
                [formControlName]="field.name"
-               [attr.placeholder]="field.label"
+               [attr.placeholder]="field.attributes?.['placeholder'] || field.name"
         >
       }
       @case ('select') {
-        <select [formControlName]="field.name">
+        <select [formControlName]="field.name"
+        >
           @for (option of field.options; track $index) {
             <option [value]="option.value">
               {{ option.label }}
@@ -18,12 +19,15 @@
         </select>
       }
       @case ('textarea') {
+        <br>
         <textarea [formControlName]="field.name"
-          [attr.rows]="field.validators?.['rows'] || 4"
-          [attr.cols]="field.validators?.['cols'] || 50"
+          [attr.placeholder]="field.attributes?.['placeholder'] || field.name"
+          [attr.rows]="field.attributes?.['rows'] || 10"
+          [attr.cols]="field.attributes?.['cols'] || 10"
         ></textarea>
       }
     }
+    <br>
 
     @if (form.get(field.name)?.invalid && form.get(field.name)?.touched) {
       <div>
