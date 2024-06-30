@@ -69,7 +69,29 @@ export class DinamicFormComponent implements OnInit{
       console.log('Formulario enviado:', this.form.value);
       // Enviar datos a la API
     } else {
+      this.form.markAllAsTouched();  
       console.error('Formulario no válido');
     }
+  }
+
+  getValidatorMessage(fieldName: string) {
+    const control = this.form.controls[fieldName];
+    if (control.errors) {
+      return Object.keys(control.errors)
+        .map(key => {
+          switch (key) {
+            case 'required':
+              return 'Este campo es obligatorio';
+            case 'minlength':
+              return `Debe tener al menos ${control.errors?.['minlength'].requiredLength} caracteres`;
+            case 'maxlength':
+              return `Debe tener como máximo ${control.errors?.['maxlength'].requiredLength} caracteres`;
+            default:
+              return '';
+          }
+        })
+        .join(', ');
+    }
+    return '';
   }
 }

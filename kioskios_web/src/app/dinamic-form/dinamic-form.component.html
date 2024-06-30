@@ -9,8 +9,9 @@
         >
       }
       @case ('select') {
-        <select [formControlName]="field.name"
+        <select  [formControlName]="field.name"
         >
+          <option value="" disabled selected>{{ field.attributes?.['placeholder'] || 'Seleccione una opción' }}</option>
           @for (option of field.options; track $index) {
             <option [value]="option.value">
               {{ option.label }}
@@ -32,10 +33,7 @@
     @if (form.get(field.name)?.invalid && form.get(field.name)?.touched) {
       <div>
         <small>
-          @if (form.get(field.name)?.errors?.['required']) {Este campo es obligatorio}
-          @if (form.get(field.name)?.errors?.['maxlength']) {El texto es demasiado largo}
-          @if (form.get(field.name)?.errors?.['minlength']) {El texto es demasiado corto}
-          @if (form.get(field.name)?.errors?.['email']) {Por favor, introduce un email correcto}
+          {{ getValidatorMessage(field.name) }}
         </small>
       </div>
     }
