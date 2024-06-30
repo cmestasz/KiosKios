@@ -1,5 +1,6 @@
 # KiosKios
 ## Proyecto final de Programación Web 2
+**NO SE PUEDE EJECUTAR ESTE PROYECTO EN WINDOWS**
 
 ### Instalación
 1. Python
@@ -79,21 +80,3 @@ make -j8
 sudo make install
 ```
 
-2. Librerías geográficas (Windows)
-- GEOS, PROJ, GDAL
-    - Usar https://trac.osgeo.org/osgeo4w/
-    - Actualizar el PATH con esto (esto considera una instalación express, caso contrario las rutas deben cambiar)
-
-```bash
-set OSGEO4W_ROOT=C:\OSGeo4W
-set GDAL_DATA=%OSGEO4W_ROOT%\apps\gdal\share\gdal
-set PROJ_LIB=%OSGEO4W_ROOT%\share\proj
-set PATH=%PATH%;%OSGEO4W_ROOT%\bin
-reg ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v Path /t REG_EXPAND_SZ /f /d "%PATH%"
-reg ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v GDAL_DATA /t REG_EXPAND_SZ /f /d "%GDAL_DATA%"
-reg ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v PROJ_LIB /t REG_EXPAND_SZ /f /d "%PROJ_LIB%"
-```
-
-- SpatiaLite
-    - Usar http://www.gaia-gis.it/gaia-sins/windows-bin-amd64/mod_spatialite-5.1.0-win-amd64.7z
-    - Actualizar el PATH (todo)
