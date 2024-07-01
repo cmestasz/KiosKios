@@ -1,1 +1,25 @@
-<router-outlet />
+<header>
+  <div>
+    <img alt="logo">
+  </div>
+  <div>
+    <form action="." method="GET">
+      <label for="q"></label>
+      <input type="text" name="q">
+      <button>Buscar</button>
+    </form>
+  </div>
+  <div>
+    <a [routerLink]="['/login']">Login</a>
+    <a [routerLink]="['/register']">Register</a>
+
+  </div>
+  <div>
+    <a [routerLink]="['/cart']"><fa-icon [icon]="['fas', 'cart-shopping']"></fa-icon> Carrito</a>
+  </div>
+</header>
+<nav></nav>
+<body>
+  <router-outlet />
+</body>
+<footer></footer>
