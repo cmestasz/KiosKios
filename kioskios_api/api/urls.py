@@ -13,4 +13,6 @@ urlpatterns = [
     path('get_productos/', views.get_productos, name='get_productos'),
     path('create_venta/', views.create_venta, name='create_venta'),
     path('get_ventas/', views.get_ventas, name='get_ventas_dueño'),
+
+    path('get_usuarios/', views.get_usuarios, name='get_usuarios'), # ELIMINAR
 ]

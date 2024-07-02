@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from .forms import UsuarioForm, DueñoForm, TiendaForm, ProductoForm, VentaForm, LoginForm, LogoutForm
-from .models import Tienda, Producto, Venta
+from .models import Tienda, Producto, Venta, Usuario
 from .decorators import api_login_required
 from .serializers import form_serializer, model_serializer
 from django.contrib.auth import authenticate, login, logout
@@ -157,6 +157,13 @@ def get_ventas(request):
     }
     return JsonResponse(json)
 
+# ES DE PRUEBA, ELIMINAR EN PRODUCCION
+def get_usuarios(request):
+    usuarios = Usuario.objects.all()
+    json = {
+        'usuarios': [model_serializer(usuario) for usuario in usuarios]
+    }
+    return JsonResponse(json)
 
 def get_errors(form_errors):
     return [error for sublist in form_errors.values() for error in sublist]
