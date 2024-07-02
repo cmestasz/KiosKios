@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.gis.db import models as gis_models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 
 # Create your models here.
@@ -52,7 +51,8 @@ class Tienda(models.Model):
     descripcion = models.TextField()
     categoria = models.CharField(max_length=100)
     dueño = models.ForeignKey(Usuario, on_delete=models.CASCADE, limit_choices_to={'tipo': Usuario.Types.DUEÑO})
-    ubication = gis_models.PointField()
+    latitud = models.DecimalField(max_digits=9, decimal_places=6)
+    longitud = models.DecimalField(max_digits=9, decimal_places=6)
 
 
 class Producto(models.Model):
