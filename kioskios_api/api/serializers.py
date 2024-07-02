@@ -6,6 +6,7 @@ from django.db.models import Model
 from django.db.models.fields.files import ImageFieldFile
 from decimal import Decimal
 
+
 class CustomJSONEncoder(DjangoJSONEncoder):
     def default(self, obj):
         if isinstance(obj, ImageFieldFile):
@@ -13,6 +14,7 @@ class CustomJSONEncoder(DjangoJSONEncoder):
         if isinstance(obj, Decimal):
             return float(obj)
         return super().default(obj)
+
 
 def model_serializer(instance: Model, fields=None, exclude=None):
     data = {}
@@ -27,6 +29,7 @@ def model_serializer(instance: Model, fields=None, exclude=None):
                 value = float(value)
             data[field.name] = value
     return data
+
 
 def form_serializer(form: ModelForm):
     fields = []
@@ -103,6 +106,16 @@ def get_attributes(field):
 
 
 def get_options(field):
-    if hasattr(field, 'choices'):
-        return [{'label': label, 'value': value} for value, label in field.choices]
+    if isinstance(field, forms.ModelChoiceField):
+        return [{'label': str(obj), 'value': obj.pk} for obj in field.queryset]
+    elif hasattr(field, 'choices'):
+        return [{'label': label, 'value': serialize_value(value)} for value, label in field.choices]
     return []
+
+
+def serialize_value(value):
+    if hasattr(value, 'pk'):
+        return value.pk
+    elif isinstance(value, (list, tuple)) and len(value) == 2:
+        return value[0]
+    return value
