@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from .forms import UsuarioForm, DueñoForm, TiendaForm, ProductoForm, VentaForm, LoginForm, LogoutForm
 from .models import Tienda, Producto, Venta
 from .decorators import api_login_required
+from .serializers import form_serializer, model_serializer
 from django.contrib.auth import authenticate, login, logout
 
 # Create your views here.
@@ -54,17 +55,9 @@ def create_usuario(request):
             return JsonResponse({'status': 'ok'})
 
         print(form.errors)
-        errors = [error for sublist in form.errors.values() for error in sublist]
-        return JsonResponse({'status': 'error', 'errors': errors})
+        return JsonResponse({'status': 'error', 'errors': get_errors(form.errors)})
     json = {
-        'campos': [
-            {'tipoCampo': 'input', 'name': 'username', 'label': 'Nombre de usuario'},
-            {'tipoCampo': 'input', 'name': 'telefono', 'label': 'Teléfono'},
-            {'tipoCampo': 'input', 'name': 'password1',
-                'label': 'Contraseña', 'attributes': ['type="password"', ]},
-            {'tipoCampo': 'input', 'name': 'password2',
-                'label': 'Confirmar contraseña', 'attributes': ['type="password"', ]},
-        ]
+        'campos': form_serializer(UsuarioForm())
     }
     return JsonResponse(json)
 
@@ -77,19 +70,9 @@ def create_dueño(request):
             return JsonResponse({'status': 'ok'})
         
         print(form.errors)
-        errors = [error for sublist in form.errors.values() for error in sublist]
-        return JsonResponse({'status': 'error', 'errors': errors})
+        return JsonResponse({'status': 'error', 'errors': get_errors(form.errors)})
     json = {
-        'campos': [
-            {'tipoCampo': 'input', 'name': 'username', 'label': 'Nombre de usuario'},
-            {'tipoCampo': 'input', 'name': 'telefono', 'label': 'Teléfono'},
-            {'tipoCampo': 'input', 'name': 'password1',
-                'label': 'Contraseña', 'attributes': ['type="password"', ]},
-            {'tipoCampo': 'input', 'name': 'password2',
-                'label': 'Confirmar contraseña', 'attributes': ['type="password"', ]},
-            {'tipoCampo': 'input', 'name': 'yape_qr',
-                'label': 'Código QR de Yape', 'attributes': ['type="file"', ]},
-        ]
+        'campos': form_serializer(DueñoForm())
     }
     return JsonResponse(json)
 
@@ -103,19 +86,9 @@ def create_tienda(request):
             return JsonResponse({'status': 'ok'})
         
         print(form.errors)
-        errors = [error for sublist in form.errors.values() for error in sublist]
-        return JsonResponse({'status': 'error', 'errors': errors})
+        return JsonResponse({'status': 'error', 'errors': get_errors(form.errors)})
     json = {
-        'campos': [
-            {'tipoCampo': 'input', 'name': 'nombre',
-                'label': 'Nombre de la tienda'},
-            {'tipoCampo': 'textarea', 'name': 'descripcion', 'label': 'Descripción'},
-            {'tipoCampo': 'input', 'name': 'ubication',
-                'label': 'Ubicación', 'attributes': ['type="hidden"', ]},
-            {'tipoCampo': 'input', 'name': 'categoria', 'label': 'Categoría'},
-            {'tipoCampo': 'input', 'name': 'dueño', 'label': 'Dueño',
-                'attributes': [f'value={request.user}', 'type="hidden"',]}
-        ]
+        'campos': form_serializer(TiendaForm())
     }
     return JsonResponse(json)
 
@@ -128,17 +101,7 @@ def get_tiendas(request):
         tiendas = Tienda.objects.all()
     json = {
         'tipo': 'DU' if request.user.tipo == 'DU' else 'AD',
-        'tiendas': [
-            {
-                'id': tienda.id,
-                'nombre': tienda.nombre,
-                'descripcion': tienda.descripcion,
-                'categoria': tienda.categoria,
-                'dueño': tienda.dueño.username,
-                'latitud': tienda.latitud,
-                'longitud': tienda.longitud,
-            } for tienda in tiendas
-        ]
+        'tiendas': [model_serializer(tienda) for tienda in tiendas]
     }
     return JsonResponse(json)
 
@@ -152,20 +115,9 @@ def create_producto(request):
             return JsonResponse({'status': 'ok'})
         
         print(form.errors)
-        errors = [error for sublist in form.errors.values() for error in sublist]
-        return JsonResponse({'status': 'error', 'errors': errors})
+        return JsonResponse({'status': 'error', 'errors': get_errors(form.errors)})
     json = {
-        'campos': [
-            {'tipoCampo': 'input', 'name': 'nombre',
-                'label': 'Nombre del producto'},
-            {'tipoCampo': 'textarea', 'name': 'descripcion', 'label': 'Descripción'},
-            {'tipoCampo': 'input', 'name': 'precio', 'label': 'Precio'},
-            {'tipoCampo': 'input', 'name': 'stock', 'label': 'Stock'},
-            {'tipoCampo': 'input', 'name': 'imagen',
-                'label': 'Imagen', 'attributes': ['type="file"', ]},
-            {'tipoCampo': 'select', 'name': 'tienda', 'label': 'Tienda', 'options': [
-                tienda for tienda in Tienda.objects.filter(dueño=request.user)]},
-        ]
+        'campos': form_serializer(ProductoForm())
     }
     return JsonResponse(json)
 
@@ -174,16 +126,7 @@ def create_producto(request):
 def get_productos(request):
     productos = Producto.objects.filter(tienda=request.json()['tienda'])
     json = {
-        'productos': [
-            {
-                'id': producto.id,
-                'nombre': producto.nombre,
-                'descripcion': producto.descripcion,
-                'precio': producto.precio,
-                'imagen': producto.imagen.url,
-                'stock': producto.stock,
-            } for producto in productos
-        ]
+        'productos': [model_serializer(producto) for producto in productos]
     }
     return JsonResponse(json)
 
@@ -195,16 +138,10 @@ def create_venta(request):
         if form.is_valid():
             form.save()
             return JsonResponse({'status': 'ok'})
-        print(form.errors)
-        return JsonResponse({'status': 'error', 'errors': form.errors})
+        
+        return JsonResponse({'status': 'error', 'errors': get_errors(form.errors)})
     json = {
-        'campos': [
-            {'tipoCampo': 'input', 'name': 'usuario', 'label': 'Usuario',
-                'attributes': [f'value={request.user}', 'type="hidden"',]},
-            {'tipoCampo': 'select', 'name': 'producto', 'label': 'Producto', 'options': [
-                producto for producto in Producto.objects.filter(tienda=request.json()['tienda'])]},
-            {'tipoCampo': 'input', 'name': 'cantidad', 'label': 'Cantidad'},
-        ]
+        'campos': form_serializer(VentaForm())
     }
     return JsonResponse(json)
 
@@ -216,13 +153,10 @@ def get_ventas(request):
     else:
         ventas = Venta.objects.filter(producto__tienda__dueño=request.user)
     json = {
-        'ventas': [
-            {
-                'usuario': venta.usuario.username,
-                'producto': venta.producto.nombre,
-                'cantidad': venta.cantidad,
-                'fecha': venta.fecha,
-            } for venta in ventas
-        ]
+        'ventas': [model_serializer(venta) for venta in ventas]
     }
     return JsonResponse(json)
+
+
+def get_errors(form_errors):
+    return [error for sublist in form_errors.values() for error in sublist]
