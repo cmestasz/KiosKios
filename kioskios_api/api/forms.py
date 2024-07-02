@@ -1,8 +1,13 @@
 from django import forms
 from django.forms import ModelForm
-from leaflet.forms.widgets import LeafletWidget
 from .models import Usuario, Tienda, Producto, Venta
 
+class LoginForm(forms.Form):
+    username = forms.CharField(label='Nombre de usuario')
+    password = forms.CharField(label='Contraseña', widget=forms.PasswordInput)
+
+class LogoutForm(forms.Form):
+    pass
 
 class UsuarioForm(ModelForm):
     password1 = forms.CharField(label='Contraseña', widget=forms.PasswordInput)
@@ -11,6 +16,13 @@ class UsuarioForm(ModelForm):
     class Meta:
         model = Usuario
         fields = ['username', 'telefono', 'password1', 'password2']
+
+    def clean_telefono(self):
+        telefono = self.cleaned_data.get('telefono')
+        if not telefono:
+            raise forms.ValidationError('Ingrese un número de teléfono')
+        if len(telefono) != 9:
+            raise forms.ValidationError('Ingrese un número de teléfono válido')
 
     def clean_password2(self):
         password1 = self.cleaned_data.get('password1')
@@ -37,6 +49,14 @@ class DueñoForm(UsuarioForm):
         if commit:
             user.save()
         return user
+    
+    def clean_yape_qr(self):
+        yape_qr = self.cleaned_data.get('yape_qr')
+        if not yape_qr:
+            instance = self.instance
+            if instance.pk:
+                yape_qr = instance.yape_qr
+        return yape_qr
 
 class AdminForm(UsuarioForm):
     class Meta:
@@ -54,10 +74,6 @@ class TiendaForm(ModelForm):
     class Meta:
         model = Tienda
         fields = '__all__'
-        widgets = {
-            'ubication': LeafletWidget()
-        }
-
 
 class ProductoForm(ModelForm):
     class Meta:

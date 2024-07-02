@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.gis.db import models as gis_models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 
 # Create your models here.
@@ -39,7 +38,7 @@ class Usuario(AbstractUser):
 
     username = models.EmailField(unique=True)
     telefono = models.CharField(max_length=9)
-    yape_qr = models.ImageField(upload_to='yape_qrs', blank=True, null=True)
+    yape_qr = models.ImageField(upload_to='yape_qrs/', blank=True, null=True)
     tipo = models.CharField(max_length=2, choices=Types.choices, default=Types.USUARIO)
 
     objects = UsuarioManager()
@@ -52,14 +51,15 @@ class Tienda(models.Model):
     descripcion = models.TextField()
     categoria = models.CharField(max_length=100)
     dueño = models.ForeignKey(Usuario, on_delete=models.CASCADE, limit_choices_to={'tipo': Usuario.Types.DUEÑO})
-    ubication = gis_models.PointField()
+    latitud = models.DecimalField(max_digits=9, decimal_places=6)
+    longitud = models.DecimalField(max_digits=9, decimal_places=6)
 
 
 class Producto(models.Model):
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField()
     precio = models.DecimalField(max_digits=6, decimal_places=2)
-    imagen = models.ImageField(upload_to='productos', blank=True, null=True)
+    imagen = models.ImageField(upload_to='productos/', blank=True, null=True)
     tienda = models.ForeignKey(Tienda, on_delete=models.CASCADE)
     stock = models.PositiveIntegerField()
 
