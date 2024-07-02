@@ -2,6 +2,12 @@ from django import forms
 from django.forms import ModelForm
 from .models import Usuario, Tienda, Producto, Venta
 
+class LoginForm(forms.Form):
+    username = forms.CharField(label='Nombre de usuario')
+    password = forms.CharField(label='Contraseña', widget=forms.PasswordInput)
+
+class LogoutForm(forms.Form):
+    pass
 
 class UsuarioForm(ModelForm):
     password1 = forms.CharField(label='Contraseña', widget=forms.PasswordInput)
