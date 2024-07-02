@@ -6,6 +6,12 @@
         <title>Document</title>
     </head>
     <body>
+        {% if request.user.is_authenticated %}
+        <p>Sesion iniciada!</p>
+        {% else %}
+        <p>Sesion no iniciada!</p>
+        {% endif %}
+        
         {% for form in forms %}
         <h1>Form</h1>
         <form action="{{ form.url }}" method="POST" enctype="multipart/form-data">

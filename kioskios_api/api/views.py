@@ -34,8 +34,8 @@ def iniciar_sesion(request):
             if user:
                 login(request, user)
                 return JsonResponse({'status': 'ok'})
-            return JsonResponse({'status': 'error', 'message': 'Contraseña incorrecta'})
-    return JsonResponse({'status': 'error', 'message': 'No permitido'})
+            return JsonResponse({'status': 'error', 'errors': ['Contraseña incorrecta',]})
+    return JsonResponse({'status': 'error', 'errors': ['No permitido',]})
 
 
 @api_login_required
@@ -43,7 +43,7 @@ def cerrar_sesion(request):
     if request.method == 'POST':
         logout(request)
         return JsonResponse({'status': 'ok'})
-    return JsonResponse({'status': 'error', 'message': 'No permitido'})
+    return JsonResponse({'status': 'error', 'errors': ['No permitido',]})
 
 
 def create_usuario(request):
@@ -54,7 +54,8 @@ def create_usuario(request):
             return JsonResponse({'status': 'ok'})
 
         print(form.errors)
-        return JsonResponse({'status': 'error', 'errors': form.errors})
+        errors = [error for sublist in form.errors.values() for error in sublist]
+        return JsonResponse({'status': 'error', 'errors': errors})
     json = {
         'campos': [
             {'tipoCampo': 'input', 'name': 'username', 'label': 'Nombre de usuario'},
@@ -74,8 +75,10 @@ def create_dueño(request):
         if form.is_valid():
             form.save()
             return JsonResponse({'status': 'ok'})
+        
         print(form.errors)
-        return JsonResponse({'status': 'error', 'errors': form.errors})
+        errors = [error for sublist in form.errors.values() for error in sublist]
+        return JsonResponse({'status': 'error', 'errors': errors})
     json = {
         'campos': [
             {'tipoCampo': 'input', 'name': 'username', 'label': 'Nombre de usuario'},
@@ -98,8 +101,10 @@ def create_tienda(request):
         if form.is_valid():
             form.save()
             return JsonResponse({'status': 'ok'})
+        
         print(form.errors)
-        return JsonResponse({'status': 'error', 'errors': form.errors})
+        errors = [error for sublist in form.errors.values() for error in sublist]
+        return JsonResponse({'status': 'error', 'errors': errors})
     json = {
         'campos': [
             {'tipoCampo': 'input', 'name': 'nombre',
@@ -145,8 +150,10 @@ def create_producto(request):
         if form.is_valid():
             form.save()
             return JsonResponse({'status': 'ok'})
+        
         print(form.errors)
-        return JsonResponse({'status': 'error', 'errors': form.errors})
+        errors = [error for sublist in form.errors.values() for error in sublist]
+        return JsonResponse({'status': 'error', 'errors': errors})
     json = {
         'campos': [
             {'tipoCampo': 'input', 'name': 'nombre',
@@ -160,6 +167,7 @@ def create_producto(request):
                 tienda for tienda in Tienda.objects.filter(dueño=request.user)]},
         ]
     }
+    return JsonResponse(json)
 
 
 @api_login_required
@@ -177,6 +185,7 @@ def get_productos(request):
             } for producto in productos
         ]
     }
+    return JsonResponse(json)
 
 
 @api_login_required
@@ -197,6 +206,7 @@ def create_venta(request):
             {'tipoCampo': 'input', 'name': 'cantidad', 'label': 'Cantidad'},
         ]
     }
+    return JsonResponse(json)
 
 
 @api_login_required

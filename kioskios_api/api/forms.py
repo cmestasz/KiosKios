@@ -17,6 +17,13 @@ class UsuarioForm(ModelForm):
         model = Usuario
         fields = ['username', 'telefono', 'password1', 'password2']
 
+    def clean_telefono(self):
+        telefono = self.cleaned_data.get('telefono')
+        if not telefono:
+            raise forms.ValidationError('Ingrese un número de teléfono')
+        if len(telefono) != 9:
+            raise forms.ValidationError('Ingrese un número de teléfono válido')
+
     def clean_password2(self):
         password1 = self.cleaned_data.get('password1')
         password2 = self.cleaned_data.get('password2')
