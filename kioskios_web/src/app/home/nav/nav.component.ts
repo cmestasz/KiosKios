@@ -1,13 +1,11 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-nav',
+  selector: 'home-nav',
   standalone: true,
   imports: [],
   template: `
-    <p>
-      nav works!
-    </p>
+    <nav></nav>
   `,
   styles: ``
 })

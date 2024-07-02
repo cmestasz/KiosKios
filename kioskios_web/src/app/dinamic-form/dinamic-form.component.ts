@@ -1,16 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component} from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormField } from '../models/form-field';
 import { ApiService } from '../services/api.service';
 
 @Component({
-  selector: 'app-dinamic-form',
+  selector: 'dinamic-form',
   standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './dinamic-form.component.html',
   styleUrl: './dinamic-form.component.css'
 })
-export class DinamicFormComponent implements OnInit{
+export class DinamicFormComponent{
 
   form: FormGroup;
   fields: FormField[] = [];
@@ -21,10 +21,6 @@ export class DinamicFormComponent implements OnInit{
   ){
     this.form = this.formBuilder.group({
     });
-  }
-
-  ngOnInit(): void {
-      this.loadSchema("allin");
   }
 
   loadSchema(model: string): void{

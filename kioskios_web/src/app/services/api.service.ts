@@ -8,12 +8,11 @@ import { FormField } from '../models/form-field';
 export class ApiService {
 
   private urlApi = 'http://localhost:8000/api/';
-  campos: FormField[] = [
+  campos1: FormField[] = [
     { tipoCampo: 'input', name: 'nombre', label: 'Nombre', type: 'text', validators: {maxlength: '10'} },
-    { tipoCampo: 'input', name: 'apellidos', label: 'Apellidos', type: 'text', validators: {minlength: '2'}},
-    { tipoCampo: 'input', name: 'email', label: 'Email',  type: 'email'},
-    { tipoCampo: 'select', name: 'foreign', label: 'Foreign', validators: {required: 'true'}, options: [{label: 'Option1', value: 'Option1'}, {label: 'Option2', value: 'Option2'}, {label: 'Option2', value: 'Option2'}]},
-    { tipoCampo: 'textarea', name: 'text', label: 'Text', validators: {required: 'true'}, attributes: {rows: '20', cols:'20'} }
+  ];
+  campos2: FormField[] = [
+    { tipoCampo: 'textarea', name: 'text', label: 'Texto', type: 'text', validators: {maxlength: '10'} },
   ];
 
 
@@ -22,6 +21,8 @@ export class ApiService {
   getFormSchema(formToGet : string) : Observable<FormField[]> {
     const url = `${this.urlApi}create_${formToGet}`;
     // return this.http.get<FormField[]>(url);
-    return of(this.campos);
+    if(formToGet == 'login')
+      return of(this.campos1);
+    return of(this.campos2);
   }
 }
