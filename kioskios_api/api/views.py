@@ -26,10 +26,10 @@ def create_usuario(request):
         form = UsuarioForm(request.POST)
         if form.is_valid():
             form.save()
-        else:
-            print(form.errors)
-            return JsonResponse({'status': 'error', 'errors': form.errors})
-        return JsonResponse({'status': 'ok'})
+            return JsonResponse({'status': 'ok'})
+
+        print(form.errors)
+        return JsonResponse({'status': 'error', 'errors': form.errors})
     json = {
         'campos': [
             {'tipoCampo': 'input', 'name': 'username', 'label': 'Nombre de usuario'},
@@ -47,10 +47,9 @@ def create_dueño(request):
         form = DueñoForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-        else:
-            print(form.errors)
-            return JsonResponse({'status': 'error', 'errors': form.errors})
-        return JsonResponse({'status': 'ok'})
+            return JsonResponse({'status': 'ok'})
+        print(form.errors)
+        return JsonResponse({'status': 'error', 'errors': form.errors})
     json = {
         'campos': [
             {'tipoCampo': 'input', 'name': 'username', 'label': 'Nombre de usuario'},
@@ -68,10 +67,9 @@ def create_tienda(request):
         form = TiendaForm(request.POST)
         if form.is_valid():
             form.save()
-        else:
-            print(form.errors)
-            return JsonResponse({'status': 'error', 'errors': form.errors})
-        return JsonResponse({'status': 'ok'})
+            return JsonResponse({'status': 'ok'})
+        print(form.errors)
+        return JsonResponse({'status': 'error', 'errors': form.errors})
     json = {
         'campos': [
             {'tipoCampo': 'input', 'name': 'nombre', 'label': 'Nombre de la tienda'},
@@ -89,10 +87,9 @@ def create_producto(request):
         form = ProductoForm(request.POST)
         if form.is_valid():
             form.save()
-        else:
-            print(form.errors)
-            return JsonResponse({'status': 'error', 'errors': form.errors})
-        return JsonResponse({'status': 'ok'})
+            return JsonResponse({'status': 'ok'})
+        print(form.errors)
+        return JsonResponse({'status': 'error', 'errors': form.errors})
     json = {
         'campos': [
             {'tipoCampo': 'input', 'name': 'nombre', 'label': 'Nombre del producto'},
@@ -110,10 +107,9 @@ def create_venta(request):
         form = VentaForm(request.POST)
         if form.is_valid():
             form.save()
-        else:
-            print(form.errors)
-            return JsonResponse({'status': 'error', 'errors': form.errors})
-        return JsonResponse({'status': 'ok'})
+            return JsonResponse({'status': 'ok'})
+        print(form.errors)
+        return JsonResponse({'status': 'error', 'errors': form.errors})
     json = {
         'campos': [
             {'tipoCampo': 'input', 'name': 'usuario', 'label': 'Usuario', 'attributes': [f'value={request.user}', 'type="hidden"',]},

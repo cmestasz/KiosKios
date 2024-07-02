@@ -38,7 +38,7 @@ class Usuario(AbstractUser):
 
     username = models.EmailField(unique=True)
     telefono = models.CharField(max_length=9)
-    yape_qr = models.ImageField(upload_to='yape_qrs', blank=True, null=True)
+    yape_qr = models.ImageField(upload_to='yape_qrs/', blank=True, null=True)
     tipo = models.CharField(max_length=2, choices=Types.choices, default=Types.USUARIO)
 
     objects = UsuarioManager()
@@ -59,7 +59,7 @@ class Producto(models.Model):
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField()
     precio = models.DecimalField(max_digits=6, decimal_places=2)
-    imagen = models.ImageField(upload_to='productos', blank=True, null=True)
+    imagen = models.ImageField(upload_to='productos/', blank=True, null=True)
     tienda = models.ForeignKey(Tienda, on_delete=models.CASCADE)
     stock = models.PositiveIntegerField()
 

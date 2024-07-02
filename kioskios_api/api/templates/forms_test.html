@@ -8,7 +8,7 @@
     <body>
         {% for form in forms %}
         <h1>Form</h1>
-        <form action="{{ form.url }}" method="POST">
+        <form action="{{ form.url }}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <table>
                 {{ form.form.as_table }}

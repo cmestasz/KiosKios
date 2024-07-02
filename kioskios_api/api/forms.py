@@ -36,6 +36,14 @@ class DueñoForm(UsuarioForm):
         if commit:
             user.save()
         return user
+    
+    def clean_yape_qr(self):
+        yape_qr = self.cleaned_data.get('yape_qr')
+        if not yape_qr:
+            instance = self.instance
+            if instance.pk:
+                yape_qr = instance.yape_qr
+        return yape_qr
 
 class AdminForm(UsuarioForm):
     class Meta:
