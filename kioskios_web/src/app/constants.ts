@@ -3,5 +3,6 @@ export const TYPE_FORMS = {
   OWNER: "dueño",
   STORE: "tienda",
   PRODUCT: "producto",
-  VENTA: "venta"
+  VENTA: "venta",
+  LOGIN: "iniciar_sesion"
 };
