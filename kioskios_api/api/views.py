@@ -34,8 +34,8 @@ def create_usuario(request):
         'campos': [
             {'tipoCampo': 'input', 'name': 'username', 'label': 'Nombre de usuario'},
             {'tipoCampo': 'input', 'name': 'telefono', 'label': 'Teléfono'},
-            {'tipoCampo': 'input', 'name': 'password1', 'label': 'Contraseña', 'attributes': ['type="password"', ]},
-            {'tipoCampo': 'input', 'name': 'password2', 'label': 'Confirmar contraseña', 'attributes': ['type="password"', ]},
+            {'tipoCampo': 'input', 'name': 'password1', 'label': 'Contraseña', 'attributes': {'type':"password"} },
+            {'tipoCampo': 'input', 'name': 'password2', 'label': 'Confirmar contraseña', 'attributes': {'type':"password"}},
         ]
     }
     return JsonResponse(json)
@@ -55,9 +55,9 @@ def create_dueño(request):
         'campos': [
             {'tipoCampo': 'input', 'name': 'username', 'label': 'Nombre de usuario'},
             {'tipoCampo': 'input', 'name': 'telefono', 'label': 'Teléfono'},
-            {'tipoCampo': 'input', 'name': 'password1', 'label': 'Contraseña', 'attributes': ['type="password"', ]},
-            {'tipoCampo': 'input', 'name': 'password2', 'label': 'Confirmar contraseña', 'attributes': ['type="password"', ]},
-            {'tipoCampo': 'input', 'name': 'yape_qr', 'label': 'Código QR de Yape', 'attributes': ['type="file"', ]},
+            {'tipoCampo': 'input', 'name': 'password1', 'label': 'Contraseña', 'attributes': {'type':"password"}},
+            {'tipoCampo': 'input', 'name': 'password2', 'label': 'Confirmar contraseña', 'attributes': {'type':"password"}},
+            {'tipoCampo': 'input', 'name': 'yape_qr', 'label': 'Código QR de Yape', 'attributes': {'type':"file"}},
         ]
     }
     return JsonResponse(json)
@@ -76,9 +76,9 @@ def create_tienda(request):
         'campos': [
             {'tipoCampo': 'input', 'name': 'nombre', 'label': 'Nombre de la tienda'},
             {'tipoCampo': 'textarea', 'name': 'descripcion', 'label': 'Descripción'},
-            {'tipoCampo': 'input', 'name': 'ubication', 'label': 'Ubicación', 'attributes': ['type="hidden"', ]},
+            {'tipoCampo': 'input', 'name': 'ubication', 'label': 'Ubicación', 'attributes': {'type':"hidden"}},
             {'tipoCampo': 'input', 'name': 'categoria', 'label': 'Categoría'},
-            {'tipoCampo': 'input', 'name': 'dueño', 'label': 'Dueño', 'attributes': [f'value={request.user}', 'type="hidden"',]}
+            {'tipoCampo': 'input', 'name': 'dueño', 'label': 'Dueño', 'attributes': {'value':request.user, 'type':"hidden"}}
         ]
     }
     return JsonResponse(json)
@@ -99,7 +99,7 @@ def create_producto(request):
             {'tipoCampo': 'textarea', 'name': 'descripcion', 'label': 'Descripción'},
             {'tipoCampo': 'input', 'name': 'precio', 'label': 'Precio'},
             {'tipoCampo': 'input', 'name': 'stock', 'label': 'Stock'},
-            {'tipoCampo': 'input', 'name': 'imagen', 'label': 'Imagen', 'attributes': ['type="file"', ]},
+            {'tipoCampo': 'input', 'name': 'imagen', 'label': 'Imagen', 'attributes': {'type':"file"}},
             {'tipoCampo': 'select', 'name': 'tienda', 'label': 'Tienda', 'options': [tienda for tienda in Tienda.objects.filter(dueño=request.user)]},
         ]
     }
@@ -116,7 +116,7 @@ def create_venta(request):
         return JsonResponse({'status': 'ok'})
     json = {
         'campos': [
-            {'tipoCampo': 'input', 'name': 'usuario', 'label': 'Usuario', 'attributes': [f'value={request.user}', 'type="hidden"',]},
+            {'tipoCampo': 'input', 'name': 'usuario', 'label': 'Usuario', 'attributes': {'value':request.user, 'type':"hidden"}},
             {'tipoCampo': 'select', 'name': 'producto', 'label': 'Producto', 'options': [producto for producto in Producto.objects.filter(tienda=request.json()['tienda'])]},
             {'tipoCampo': 'input', 'name': 'cantidad', 'label': 'Cantidad'},
         ]
