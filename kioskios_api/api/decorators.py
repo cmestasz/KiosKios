@@ -6,5 +6,5 @@ def api_login_required(func):
     def wrapper(request, *args, **kwargs):
         if request.user.is_authenticated:
             return func(request, *args, **kwargs)
-        return JsonResponse({'status': 'error', 'errors': ['No permitido', ]})
+        return JsonResponse({'status': 401, 'message': 'No permitido'})
     return wrapper
