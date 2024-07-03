@@ -34,17 +34,17 @@ def iniciar_sesion(request):
                 request, username=form.cleaned_data['username'], password=form.cleaned_data['password'])
             if user:
                 login(request, user)
-                return JsonResponse({'status': 'ok'})
-            return JsonResponse({'status': 'error', 'errors': ['Contraseña incorrecta',]})
-    return JsonResponse({'status': 'error', 'errors': ['No permitido',]})
+                return JsonResponse({'status': 200, 'message': 'Sesión iniciada',})
+            return JsonResponse({'status': 406, 'message': 'Contraseña incorrecta',})
+    return JsonResponse({'status': 405, 'errors': 'No permitido',})
 
 
 @api_login_required
 def cerrar_sesion(request):
     if request.method == 'POST':
         logout(request)
-        return JsonResponse({'status': 'ok'})
-    return JsonResponse({'status': 'error', 'errors': ['No permitido',]})
+        return JsonResponse({'status': 200, 'message': 'Sesión cerrada',})
+    return JsonResponse({'status': 403, 'errors': 'No permitido',})
 
 
 def create_usuario(request):
@@ -52,11 +52,12 @@ def create_usuario(request):
         form = UsuarioForm(request.POST)
         if form.is_valid():
             form.save()
-            return JsonResponse({'status': 'ok'})
+            return JsonResponse({'status': 201, 'message': 'Usuario creado',})
 
         print(form.errors)
-        return JsonResponse({'status': 'error', 'errors': get_errors(form.errors)})
+        return JsonResponse({'status': 406, 'message': 'Error en los campos'})
     json = {
+        'status': 200,
         'campos': form_serializer(UsuarioForm())
     }
     return JsonResponse(json)
@@ -67,11 +68,12 @@ def create_dueño(request):
         form = DueñoForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return JsonResponse({'status': 'ok'})
+            return JsonResponse({'status': 201, 'message': 'Dueño creado',})
         
         print(form.errors)
-        return JsonResponse({'status': 'error', 'errors': get_errors(form.errors)})
+        return JsonResponse({'status': 406, 'message': 'Error en los campos'})
     json = {
+        'status': 200,
         'campos': form_serializer(DueñoForm())
     }
     return JsonResponse(json)
@@ -83,11 +85,12 @@ def create_tienda(request):
         form = TiendaForm(request.POST)
         if form.is_valid():
             form.save()
-            return JsonResponse({'status': 'ok'})
+            return JsonResponse({'status': 201, 'message': 'Tienda creada',})
         
         print(form.errors)
-        return JsonResponse({'status': 'error', 'errors': get_errors(form.errors)})
+        return JsonResponse({'status': 406, 'message': 'Error en los campos'})
     json = {
+        'status': 200,
         'campos': form_serializer(TiendaForm())
     }
     return JsonResponse(json)
@@ -100,6 +103,7 @@ def get_tiendas(request):
     else:
         tiendas = Tienda.objects.all()
     json = {
+        'status': 200,
         'tipo': 'DU' if request.user.tipo == 'DU' else 'AD',
         'tiendas': [model_serializer(tienda) for tienda in tiendas]
     }
@@ -112,11 +116,12 @@ def create_producto(request):
         form = ProductoForm(request.POST)
         if form.is_valid():
             form.save()
-            return JsonResponse({'status': 'ok'})
+            return JsonResponse({'status': 200})
         
         print(form.errors)
-        return JsonResponse({'status': 'error', 'errors': get_errors(form.errors)})
+        return JsonResponse({'status': 406, 'message': 'Error en los campos'})
     json = {
+        'status': 200,
         'campos': form_serializer(ProductoForm())
     }
     return JsonResponse(json)
@@ -126,6 +131,7 @@ def create_producto(request):
 def get_productos(request):
     productos = Producto.objects.filter(tienda=request.json()['tienda'])
     json = {
+        'status': 200,
         'productos': [model_serializer(producto) for producto in productos]
     }
     return JsonResponse(json)
@@ -137,10 +143,11 @@ def create_venta(request):
         form = VentaForm(request.POST)
         if form.is_valid():
             form.save()
-            return JsonResponse({'status': 'ok'})
+            return JsonResponse({'status': 200})
         
-        return JsonResponse({'status': 'error', 'errors': get_errors(form.errors)})
+        return JsonResponse({'status': 406, 'message': 'Error en los campos'})
     json = {
+        'status': 200,
         'campos': form_serializer(VentaForm())
     }
     return JsonResponse(json)
@@ -153,6 +160,7 @@ def get_ventas(request):
     else:
         ventas = Venta.objects.filter(producto__tienda__dueño=request.user)
     json = {
+        'status': 200,
         'ventas': [model_serializer(venta) for venta in ventas]
     }
     return JsonResponse(json)
@@ -161,6 +169,7 @@ def get_ventas(request):
 def get_usuarios(request):
     usuarios = Usuario.objects.all()
     json = {
+        'status': 200,
         'usuarios': [model_serializer(usuario) for usuario in usuarios]
     }
     return JsonResponse(json)
