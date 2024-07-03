@@ -1,24 +1,8 @@
 export interface FormField {
-  tipoCampo: TipoCampo;
+  tipoCampo: 'input' | 'select' | 'textarea';
   name: string;
   label: string;
-  type?: string;
-  validators?: Validators;
-  attributes?: Attributes;
-  options?: Option[];
-}
-
-export type TipoCampo = 'input' | 'select' | 'textarea';
-
-export interface Validators {
-  [key : string]: string;
-}
-
-export interface Attributes {
-  [key : string]: string;
-}
-
-export interface Option {
-  label: string;
-  value: any;
+  validators?: { [key: string]: string };
+  attributes?: { [key: string]: string };
+  options?: { label: string; value: any }[];
 }

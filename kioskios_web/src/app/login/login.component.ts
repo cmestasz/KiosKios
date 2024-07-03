@@ -1,5 +1,6 @@
 import { Component, ComponentRef, ViewContainerRef } from '@angular/core';
 import { DinamicFormComponent } from '../dinamic-form/dinamic-form.component';
+import { TYPE_FORMS } from '../constants';
 
 @Component({
   selector: 'loader-form',
@@ -19,7 +20,7 @@ export class LoaderForm {
   ){
     this.componentRef =  this.viewContainer.createComponent(DinamicFormComponent);
     if(this.componentRef && this.componentRef.instance){
-      this.componentRef.instance.loadSchema("login");
+      this.componentRef.instance.loadSchema(TYPE_FORMS.USER);
     }
   }
 
