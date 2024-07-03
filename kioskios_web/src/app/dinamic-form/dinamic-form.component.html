@@ -3,7 +3,7 @@
     <label [for]="field.name">{{ field.label }}</label>
     @switch (field.tipoCampo) {
       @case ('input') {
-        <input [type]="field.type" 
+        <input [type]="field.attributes?.['type']" 
                [formControlName]="field.name"
                [attr.placeholder]="field.attributes?.['placeholder'] || field.name"
         >

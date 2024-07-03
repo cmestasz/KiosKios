@@ -25,8 +25,8 @@ export class DinamicFormComponent{
 
   loadSchema(model: string): void{
     this.form = this.formBuilder.group({});
-    this.api.getFormSchema(model).subscribe(fields => {
-      this.fields = fields;
+    this.api.getFormSchema(model).subscribe(fieldsReceived => {
+      this.fields = fieldsReceived;
       this.buildForm();
     });
   }
@@ -40,7 +40,7 @@ export class DinamicFormComponent{
 
   getValidators(field: FormField){
     const validators = [];
-    if(field.type == 'email'){
+    if(field.attributes?.['type'] == 'email'){
       validators.push(Validators.email);
     }
     if(field.validators){
