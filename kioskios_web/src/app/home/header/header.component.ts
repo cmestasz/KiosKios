@@ -49,6 +49,20 @@ import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
     .header-left{
         display: flex;
     }
+    nav ul {
+        list-style: none;
+        display: flex;
+        gap: 20px;
+    }
+
+    nav ul li a {
+        text-decoration: none;
+        color: #333;
+    }
+
+    nav ul li .register {
+        color: #ff9900;
+    }
 
   `
 })
