@@ -27,12 +27,30 @@ import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
             <ul>
                 <li><a [routerLink]="['/cart']"><fa-icon [icon]="['fas', 'cart-shopping']"></fa-icon> Carrito</a></li>
                 <li><a [routerLink]="['/login']">Login</a></li>
-                <li><a [routerLink]="['/register']">Register</a></li>
+                <li><a [routerLink]="['/register']" class="register">Register</a></li>
             </ul>
         </nav>
     </header>
   `,
-  styles: ``
+  styles: `
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.4% 5%;
+      background: #fff;
+      border-bottom: 1px solid #ddd;
+      margin-top: 1%;
+    }
+
+    header .logo img {
+        height: 60px;
+    }
+    .header-left{
+        display: flex;
+    }
+
+  `
 })
 export class HeaderComponent {
 
