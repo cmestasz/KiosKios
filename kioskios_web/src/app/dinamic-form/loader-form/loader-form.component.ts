@@ -10,19 +10,23 @@ import { TYPE_FORMS } from '../../constants';
   `
 })
 export class LoaderFormComponent {
-  private componentRef: ComponentRef<DinamicFormComponent>;
+  private componentRef!: ComponentRef<DinamicFormComponent>;
 
   constructor(
     private viewContainer: ViewContainerRef,
   ){
-    this.componentRef =  this.viewContainer.createComponent(DinamicFormComponent);
+    
   }
 
   createForm(typeForm: string): void {
+    if(this.componentRef)
+      this.componentRef.destroy();
+    this.componentRef = this.viewContainer.createComponent(DinamicFormComponent);
     if(this.componentRef && this.componentRef.instance){
       this.componentRef.instance.loadSchema(typeForm);
     }else{
       console.log("El componente no se ha podido cargar correctamente");
     }
   }
+
 }
