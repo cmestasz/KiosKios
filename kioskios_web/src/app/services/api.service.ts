@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, map, of } from 'rxjs';
 import { FormField } from '../models/form-field';
 import { response } from 'express';
@@ -15,9 +15,17 @@ export class ApiService {
 
   getFormSchema(formToGet : string) : Observable<FormField[]> {
     const url = this.urlBaseApi + `/${formToGet}`;
-    return this.http.get<{campos: FormField[]}>(url).pipe(
+    const httpOptions = {
+      headers: new HttpHeaders({ 
+        'Content-Type': 'application/json',
+        //'Authorization':'authkey',
+        //'userid':'1'
+      })
+    };
+    return this.http.get<{campos: FormField[]}>(url, httpOptions).pipe(
       map(response => {
-        if(!response.campos){}
+        console.log("Response: ", response);
+        if(!response.campos) 
           throw new Error("No autorizado")
         return response.campos;
       }),
