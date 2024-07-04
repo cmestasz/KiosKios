@@ -64,6 +64,26 @@ import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
         color: #ff9900;
     }
 
+    /* Barra de búsqueda */
+    .search{
+        justify-self: flex-start;
+    }
+    .search-bar {
+        text-align: center;
+        padding: 20px;
+        background: hsl(0, 0%, 100%);
+    }
+
+    .search-bar input {
+        padding: 10px;
+        width: 80%;
+        max-width: 500px;
+        border: 1px solid #e2e2e2;
+        border-radius: 4px;
+        width: 300px;
+        background-color: #ececec;
+    }
+
   `
 })
 export class HeaderComponent {
