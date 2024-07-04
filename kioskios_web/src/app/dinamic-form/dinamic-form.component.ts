@@ -40,9 +40,6 @@ export class DinamicFormComponent{
 
   getValidators(field: FormField){
     const validators = [];
-    if(field.attributes?.['type'] == 'email'){
-      validators.push(Validators.email);
-    }
     if(field.validators){
       for(const [key, value] of Object.entries(field.validators)){
         switch(key){
@@ -52,6 +49,8 @@ export class DinamicFormComponent{
             validators.push(Validators.maxLength(Number(value))); break;
           case 'minlength':
             validators.push(Validators.minLength(Number(value))); break;
+          case 'email':
+            validators.push(Validators.email); break;
           default:
             console.warn(`This validator is not supported: ${key}`);
         }
@@ -82,6 +81,8 @@ export class DinamicFormComponent{
               return `Debe tener al menos ${control.errors?.['minlength'].requiredLength} caracteres`;
             case 'maxlength':
               return `Debe tener como máximo ${control.errors?.['maxlength'].requiredLength} caracteres`;
+            case 'email':
+              return 'Ingrese un email correcto';
             default:
               return '';
           }
