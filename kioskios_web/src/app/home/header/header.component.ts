@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink} from '@angular/router';
 import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
+import { faCartShopping, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'home-header',
@@ -18,16 +18,16 @@ import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
                     <form action="." method="GET">
                       <label for="q"></label>
                       <input type="text" name="q" placeholder="Busca un artículo">
-                      <button>Buscar</button>
+                      <button class="register"><fa-icon [icon]="['fas', 'magnifying-glass']"></fa-icon></button>
                     </form>
                 </section>
             </div>
         </div>
         <nav>
             <ul>
-                <li><a [routerLink]="['/cart']"><fa-icon [icon]="['fas', 'cart-shopping']"></fa-icon> Carrito</a></li>
-                <li><a [routerLink]="['/login']">Login</a></li>
-                <li><a [routerLink]="['/register']" class="register">Register</a></li>
+                <li><a [routerLink]="['/cart']"><fa-icon [icon]="['fas', 'cart-shopping']"></fa-icon> Carrito |</a></li>
+                <li><a [routerLink]="['/login']">Iniciar Sesión</a></li>
+                <li><a [routerLink]="['/register']" class="register">Regístrate</a></li>
             </ul>
         </nav>
     </header>
@@ -61,7 +61,10 @@ import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
     }
 
     nav ul li .register {
-        color: #ff9900;
+        color:#ffffff;
+        background-color:#ff9900 ;
+        border-radius: 10%;
+        padding: 10px;
     }
 
     /* Barra de búsqueda */
@@ -89,6 +92,6 @@ import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
 export class HeaderComponent {
 
   constructor(library: FaIconLibrary){
-    library.addIcons(faCartShopping);
+    library.addIcons(faCartShopping, faMagnifyingGlass);
   }
 }
