@@ -9,24 +9,27 @@ import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
   imports: [RouterLink, FontAwesomeModule],
   template: `
     <header>
-      <div>
-        <img alt="logo">
-      </div>
-      <div>
-        <form action="." method="GET">
-          <label for="q"></label>
-          <input type="text" name="q">
-          <button>Buscar</button>
-        </form>
-      </div>
-      <div>
-        <a [routerLink]="['/login']">Login</a>
-        <a [routerLink]="['/register']">Register</a>
-
-      </div>
-      <div>
-        <a [routerLink]="['/cart']"><fa-icon [icon]="['fas', 'cart-shopping']"></fa-icon> Carrito</a>
-      </div>
+        <div class="header-left">
+            <div class="logo">
+                <img src="logo.png" alt="Kioskios Logo">
+            </div>
+            <div class="search">
+                <section class="search-bar">
+                    <form action="." method="GET">
+                      <label for="q"></label>
+                      <input type="text" name="q" placeholder="Busca un artículo">
+                      <button>Buscar</button>
+                    </form>
+                </section>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li><a [routerLink]="['/cart']"><fa-icon [icon]="['fas', 'cart-shopping']"></fa-icon> Carrito</a></li>
+                <li><a [routerLink]="['/login']">Login</a></li>
+                <li><a [routerLink]="['/register']">Register</a></li>
+            </ul>
+        </nav>
     </header>
   `,
   styles: ``
