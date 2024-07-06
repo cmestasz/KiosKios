@@ -66,8 +66,49 @@ import { Component } from '@angular/core';
     color: #fff;
 }
 
+.ftco-footer-social {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: 1em;
+}
 
-`
+.ftco-footer-social li a {
+    display: block;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #a3de83;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background 0.3s;
+}
+
+.ftco-footer-social li a:hover {
+    background: #a3de83;
+    color: #121212;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .footer .footer-heading {
+        font-size: 20px;
+    }
+    .footer .menu a {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 576px) {
+    .footer .footer-heading {
+        font-size: 18px;
+    }
+    .footer .menu a {
+        font-size: 12px;
+    }
+}`
 })
 export class FooterComponent {
 
