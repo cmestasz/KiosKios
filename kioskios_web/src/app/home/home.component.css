@@ -1,4 +1,4 @@
-/* Banner w*/
+/* Banner */
 .banner {
     position: relative;
     overflow: hidden;
@@ -87,4 +87,47 @@
     cursor: pointer;
     font-size: 16px;
     border-radius: 4px;
+}
+
+/* Controles del banner */
+.controls {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+}
+
+.controls button {
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.controls button#prevBtn {
+    margin-left: 10px;
+}
+
+.controls button#nextBtn {
+    margin-right: 10px;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .banner-text h1 {
+        font-size: 28px;
+    }
+
+    .banner-text p {
+        font-size: 16px;
+    }
+
+    .banner-text button {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
 }
