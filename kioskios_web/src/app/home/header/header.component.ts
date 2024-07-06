@@ -34,13 +34,18 @@ import { faCartShopping, faMagnifyingGlass } from '@fortawesome/free-solid-svg-i
   `,
   styles: `
     header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.4% 5%;
-      background: #fff;
-      border-bottom: 1px solid #ddd;
-      margin-top: 1%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5em 5%;
+        background: #fff;
+        border-bottom: 1px solid #ddd;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+        box-sizing: border-box;
+        
     }
 
     header .logo img {
@@ -58,6 +63,9 @@ import { faCartShopping, faMagnifyingGlass } from '@fortawesome/free-solid-svg-i
     nav ul li a {
         text-decoration: none;
         color: #333;
+        padding: 0.5em 1em;
+        display: block;
+        white-space: nowrap;
     }
 
     nav ul li .register {
@@ -66,6 +74,65 @@ import { faCartShopping, faMagnifyingGlass } from '@fortawesome/free-solid-svg-i
         border-radius: 10%;
         padding: 10px;
     }
+
+    /* Barra de búsqueda */
+    .search{
+        justify-self: flex-start;
+    }
+    .search-bar {
+        text-align: center;
+        padding: 20px;
+        background: hsl(0, 0%, 100%);
+    }
+
+    .search-bar input {
+        padding: 10px;
+        width: 80%;
+        max-width: 500px;
+        border: 1px solid #e2e2e2;
+        border-radius: 4px;
+        width: 300px;
+        background-color: #ececec;
+        box-sizing: border-box;
+    }
+
+    /* Ajustes responsivos */
+    @media (max-width: 768px) {
+        header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .header-left {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav ul {
+            flex-direction: column;
+            width: 100%;
+        }
+
+        nav ul li {
+            width: 100%;
+            text-align: center;
+        }
+
+        nav ul li a {
+            padding: 10px;
+            width: 100%;
+        }
+
+        .search-bar {
+            width: 100%;
+        }
+
+        .search-bar input {
+            width: calc(100% - 20px);
+        }
+    } 
 
     /* Barra de búsqueda */
     .search{
