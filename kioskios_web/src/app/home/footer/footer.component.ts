@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
+import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faFacebook, faInstagram, faWhatsapp } from '@fortawesome/free-brands-svg-icons';
+
 
 @Component({
   selector: 'home-footer',
   standalone: true,
-  imports: [],
+  imports: [FontAwesomeModule],
   template: `
     <footer class="footer">
         <div class="container-footer">
@@ -18,15 +21,15 @@ import { Component } from '@angular/core';
                         <a href="#">Contact</a>
                     </p>
                     <ul class="ftco-footer-social ">
-                        <li class="ftco-animate"><a href="#" data-toggle="tooltip" data-placement="top" title="Twitter"><span class="ion-logo-twitter"></span></a></li>
-                        <li class="ftco-animate"><a href="#" data-toggle="tooltip" data-placement="top" title="Facebook"><span class="ion-logo-facebook"></span></a></li>
-                        <li class="ftco-animate"><a href="#" data-toggle="tooltip" data-placement="top" title="Instagram"><span class="ion-logo-instagram"></span></a></li>
+                        <li class="ftco-animate"><a href="#" data-toggle="tooltip" data-placement="top" title="Whatsapp"><fa-icon [icon]="['fab', 'whatsapp']"></fa-icon></a></li>
+                        <li class="ftco-animate"><a href="#" data-toggle="tooltip" data-placement="top" title="Facebook"><fa-icon [icon]="['fab', 'facebook']"></fa-icon></a></li>
+                        <li class="ftco-animate"><a href="#" data-toggle="tooltip" data-placement="top" title="Instagram"><fa-icon [icon]="['fab', 'instagram']"></fa-icon></a></li>
                     </ul>
                 </div>
             </div>
             <div class="row">
                 <p>
-                    Kioskios<script>document.write(new Date().getFullYear());</script> Sigue disfrutando de tus compras en KiosKios.com
+                    Kioskios 2024 | Sigue disfrutando de tus compras en KiosKios.com
                 </p>
             </div>
         </div>
@@ -111,5 +114,7 @@ import { Component } from '@angular/core';
 }`
 })
 export class FooterComponent {
-
+    constructor(library: FaIconLibrary) {
+        library.addIcons(faFacebook, faWhatsapp, faInstagram);  
+    }
 }
