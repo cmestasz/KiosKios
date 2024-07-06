@@ -4,14 +4,14 @@
   <router-outlet />
   <section class="banner">
     <div class="slider">
-        <div class="slide active" style="background-image: url('baner1.jfif');">
+        <div class="slide active" style="background-image: url('banner.png');">
             <div class="banner-text">
                 <h1>Revisa los nuevos productos disponibles</h1>
                 <p>Encuentra los mejores precios de tus productos y ahorra inteligentemente.</p>
                 <button>Registrate Ya</button>
             </div>
         </div>
-        <div class="slide" style="background-image: url('banner2.avif');">
+        <div class="slide" style="background-image: url('banner2.png');">
             <div class="banner-text">
                 <h1>Revisa los nuevos productos disponibles</h1>
                 <p>Encuentra los mejores precios de tus productos y ahorra inteligentemente.</p>
@@ -19,13 +19,31 @@
             </div>
         </div>
 
-        <div class="slide" style="background-image: url('baner1.jfif');"></div>
+        <div class="slide" style="background-image: url('banner3.png');"></div>
     </div>
     <div class="controls">
         <button id="prevBtn">⟨</button>
         <button id="nextBtn">⟩</button>
     </div>
-  </section>
+</section>
+  <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let slides = document.querySelectorAll('.slide');
+            let currentIndex = 0;
+        
+            document.getElementById('nextBtn').addEventListener('click', () => {
+                slides[currentIndex].classList.remove('active');
+                currentIndex = (currentIndex + 1) % slides.length;
+                slides[currentIndex].classList.add('active');
+            });
+        
+            document.getElementById('prevBtn').addEventListener('click', () => {
+                slides[currentIndex].classList.remove('active');
+                currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+                slides[currentIndex].classList.add('active');
+            });
+        });
+    </script>
 </main>
 <home-footer />
 

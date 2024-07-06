@@ -6,7 +6,3 @@ body {
     display: flex;
     flex-direction: column;
 }
-
-footer{
-    margin-top: 20%;
-}
