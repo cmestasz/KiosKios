@@ -1,3 +1,9 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center ;
+}
 .buttons{
     display: flex;
     flex-direction: row;
@@ -16,6 +22,11 @@
     max-height: 40px;
     border-color: #ff9900;
 }
-.form{
-
+.form-container {
+    background-color: rgb(233, 233, 233);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
 }
