@@ -1,11 +1,13 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { LoaderFormComponent } from '../dinamic-form/loader-form/loader-form.component';
 import { TYPE_FORMS } from '../constants';
+import { FooterComponent } from '../home/footer/footer.component';
+import { HeaderComponent } from '../home/header/header.component';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [LoaderFormComponent],
+  imports: [LoaderFormComponent, FooterComponent, HeaderComponent],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })

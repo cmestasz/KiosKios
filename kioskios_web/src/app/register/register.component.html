@@ -1,5 +1,17 @@
+<home-header />
+<br><br>
 <main>
-  <button (click)="loadOwner()">Soy un dueño</button>
-  <button (click)="loadUser()">Soy un comprador</button>
-  <loader-form />
+  <div class="container">
+    <div class="buttons">
+      <button (click)="loadOwner()" class="button" >Soy Dueño</button>
+      <button (click)="loadUser()" class="button" >Soy Comprador</button>
+    </div>
+    <div class="form">
+      <loader-form />
+    </div>
+  </div>
+
+  
 </main>
+
+<home-footer />

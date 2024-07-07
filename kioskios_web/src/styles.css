@@ -1,5 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-body {
+html, body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
@@ -7,6 +7,25 @@ body {
     flex-direction: column;
 }
 
-footer{
-  
+html, body {
+    height: 100%;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+}
+
+main {
+    flex: 1;
+    padding: 20px;
+}
+
+footer {
+    text-align: center;
+    padding: 10px 0;
 }

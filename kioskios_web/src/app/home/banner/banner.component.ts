@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
+
 
 @Component({
   selector: 'home-banner',
@@ -9,7 +10,7 @@ import { Component } from '@angular/core';
         <div class="slider">
             <div class="slide active" style="background-image: url('banner.png');">
                 <div class="banner-text">
-                    <h1>Revisa los nuevosa productos disponibles</h1>
+                    <h1>Revisa los nuevos productos disponibles</h1>
                     <p>Encuentra los mejores precios de tus productos y ahorra inteligentemente.</p>
                     <button>Registrate Ya</button>
                 </div>
@@ -165,6 +166,23 @@ import { Component } from '@angular/core';
 }
 `
 })
-export class BannerComponent {
 
-}
+export class BannerComponent implements AfterViewInit {
+    ngAfterViewInit() {
+      const slides = document.querySelectorAll('.slide') as NodeListOf<HTMLElement>;
+      let currentIndex = 0;
+  
+      document.getElementById('nextBtn')?.addEventListener('click', () => {
+        slides[currentIndex].classList.remove('active');
+        currentIndex = (currentIndex + 1) % slides.length;
+        slides[currentIndex].classList.add('active');
+      });
+  
+      document.getElementById('prevBtn')?.addEventListener('click', () => {
+        slides[currentIndex].classList.remove('active');
+        currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+        slides[currentIndex].classList.add('active');
+      });
+    }
+  }
+
