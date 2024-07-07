@@ -15,15 +15,18 @@ import { Component, AfterViewInit } from '@angular/core';
                     <button>Registrate Ya</button>
                 </div>
             </div>
-            <div class="slide" style="background-image: url('banner2.png');">
+            <div class="slide" style="background-image: url('banner2.png');justify-content:flex-end;">
                 <div class="banner-text">
+                </div>
+            </div>
+
+            <div class="slide" style="background-image: url('banner3.png');">
+                <div class="banner-text" style="color: black;">
                     <h1>Revisa los nuevos productos disponibles</h1>
                     <p>Encuentra los mejores precios de tus productos y ahorra inteligentemente.</p>
                     <button>Registrate Ya</button>
                 </div>
             </div>
-
-            <div class="slide" style="background-image: url('banner3.png');"></div>
         </div>
         <div class="controls">
             <button id="prevBtn">⟨</button>

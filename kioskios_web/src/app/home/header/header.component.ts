@@ -18,7 +18,7 @@ import { faCartShopping, faMagnifyingGlass } from '@fortawesome/free-solid-svg-i
                     <form action="." method="GET">
                       <label for="q"></label>
                       <input type="text" name="q" placeholder="Busca un artículo">
-                      <button class="register"><fa-icon [icon]="['fas', 'magnifying-glass']"></fa-icon></button>
+                      <button class="busqueda"><fa-icon [icon]="['fas', 'magnifying-glass']"></fa-icon></button>
                     </form>
                 </section>
             </div>
@@ -74,6 +74,14 @@ import { faCartShopping, faMagnifyingGlass } from '@fortawesome/free-solid-svg-i
         background-color:#ff9900 ;
         border-radius: 10%;
         padding: 10px;
+    }
+    
+    .busqueda{
+        color:#ffffff;
+        background-color:#ff9900 ;
+        border-radius: 10%;
+        padding: 5px;  
+        border-color: #ff9900; 
     }
 
     /* Barra de búsqueda */
