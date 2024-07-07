@@ -1,5 +1,4 @@
-import { Component, AfterViewInit } from '@angular/core';
-
+import { Component, ElementRef, ViewChildren, QueryList } from '@angular/core';
 
 @Component({
   selector: 'home-banner',
@@ -8,19 +7,22 @@ import { Component, AfterViewInit } from '@angular/core';
   template: `
     <section class="banner">
         <div class="slider">
-            <div class="slide active" style="background-image: url('banner.png');">
+            <div #slide class="slide active" style="background-image: url('banner.png');">
                 <div class="banner-text">
                     <h1>Revisa los nuevos productos disponibles</h1>
                     <p>Encuentra los mejores precios de tus productos y ahorra inteligentemente.</p>
                     <button>Registrate Ya</button>
                 </div>
             </div>
-            <div class="slide" style="background-image: url('banner2.png');justify-content:flex-end;">
-                <div class="banner-text">
+            <div #slide class="slide" style="background-image: url('banner2.png');justify-content:flex-end;">
+                <div class="banner-text" style="color: black">
+                <h1>Revisa los nuevos productos disponibles</h1>
+                    <p>Encuentra los mejores precios de tus productos y ahorra inteligentemente.</p>
+                    <button>Registrate Ya</button>
                 </div>
             </div>
 
-            <div class="slide" style="background-image: url('banner3.png');">
+            <div #slide class="slide" style="background-image: url('banner3.png');">
                 <div class="banner-text" style="color: black;">
                     <h1>Revisa los nuevos productos disponibles</h1>
                     <p>Encuentra los mejores precios de tus productos y ahorra inteligentemente.</p>
@@ -29,8 +31,8 @@ import { Component, AfterViewInit } from '@angular/core';
             </div>
         </div>
         <div class="controls">
-            <button id="prevBtn">⟨</button>
-            <button id="nextBtn">⟩</button>
+            <button (click)="prevSlide()">⟨</button>
+            <button (click)="nextSlide()">⟩</button>
         </div>
     </section>
   `,
@@ -44,22 +46,40 @@ import { Component, AfterViewInit } from '@angular/core';
 
 .slider {
     display: flex;
+    position: relative;
+    flex-direction: column;
     transition: transform 0.5s ease-in-out;
 }
 
 .slide {
+    position: absolute;
     min-width: 100%;
     height: 400px;
     background-size: cover;
     background-position: center;
-    position: relative;
-    display: none;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    transition: opacity .5s ease-in;
+
 }
 
 
-.slide.active {
-    display: block; /* Mostrar la diapositiva activa */
+.slide.active {/* Mostrar la diapositiva activa */
+    opacity: 1;
 }
+
+@keyframes fade-in {
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
 @media (max-width: 768px) {
     header {
         flex-direction: column;
@@ -170,22 +190,21 @@ import { Component, AfterViewInit } from '@angular/core';
 `
 })
 
-export class BannerComponent implements AfterViewInit {
-    ngAfterViewInit() {
-      const slides = document.querySelectorAll('.slide') as NodeListOf<HTMLElement>;
-      let currentIndex = 0;
-  
-      document.getElementById('nextBtn')?.addEventListener('click', () => {
-        slides[currentIndex].classList.remove('active');
-        currentIndex = (currentIndex + 1) % slides.length;
-        slides[currentIndex].classList.add('active');
-      });
-  
-      document.getElementById('prevBtn')?.addEventListener('click', () => {
-        slides[currentIndex].classList.remove('active');
-        currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-        slides[currentIndex].classList.add('active');
-      });
+export class BannerComponent {
+
+    @ViewChildren('slide') slides!: QueryList<ElementRef>;
+    private currentIndex: number = 0;
+
+    nextSlide() {
+      this.slides.toArray()[this.currentIndex].nativeElement.classList.remove('active');
+      this.currentIndex = (this.currentIndex + 1) % this.slides.length;
+      this.slides.toArray()[this.currentIndex].nativeElement.classList.add('active');
+    }
+
+    prevSlide() {
+      this.slides.toArray()[this.currentIndex].nativeElement.classList.remove('active');
+      this.currentIndex = (this.currentIndex - 1 + this.slides.length) % this.slides.length;
+      this.slides.toArray()[this.currentIndex].nativeElement.classList.add('active');
     }
   }
 

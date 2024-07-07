@@ -41,7 +41,7 @@ import { faCartShopping, faMagnifyingGlass } from '@fortawesome/free-solid-svg-i
         padding: 0.5em 5%;
         background: #fff;
         border-bottom: 1px solid #ddd;
-        position: fixed;
+        position: sticky;
         top: 0;
         width: 100%;
         z-index: 1000;
