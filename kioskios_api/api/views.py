@@ -36,7 +36,11 @@ def iniciar_sesion(request):
                 login(request, user)
                 return JsonResponse({'status': 200, 'message': 'Sesión iniciada',})
             return JsonResponse({'status': 406, 'message': 'Contraseña incorrecta',})
-    return JsonResponse({'status': 405, 'errors': 'No permitido',})
+    json = {
+        'status': 200,
+        'campos': form_serializer(LoginForm())
+    }
+    return JsonResponse(json)
 
 
 @api_login_required
