@@ -18,7 +18,6 @@ export class ApiService {
     const httpOptions = {
       headers: new HttpHeaders({ 
         'Content-Type': 'application/json',
-        'X-CSRFToken': token
         //'Authorization':'authkey',
         //'userid':'1'
       })
@@ -44,6 +43,7 @@ export class ApiService {
           campos: response.campos,
           token: response.token
         }
+        console.log(resp);
         return resp;
       }),
       catchError(error => {

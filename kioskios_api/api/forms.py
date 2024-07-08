@@ -23,6 +23,7 @@ class UsuarioForm(ModelForm):
             raise forms.ValidationError('Ingrese un número de teléfono')
         if len(telefono) != 9:
             raise forms.ValidationError('Ingrese un número de teléfono válido')
+        return telefono
 
     def clean_password2(self):
         password1 = self.cleaned_data.get('password1')

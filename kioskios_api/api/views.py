@@ -1,15 +1,52 @@
 from django.shortcuts import render
 from django.urls import reverse
 from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
 from .forms import UsuarioForm, DueñoForm, TiendaForm, ProductoForm, VentaForm, LoginForm, LogoutForm
 from .models import Tienda, Producto, Venta, Usuario
 from .decorators import api_login_required
-from .serializers import form_serializer, model_serializer
+from .serializers import UsuarioSerializer, TiendaSerializer, ProductoSerializer, VentaSerializer, form_serializer
 from django.contrib.auth import authenticate, login, logout
 from django.middleware.csrf import get_token
-
+from rest_framework.views import APIView
+import requests
 # Create your views here.
+
+
+class TestIniciarSesion(APIView):
+    def post(self, request, format=None):
+        form = LoginForm(request.data)
+        if form.is_valid():
+            user = authenticate(
+                request, username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+            if user:
+                login(request, user)
+                return JsonResponse({'status': 200, 'message': 'Sesión iniciada', })
+            return JsonResponse({'status': 406, 'message': 'Contraseña incorrecta', })
+        return JsonResponse({'status': 406, 'message': 'Error en los campos', })
+
+class TestCreateUsuario(APIView):
+    def post(self, request, format=None):
+        form = UsuarioForm(request.data)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'status': 200, 'message': 'Usuario creado', })
+        print(form.errors)
+        return JsonResponse({'status': 406, 'message': 'Error en los campos', })
+    
+    def get(self, request, format=None):
+        response = JsonResponse({
+            'status': 200,
+            'token': get_token(request),
+            'campos': form_serializer(UsuarioForm())
+        })
+        return response
+
+class TestUsuarios(APIView):
+    def post(self, request, format=None):
+        usuarios = Usuario.objects.all()
+        serializer = UsuarioSerializer(
+            usuarios, many=True, context={'request': request})
+        return JsonResponse({'status': 200, 'usuarios': serializer.data}, safe=False)
 
 
 def forms_test(request):
@@ -26,6 +63,7 @@ def forms_test(request):
     }
     return render(request, 'forms_test.html', context)
 
+
 def iniciar_sesion(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
@@ -35,8 +73,8 @@ def iniciar_sesion(request):
                 request, username=form.cleaned_data['username'], password=form.cleaned_data['password'])
             if user:
                 login(request, user)
-                return JsonResponse({'status': 200, 'message': 'Sesión iniciada',})
-            return JsonResponse({'status': 406, 'message': 'Contraseña incorrecta',})
+                return JsonResponse({'status': 200, 'message': 'Sesión iniciada', })
+            return JsonResponse({'status': 406, 'message': 'Contraseña incorrecta', })
     json = {
         'status': 200,
         'token': get_token(request),
@@ -49,8 +87,8 @@ def iniciar_sesion(request):
 def cerrar_sesion(request):
     if request.method == 'POST':
         logout(request)
-        return JsonResponse({'status': 200, 'message': 'Sesión cerrada',})
-    return JsonResponse({'status': 403, 'errors': 'No permitido',})
+        return JsonResponse({'status': 200, 'message': 'Sesión cerrada', })
+    return JsonResponse({'status': 403, 'errors': 'No permitido', })
 
 
 def create_usuario(request):
@@ -58,7 +96,7 @@ def create_usuario(request):
         form = UsuarioForm(request.POST)
         if form.is_valid():
             form.save()
-            return JsonResponse({'status': 201, 'message': 'Usuario creado',})
+            return JsonResponse({'status': 201, 'message': 'Usuario creado', })
 
         print(form.errors)
         return JsonResponse({'status': 406, 'message': 'Error en los campos'})
@@ -75,8 +113,8 @@ def create_dueño(request):
         form = DueñoForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return JsonResponse({'status': 201, 'message': 'Dueño creado',})
-        
+            return JsonResponse({'status': 201, 'message': 'Dueño creado', })
+
         print(form.errors)
         return JsonResponse({'status': 406, 'message': 'Error en los campos'})
     json = {
@@ -93,8 +131,8 @@ def create_tienda(request):
         form = TiendaForm(request.POST)
         if form.is_valid():
             form.save()
-            return JsonResponse({'status': 201, 'message': 'Tienda creada',})
-        
+            return JsonResponse({'status': 201, 'message': 'Tienda creada', })
+
         print(form.errors)
         return JsonResponse({'status': 406, 'message': 'Error en los campos'})
     json = {
@@ -126,7 +164,7 @@ def create_producto(request):
         if form.is_valid():
             form.save()
             return JsonResponse({'status': 200})
-        
+
         print(form.errors)
         return JsonResponse({'status': 406, 'message': 'Error en los campos'})
     json = {
@@ -154,7 +192,7 @@ def create_venta(request):
         if form.is_valid():
             form.save()
             return JsonResponse({'status': 200})
-        
+
         return JsonResponse({'status': 406, 'message': 'Error en los campos'})
     json = {
         'status': 200,
@@ -176,6 +214,8 @@ def get_ventas(request):
     return JsonResponse(json)
 
 # ES DE PRUEBA, ELIMINAR EN PRODUCCION
+
+
 def get_usuarios(request):
     usuarios = Usuario.objects.all()
     json = {
@@ -183,6 +223,7 @@ def get_usuarios(request):
         'usuarios': [model_serializer(usuario) for usuario in usuarios]
     }
     return JsonResponse(json)
+
 
 def get_errors(form_errors):
     return [error for sublist in form_errors.values() for error in sublist]

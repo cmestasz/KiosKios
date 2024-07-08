@@ -15,6 +15,9 @@ urlpatterns = [
     path('rest/', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
+    path('test_get_usuarios/', views.TestUsuarios.as_view(), name='test_get_usuarios'),
+    path('test_create_usuario/', views.TestCreateUsuario.as_view(), name='test_create_usuario'),
+
     path('forms_test/', views.forms_test, name='forms_test'),
     path('iniciar_sesion/', views.iniciar_sesion, name='iniciar_sesion'),
     path('cerrar_sesion/', views.cerrar_sesion, name='cerrar_sesion'),
