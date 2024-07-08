@@ -7,6 +7,7 @@ from .models import Tienda, Producto, Venta, Usuario
 from .decorators import api_login_required
 from .serializers import form_serializer, model_serializer
 from django.contrib.auth import authenticate, login, logout
+from django.middleware.csrf import get_token
 
 # Create your views here.
 
@@ -25,7 +26,6 @@ def forms_test(request):
     }
     return render(request, 'forms_test.html', context)
 
-
 def iniciar_sesion(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
@@ -38,6 +38,7 @@ def iniciar_sesion(request):
             return JsonResponse({'status': 406, 'message': 'Contraseña incorrecta',})
     json = {
         'status': 200,
+        'token': get_token(request),
         'campos': form_serializer(LoginForm())
     }
     return JsonResponse(json)
@@ -62,6 +63,7 @@ def create_usuario(request):
         return JsonResponse({'status': 406, 'message': 'Error en los campos'})
     json = {
         'status': 200,
+        'token': get_token(request),
         'campos': form_serializer(UsuarioForm())
     }
     return JsonResponse(json)
@@ -78,6 +80,7 @@ def create_dueño(request):
         return JsonResponse({'status': 406, 'message': 'Error en los campos'})
     json = {
         'status': 200,
+        'token': get_token(request),
         'campos': form_serializer(DueñoForm())
     }
     return JsonResponse(json)
@@ -95,6 +98,7 @@ def create_tienda(request):
         return JsonResponse({'status': 406, 'message': 'Error en los campos'})
     json = {
         'status': 200,
+        'token': get_token(request),
         'campos': form_serializer(TiendaForm())
     }
     return JsonResponse(json)
@@ -126,6 +130,7 @@ def create_producto(request):
         return JsonResponse({'status': 406, 'message': 'Error en los campos'})
     json = {
         'status': 200,
+        'token': get_token(request),
         'campos': form_serializer(ProductoForm())
     }
     return JsonResponse(json)
