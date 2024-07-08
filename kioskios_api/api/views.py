@@ -62,6 +62,7 @@ class IniciarSesion(APIView):
                 request, username=form.cleaned_data['username'], password=form.cleaned_data['password'])
             if user:
                 login(request, user)
+                get_token(request)
                 return JsonResponse(MESSAGES['correct'])
             return JsonResponse(MESSAGES['wrong_password'])
         return JsonResponse(MESSAGES['fields_error'])
