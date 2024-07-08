@@ -29,6 +29,7 @@ def forms_test(request):
 def iniciar_sesion(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
+        print(form)
         if form.is_valid():
             user = authenticate(
                 request, username=form.cleaned_data['username'], password=form.cleaned_data['password'])

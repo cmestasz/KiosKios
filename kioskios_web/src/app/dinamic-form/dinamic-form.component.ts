@@ -2,6 +2,7 @@ import { Component} from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormField } from '../models/form-field';
 import { ApiService } from '../services/api.service';
+import { response } from 'express';
 
 @Component({
   selector: 'dinamic-form',
@@ -14,6 +15,8 @@ export class DinamicFormComponent{
 
   form: FormGroup;
   fields: FormField[] = [];
+  model!: string;
+  csrf!: string;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -24,9 +27,11 @@ export class DinamicFormComponent{
   }
 
   loadSchema(model: string): void{
+    this.model = model;
     this.form = this.formBuilder.group({});
-    this.api.getFormSchema(model).subscribe(fieldsReceived => {
-      this.fields = fieldsReceived;
+    this.api.getFormSchema(model, ).subscribe(fieldsReceived => {
+      this.fields = fieldsReceived.campos;
+      this.csrf = fieldsReceived.token;
       this.buildForm();
     });
   }
@@ -63,6 +68,10 @@ export class DinamicFormComponent{
     if (this.form.valid) {
       console.log('Formulario enviado:', this.form.value);
       // Enviar datos a la API
+      this.api.postForm(this.form.value, this.model, this.csrf).subscribe(response => {
+        console.log(response);
+      });
+
     } else {
       this.form.markAllAsTouched();  
       console.error('Formulario no válido');
