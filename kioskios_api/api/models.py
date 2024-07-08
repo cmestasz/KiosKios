@@ -5,26 +5,27 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 
 
 class UsuarioManager(BaseUserManager):
-    def create_user(self, username, telefono, password):
-        if not username:
+    def create_user(self, email, telefono, password):
+        if not email:
             raise ValueError('Ingrese un correo electrónico')
         if not telefono:
             raise ValueError('Ingrese un número de teléfono')
         if not password:
             raise ValueError('Ingrese una contraseña')
         usuario = self.model(
-            username=self.normalize_email(username),
+            username=self.normalize_email(email),
             telefono=telefono
         )
         usuario.set_password(password)
         usuario.save(using=self._db)
         return usuario
 
-    def create_superuser(self, username, email, password=None):
-        usuario = self.create_user(username, '000000000', password)
+    def create_superuser(self, email, password=None):
+        usuario = self.create_user(email, '000000000', password)
         usuario.is_admin = True
         usuario.is_staff = True
         usuario.is_superuser = True
+        usuario.tipo = Usuario.Types.ADMIN
         usuario.save(using=self._db)
         return usuario
 
@@ -36,14 +37,15 @@ class Usuario(AbstractUser):
         ADMIN = 'AD', 'Administrador'
 
 
-    username = models.EmailField(unique=True)
+    email = models.EmailField(unique=True)
     telefono = models.CharField(max_length=9)
     yape_qr = models.ImageField(upload_to='yape_qrs/', blank=True, null=True)
     tipo = models.CharField(max_length=2, choices=Types.choices, default=Types.USUARIO)
 
     objects = UsuarioManager()
 
-    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = []
+    USERNAME_FIELD = 'email'
 
 
 class Tienda(models.Model):
