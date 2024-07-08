@@ -15,22 +15,14 @@ urlpatterns = [
     path('rest/', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
-    path('test_get_usuarios/', views.TestUsuarios.as_view(), name='test_get_usuarios'),
-    path('test_create_usuario/', views.TestCreateUsuario.as_view(), name='test_create_usuario'),
-    path('test_iniciar_sesion/', views.TestIniciarSesion.as_view(), name='test_iniciar_sesion'),
-    path('test_cerrar_sesion/', views.TestCerrarSesion.as_view(), name='test_cerrar_sesion'),
-
-    path('forms_test/', views.forms_test, name='forms_test'),
-    path('iniciar_sesion/', views.iniciar_sesion, name='iniciar_sesion'),
-    path('cerrar_sesion/', views.cerrar_sesion, name='cerrar_sesion'),
-    path('create_usuario/', views.create_usuario, name='create_usuario'),
-    path('create_dueño/', views.create_dueño, name='create_dueño'),
-    path('create_tienda/', views.create_tienda, name='create_tienda'),
-    path('get_tiendas/', views.get_tiendas, name='get_tiendas'),
-    path('create_producto/', views.create_producto, name='create_producto'),
-    path('get_productos/', views.get_productos, name='get_productos'),
-    path('create_venta/', views.create_venta, name='create_venta'),
-    path('get_ventas/', views.get_ventas, name='get_ventas_dueño'),
-
-    path('get_usuarios/', views.get_usuarios, name='get_usuarios'),  # ELIMINAR
+    path('iniciar_sesion/', views.IniciarSesion.as_view()),
+    path('cerrar_sesion/', views.CerrarSesion.as_view()),
+    path('crear_usuario/', views.CrearUsuario.as_view()),
+    path('crear_tienda/', views.CrearTienda.as_view()),
+    path('crear_producto/', views.CrearProducto.as_view()),
+    path('crear_venta/', views.CrearVenta.as_view()),
+    path('get_usuarios/', views.GetUsuarios.as_view()),
+    path('get_tiendas/', views.GetTiendas.as_view()),
+    path('get_productos/', views.GetProductos.as_view()),
+    path('get_ventas/', views.GetVentas.as_view()),
 ]
