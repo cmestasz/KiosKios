@@ -203,3 +203,13 @@ cython_debug/
 # End of https://www.toptal.com/developers/gitignore/api/django,angular
 
 .vscode/
+
+
+_minted-Informe/
+Informe.aux
+Informe.log
+Informe.out
+Informe.toc
+Informe.fls
+Informe.synctex.gz
+Informe.fdb_latexmk
