@@ -15,7 +15,7 @@ class UsuarioForm(ModelForm):
 
     class Meta:
         model = Usuario
-        fields = ['username', 'telefono', 'password1', 'password2']
+        fields = ['email', 'telefono', 'password1', 'password2']
 
     def clean_telefono(self):
         telefono = self.cleaned_data.get('telefono')
@@ -23,6 +23,7 @@ class UsuarioForm(ModelForm):
             raise forms.ValidationError('Ingrese un número de teléfono')
         if len(telefono) != 9:
             raise forms.ValidationError('Ingrese un número de teléfono válido')
+        return telefono
 
     def clean_password2(self):
         password1 = self.cleaned_data.get('password1')
@@ -41,7 +42,7 @@ class UsuarioForm(ModelForm):
 class DueñoForm(UsuarioForm):
     class Meta:
         model = Usuario
-        fields = ['username', 'telefono', 'password1', 'password2', 'yape_qr']
+        fields = ['email', 'telefono', 'password1', 'password2', 'yape_qr']
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -73,7 +74,7 @@ class AdminForm(UsuarioForm):
 class TiendaForm(ModelForm):
     class Meta:
         model = Tienda
-        fields = '__all__'
+        fields = ['nombre', 'descripcion', 'categoria', 'latitud', 'longitud']
 
 class ProductoForm(ModelForm):
     class Meta:
@@ -84,4 +85,4 @@ class ProductoForm(ModelForm):
 class VentaForm(ModelForm):
     class Meta:
         model = Venta
-        fields = '__all__'
+        fields = ['producto', 'cantidad']

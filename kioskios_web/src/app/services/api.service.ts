@@ -18,7 +18,6 @@ export class ApiService {
     const httpOptions = {
       headers: new HttpHeaders({ 
         'Content-Type': 'application/json',
-        'X-CSRFToken': token
         //'Authorization':'authkey',
         //'userid':'1'
       })
@@ -38,12 +37,13 @@ export class ApiService {
     };
     return this.http.get<{status: number, campos: FormField[], token: string}>(url, httpOptions).pipe(
       map(response => {
-        if(response.status != 200) 
+        if(response.status != 200)
           throw new Error("No autorizado")
         const resp = {
           campos: response.campos,
           token: response.token
         }
+        console.log(resp);
         return resp;
       }),
       catchError(error => {

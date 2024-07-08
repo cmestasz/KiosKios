@@ -1,18 +1,28 @@
 from django.urls import path
 from . import views
+from rest_framework import routers
+from .viewsets import UsuarioViewSet, TiendaViewSet, ProductoViewSet, VentaViewSet
+from django.urls import include
+
+router = routers.DefaultRouter()
+router.register(r'usuarios', UsuarioViewSet)
+router.register(r'tiendas', TiendaViewSet)
+router.register(r'productos', ProductoViewSet)
+router.register(r'ventas', VentaViewSet)
+
 
 urlpatterns = [
-    path('forms_test/', views.forms_test, name='forms_test'),
-    path('iniciar_sesion/', views.iniciar_sesion, name='iniciar_sesion'),
-    path('cerrar_sesion/', views.cerrar_sesion, name='cerrar_sesion'),
-    path('create_usuario/', views.create_usuario, name='create_usuario'),
-    path('create_dueño/', views.create_dueño, name='create_dueño'),
-    path('create_tienda/', views.create_tienda, name='create_tienda'),
-    path('get_tiendas/', views.get_tiendas, name='get_tiendas'),
-    path('create_producto/', views.create_producto, name='create_producto'),
-    path('get_productos/', views.get_productos, name='get_productos'),
-    path('create_venta/', views.create_venta, name='create_venta'),
-    path('get_ventas/', views.get_ventas, name='get_ventas_dueño'),
+    path('rest/', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
-    path('get_usuarios/', views.get_usuarios, name='get_usuarios'), # ELIMINAR
+    path('iniciar_sesion/', views.IniciarSesion.as_view()),
+    path('cerrar_sesion/', views.CerrarSesion.as_view()),
+    path('crear_usuario/', views.CrearUsuario.as_view()),
+    path('crear_tienda/', views.CrearTienda.as_view()),
+    path('crear_producto/', views.CrearProducto.as_view()),
+    path('crear_venta/', views.CrearVenta.as_view()),
+    path('get_usuarios/', views.GetUsuarios.as_view()),
+    path('get_tiendas/', views.GetTiendas.as_view()),
+    path('get_productos/', views.GetProductos.as_view()),
+    path('get_ventas/', views.GetVentas.as_view()),
 ]

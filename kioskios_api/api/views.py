@@ -1,188 +1,210 @@
 from django.shortcuts import render
 from django.urls import reverse
 from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
 from .forms import UsuarioForm, DueñoForm, TiendaForm, ProductoForm, VentaForm, LoginForm, LogoutForm
 from .models import Tienda, Producto, Venta, Usuario
-from .decorators import api_login_required
-from .serializers import form_serializer, model_serializer
+from .serializers import UsuarioSerializer, TiendaSerializer, ProductoSerializer, VentaSerializer, form_serializer
 from django.contrib.auth import authenticate, login, logout
 from django.middleware.csrf import get_token
-
+from rest_framework.views import APIView
+import requests
 # Create your views here.
 
+MESSAGES = {
+    'correct': {'status': 200, 'message': 'Correcto'},
+    'created': {'status': 201, 'message': 'Creado'},
+    'no_login': {'status': 401, 'message': 'No permitido (inicia sesión para continuar)'},
+    'unallowed': {'status': 401, 'message': 'No permitido'},
+    'fields_error': {'status': 406, 'message': 'Error en los campos'},
+    'wrong_password': {'status': 406, 'message': 'Contraseña incorrecta'}
+}
 
-def forms_test(request):
-    context = {
-        'forms': [
-            {'form': LoginForm(), 'url': reverse('iniciar_sesion')},
-            {'form': LogoutForm(), 'url': reverse('cerrar_sesion')},
-            {'form': UsuarioForm(), 'url': reverse('create_usuario')},
-            {'form': DueñoForm(), 'url': reverse('create_dueño')},
-            {'form': TiendaForm(), 'url': reverse('create_tienda')},
-            {'form': ProductoForm(), 'url': reverse('create_producto')},
-            {'form': VentaForm(), 'url': reverse('create_venta')},
-        ]
-    }
-    return render(request, 'forms_test.html', context)
 
-def iniciar_sesion(request):
-    if request.method == 'POST':
-        form = LoginForm(request.POST)
-        print(form)
+def verify_login(request):
+    if request.user.is_authenticated:
+        return True
+    return False
+
+
+def process_create_form(request, form):
+    if form.is_valid():
+        form.save()
+        return JsonResponse(MESSAGES['created'])
+    return JsonResponse(MESSAGES['fields_error'])
+
+
+def send_create_form(request, form):
+    response = JsonResponse({
+        'status': 200,
+        'campos': form_serializer(form)
+    })
+    return response
+
+def is_user(request):
+    return request.user.tipo == 'US'
+
+def is_owner(request):
+    return request.user.tipo == 'DU'
+
+def is_admin(request):
+    return request.user.tipo == 'AD'
+
+
+# TODO :admin forms
+
+
+
+class IniciarSesion(APIView):
+    def post(self, request, format=None):
+        form = LoginForm(request.data)
         if form.is_valid():
             user = authenticate(
                 request, username=form.cleaned_data['username'], password=form.cleaned_data['password'])
             if user:
                 login(request, user)
-                return JsonResponse({'status': 200, 'message': 'Sesión iniciada',})
-            return JsonResponse({'status': 406, 'message': 'Contraseña incorrecta',})
-    json = {
-        'status': 200,
-        'token': get_token(request),
-        'campos': form_serializer(LoginForm())
-    }
-    return JsonResponse(json)
+                return JsonResponse(MESSAGES['correct'])
+            return JsonResponse(MESSAGES['wrong_password'])
+        return JsonResponse(MESSAGES['fields_error'])
+
+    def get(self, request, format=None):
+        response = JsonResponse({
+            'status': 200,
+            'campos': form_serializer(LoginForm())
+        })
+        return response
 
 
-@api_login_required
-def cerrar_sesion(request):
-    if request.method == 'POST':
-        logout(request)
-        return JsonResponse({'status': 200, 'message': 'Sesión cerrada',})
-    return JsonResponse({'status': 403, 'errors': 'No permitido',})
+class CerrarSesion(APIView):
+    def post(self, request, format=None):
+        if verify_login(self, request):
+            logout(request)
+            return JsonResponse(MESSAGES['correct'])
+        return JsonResponse(MESSAGES['no_login'])
+
+    def get(self, request, format=None):
+        if verify_login(self, request):
+            response = JsonResponse({
+                'status': 200,
+                'campos': form_serializer(LogoutForm())
+            })
+            return response
+        return JsonResponse(MESSAGES['no_login'])
 
 
-def create_usuario(request):
-    if request.method == 'POST':
-        form = UsuarioForm(request.POST)
+class CreateUsuario(APIView):
+    def post(self, request, format=None):
+        form = UsuarioForm(request.data)
+        return process_create_form(self, request, form)
+
+    def get(self, request, format=None):
+        return send_create_form(self, request, UsuarioForm())
+
+
+class CreateDueño(APIView):
+    def post(self, request, format=None):
+        form = DueñoForm(request.data)
+        return process_create_form(self, request, form)
+
+    def get(self, request, format=None):
+        return send_create_form(self, request, DueñoForm())
+
+
+class CreateTienda(APIView):
+    def post(self, request, format=None):
+        if (not is_owner(request)):
+            return JsonResponse(MESSAGES['unallowed'])
+        form = TiendaForm(request.data)
+
         if form.is_valid():
-            form.save()
-            return JsonResponse({'status': 201, 'message': 'Usuario creado',})
+            instance = form.save(commit=False)
+            instance.dueño = request.user
+            instance.save()
+            return JsonResponse(MESSAGES['created'])
+        return JsonResponse(MESSAGES['fields_error'])
 
-        print(form.errors)
-        return JsonResponse({'status': 406, 'message': 'Error en los campos'})
-    json = {
-        'status': 200,
-        'token': get_token(request),
-        'campos': form_serializer(UsuarioForm())
-    }
-    return JsonResponse(json)
+    def get(self, request, format=None):
+        if (not is_owner(request)):
+            return JsonResponse(MESSAGES['unallowed'])
+        return send_create_form(self, request, TiendaForm())
 
 
-def create_dueño(request):
-    if request.method == 'POST':
-        form = DueñoForm(request.POST, request.FILES)
+class CreateProducto(APIView):
+    def post(self, request, format=None):
+        if (not is_owner(request)):
+            return JsonResponse(MESSAGES['unallowed'])
+        form = ProductoForm(request.data)
+        return process_create_form(self, request, form)
+
+    def get(self, request, format=None):
+        if (not is_owner(request)):
+            return JsonResponse(MESSAGES['unallowed'])
+        form = ProductoForm()
+        form.fields['tienda'].queryset = Tienda.objects.filter(
+            dueño=request.user)
+        return send_create_form(self, request, form)
+
+
+class CreateVenta(APIView):
+    def post(self, request, format=None):
+        if (not is_user(request)):
+            return JsonResponse(MESSAGES['unallowed'])
+        form = VentaForm(request.data)
+
         if form.is_valid():
-            form.save()
-            return JsonResponse({'status': 201, 'message': 'Dueño creado',})
-        
-        print(form.errors)
-        return JsonResponse({'status': 406, 'message': 'Error en los campos'})
-    json = {
-        'status': 200,
-        'token': get_token(request),
-        'campos': form_serializer(DueñoForm())
-    }
-    return JsonResponse(json)
+            instance = form.save(commit=False)
+            instance.usuario = request.user
+            instance.save()
+            return JsonResponse(MESSAGES['created'])
+        return JsonResponse(MESSAGES['fields_error'])
+
+    def get(self, request, format=None):
+        if (not is_user(request)):
+            return JsonResponse(MESSAGES['unallowed'])
+        form = VentaForm()
+        form.fields['producto'].queryset = Producto.objects.filter(
+            tienda=request.json()['tienda'])
+        return send_create_form(self, request, VentaForm())
 
 
-@api_login_required
-def create_tienda(request):
-    if request.method == 'POST':
-        form = TiendaForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return JsonResponse({'status': 201, 'message': 'Tienda creada',})
-        
-        print(form.errors)
-        return JsonResponse({'status': 406, 'message': 'Error en los campos'})
-    json = {
-        'status': 200,
-        'token': get_token(request),
-        'campos': form_serializer(TiendaForm())
-    }
-    return JsonResponse(json)
+class GetUsuarios(APIView):
+    def post(self, request, format=None):
+        usuarios = Usuario.objects.all()
+        serializer = UsuarioSerializer(
+            usuarios, many=True, context={'request': request})
+        return JsonResponse({'status': 200, 'usuarios': serializer.data}, safe=False)
 
 
-@api_login_required
-def get_tiendas(request):
-    if (request.user.tipo == 'DU'):
+class GetTiendas(APIView):
+    def post(self, request, format=None):
+        if (not is_owner(request)):
+            return JsonResponse(MESSAGES['unallowed'])
         tiendas = Tienda.objects.filter(dueño=request.user)
-    else:
-        tiendas = Tienda.objects.all()
-    json = {
-        'status': 200,
-        'tipo': 'DU' if request.user.tipo == 'DU' else 'AD',
-        'tiendas': [model_serializer(tienda) for tienda in tiendas]
-    }
-    return JsonResponse(json)
-
-
-@api_login_required
-def create_producto(request):
-    if request.method == 'POST':
-        form = ProductoForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return JsonResponse({'status': 200})
+        serializer = TiendaSerializer(
+            tiendas, many=True, context={'request': request})
+        return JsonResponse({'status': 200, 'tiendas': serializer.data}, safe=False)
+    
+class GetProductos(APIView):
+    def post(self, request, format=None):
+        if (is_user(request)):
+            productos = Producto.objects.filter(tienda=request.json()['tienda'])
+        elif (is_owner(request)):
+            productos = Producto.objects.filter(tienda__dueño=request.user)
+        else:
+            productos = Producto.objects.all()
         
-        print(form.errors)
-        return JsonResponse({'status': 406, 'message': 'Error en los campos'})
-    json = {
-        'status': 200,
-        'token': get_token(request),
-        'campos': form_serializer(ProductoForm())
-    }
-    return JsonResponse(json)
-
-
-@api_login_required
-def get_productos(request):
-    productos = Producto.objects.filter(tienda=request.json()['tienda'])
-    json = {
-        'status': 200,
-        'productos': [model_serializer(producto) for producto in productos]
-    }
-    return JsonResponse(json)
-
-
-@api_login_required
-def create_venta(request):
-    if request.method == 'POST':
-        form = VentaForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return JsonResponse({'status': 200})
+        serializer = ProductoSerializer(
+            productos, many=True, context={'request': request})
+        return JsonResponse({'status': 200, 'productos': serializer.data}, safe=False)
+    
+class GetVentas(APIView):
+    def post(self, request, format=None):
+        if (is_user(request)):
+            ventas = Venta.objects.filter(usuario=request.user)
+        elif (is_owner(request)):
+            ventas = Venta.objects.filter(producto__tienda__dueño=request.user)
+        else:
+            ventas = Venta.objects.all()
         
-        return JsonResponse({'status': 406, 'message': 'Error en los campos'})
-    json = {
-        'status': 200,
-        'campos': form_serializer(VentaForm())
-    }
-    return JsonResponse(json)
-
-
-@api_login_required
-def get_ventas(request):
-    if request.user.tipo == 'US':
-        ventas = Venta.objects.filter(usuario=request.user)
-    else:
-        ventas = Venta.objects.filter(producto__tienda__dueño=request.user)
-    json = {
-        'status': 200,
-        'ventas': [model_serializer(venta) for venta in ventas]
-    }
-    return JsonResponse(json)
-
-# ES DE PRUEBA, ELIMINAR EN PRODUCCION
-def get_usuarios(request):
-    usuarios = Usuario.objects.all()
-    json = {
-        'status': 200,
-        'usuarios': [model_serializer(usuario) for usuario in usuarios]
-    }
-    return JsonResponse(json)
-
-def get_errors(form_errors):
-    return [error for sublist in form_errors.values() for error in sublist]
+        serializer = VentaSerializer(
+            ventas, many=True, context={'request': request})
+        return JsonResponse({'status': 200, 'ventas': serializer.data}, safe=False)

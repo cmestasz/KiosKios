@@ -1,34 +1,34 @@
 from django import forms
 from django.forms import ModelForm
 from django.core import validators
-from django.core.serializers.json import DjangoJSONEncoder
-from django.db.models import Model
-from django.db.models.fields.files import ImageFieldFile
-from decimal import Decimal
+from rest_framework import serializers, viewsets
+from .models import Usuario, Tienda, Producto, Venta
 
 
-class CustomJSONEncoder(DjangoJSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, ImageFieldFile):
-            return obj.url if obj else None
-        if isinstance(obj, Decimal):
-            return float(obj)
-        return super().default(obj)
+class UsuarioSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Usuario
+        fields = ['id', 'username', 'password', 'telefono', 'tipo', 'yape_qr']
 
 
-def model_serializer(instance: Model, fields=None, exclude=None):
-    data = {}
-    for field in instance._meta.fields:
-        if (fields is None or field.name in fields) and (exclude is None or field.name not in exclude):
-            value = getattr(instance, field.name)
-            if isinstance(value, Model):
-                value = model_serializer(value)
-            elif isinstance(value, ImageFieldFile):
-                value = value.url if value else None
-            elif isinstance(value, Decimal):
-                value = float(value)
-            data[field.name] = value
-    return data
+class TiendaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tienda
+        fields = ['id', 'nombre', 'descripcion',
+                  'categoria', 'dueño', 'latitud', 'longitud']
+
+
+class ProductoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Producto
+        fields = ['id', 'nombre', 'descripcion',
+                  'precio', 'imagen', 'tienda', 'stock']
+
+
+class VentaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Venta
+        fields = ['id', 'usuario', 'producto', 'fecha', 'cantidad']
 
 
 def form_serializer(form: ModelForm):
