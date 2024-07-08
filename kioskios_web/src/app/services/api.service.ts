@@ -37,7 +37,7 @@ export class ApiService {
     };
     return this.http.get<{status: number, campos: FormField[], token: string}>(url, httpOptions).pipe(
       map(response => {
-        if(response.status != 200) 
+        if(response.status != 200)
           throw new Error("No autorizado")
         const resp = {
           campos: response.campos,

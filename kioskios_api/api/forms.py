@@ -74,7 +74,7 @@ class AdminForm(UsuarioForm):
 class TiendaForm(ModelForm):
     class Meta:
         model = Tienda
-        fields = '__all__'
+        fields = ['nombre', 'descripcion', 'categoria', 'latitud', 'longitud']
 
 class ProductoForm(ModelForm):
     class Meta:
@@ -85,4 +85,4 @@ class ProductoForm(ModelForm):
 class VentaForm(ModelForm):
     class Meta:
         model = Venta
-        fields = '__all__'
+        fields = ['producto', 'cantidad']

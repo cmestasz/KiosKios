@@ -17,6 +17,8 @@ urlpatterns = [
 
     path('test_get_usuarios/', views.TestUsuarios.as_view(), name='test_get_usuarios'),
     path('test_create_usuario/', views.TestCreateUsuario.as_view(), name='test_create_usuario'),
+    path('test_iniciar_sesion/', views.TestIniciarSesion.as_view(), name='test_iniciar_sesion'),
+    path('test_cerrar_sesion/', views.TestCerrarSesion.as_view(), name='test_cerrar_sesion'),
 
     path('forms_test/', views.forms_test, name='forms_test'),
     path('iniciar_sesion/', views.iniciar_sesion, name='iniciar_sesion'),

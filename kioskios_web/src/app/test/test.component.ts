@@ -15,7 +15,7 @@ export class TestComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     if(this.loaderForm)
-      this.loaderForm.createForm('test_create_usuario');
+      this.loaderForm.createForm('test_cerrar_sesion');
     else
       console.log("No se pudo cargar el formulario de login");
   }
