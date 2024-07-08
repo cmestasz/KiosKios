@@ -5,6 +5,34 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models import Model
 from django.db.models.fields.files import ImageFieldFile
 from decimal import Decimal
+from rest_framework import serializers, viewsets
+from .models import Usuario, Tienda, Producto, Venta
+
+
+class UsuarioSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Usuario
+        fields = ['url', 'username', 'password', 'telefono', 'tipo', 'yape_qr']
+
+
+class TiendaSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Tienda
+        fields = ['url', 'nombre', 'descripcion',
+                  'categoria', 'dueño', 'latitud', 'longitud']
+
+
+class ProductoSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Producto
+        fields = ['url', 'nombre', 'descripcion',
+                  'precio', 'imagen', 'tienda', 'stock']
+
+
+class VentaSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Venta
+        fields = ['url', 'usuario', 'producto', 'fecha', 'cantidad']
 
 
 class CustomJSONEncoder(DjangoJSONEncoder):

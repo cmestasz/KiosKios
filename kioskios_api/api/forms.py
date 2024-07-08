@@ -15,7 +15,7 @@ class UsuarioForm(ModelForm):
 
     class Meta:
         model = Usuario
-        fields = ['username', 'telefono', 'password1', 'password2']
+        fields = ['email', 'telefono', 'password1', 'password2']
 
     def clean_telefono(self):
         telefono = self.cleaned_data.get('telefono')
@@ -41,7 +41,7 @@ class UsuarioForm(ModelForm):
 class DueñoForm(UsuarioForm):
     class Meta:
         model = Usuario
-        fields = ['username', 'telefono', 'password1', 'password2', 'yape_qr']
+        fields = ['email', 'telefono', 'password1', 'password2', 'yape_qr']
 
     def save(self, commit=True):
         user = super().save(commit=False)

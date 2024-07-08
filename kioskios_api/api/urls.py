@@ -1,7 +1,20 @@
 from django.urls import path
 from . import views
+from rest_framework import routers
+from .viewsets import UsuarioViewSet, TiendaViewSet, ProductoViewSet, VentaViewSet
+from django.urls import include
+
+router = routers.DefaultRouter()
+router.register(r'usuarios', UsuarioViewSet)
+router.register(r'tiendas', TiendaViewSet)
+router.register(r'productos', ProductoViewSet)
+router.register(r'ventas', VentaViewSet)
+
 
 urlpatterns = [
+    path('rest/', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+
     path('forms_test/', views.forms_test, name='forms_test'),
     path('iniciar_sesion/', views.iniciar_sesion, name='iniciar_sesion'),
     path('cerrar_sesion/', views.cerrar_sesion, name='cerrar_sesion'),
@@ -14,5 +27,5 @@ urlpatterns = [
     path('create_venta/', views.create_venta, name='create_venta'),
     path('get_ventas/', views.get_ventas, name='get_ventas_dueño'),
 
-    path('get_usuarios/', views.get_usuarios, name='get_usuarios'), # ELIMINAR
+    path('get_usuarios/', views.get_usuarios, name='get_usuarios'),  # ELIMINAR
 ]
