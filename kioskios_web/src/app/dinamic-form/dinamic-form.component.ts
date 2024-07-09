@@ -30,8 +30,7 @@ export class DinamicFormComponent{
     this.model = model;
     this.form = this.formBuilder.group({});
     this.api.getFormSchema(model, ).subscribe(fieldsReceived => {
-      this.fields = fieldsReceived.campos;
-      this.csrf = fieldsReceived.token;
+      this.fields = fieldsReceived;
       this.buildForm();
     });
   }

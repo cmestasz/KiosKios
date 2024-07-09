@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, map, of } from 'rxjs';
 import { FormField } from '../models/form-field';
-import { FormGroup } from '@angular/forms';
 import { Form } from '../form';
 @Injectable({
   providedIn: 'root',
@@ -25,7 +24,7 @@ export class ApiService {
     return this.http.post<Form>(url, formtoSend, httpOptions);
   }
 
-  getFormSchema(formToGet : string) : Observable<{campos: FormField[], token: string}> {
+  getFormSchema(formToGet : string) : Observable<FormField[]> {
     const url = this.urlBaseApi + `/${formToGet}`;
     const httpOptions = {
       headers: new HttpHeaders({ 
@@ -35,16 +34,11 @@ export class ApiService {
         //'userid':'1'
       })
     };
-    return this.http.get<{status: number, campos: FormField[], token: string}>(url, httpOptions).pipe(
+    return this.http.get<{status: number, campos: FormField[]}>(url, httpOptions).pipe(
       map(response => {
         if(response.status != 200)
           throw new Error("No autorizado")
-        const resp = {
-          campos: response.campos,
-          token: response.token
-        }
-        console.log(resp);
-        return resp;
+        return response.campos;
       }),
       catchError(error => {
         throw error;
