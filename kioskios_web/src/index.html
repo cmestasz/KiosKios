@@ -13,5 +13,13 @@
   <div class="container">
     <app-root></app-root>
   </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById('menu-toggle').addEventListener('click', () => {
+        document.getElementById('nav-list').classList.toggle('active');
+        });
+    });
+</script>
 </body>
+
 </html>

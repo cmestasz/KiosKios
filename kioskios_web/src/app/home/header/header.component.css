@@ -2,7 +2,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5em 5%;
+    padding: 0.1em 4%;
     background: #fff;
     border-bottom: 1px solid #ddd;
     position: sticky;
@@ -10,6 +10,7 @@ header {
     width: 100%;
     z-index: 1000;
     box-sizing: border-box;
+    padding-top: -10px;
 }
 
 header .logo img {
@@ -27,7 +28,7 @@ nav ul {
 nav ul li a {
     text-decoration: none;
     color: #333;
-    padding: 0.5em 1em;
+    padding: 0.2em 1em;
     display: block;
     white-space: nowrap;
 }

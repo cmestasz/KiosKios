@@ -1,9 +1,11 @@
 import { Component, ElementRef, ViewChildren, QueryList } from '@angular/core';
+import { RouterLink} from '@angular/router';
+
 
 @Component({
   selector: 'home-banner',
   standalone: true,
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './banner.component.html',
   styleUrl: './banner.component.css',
 })
