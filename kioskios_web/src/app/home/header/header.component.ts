@@ -15,7 +15,7 @@ import { faCartShopping, faMagnifyingGlass, faBars } from '@fortawesome/free-sol
 export class HeaderComponent {
   isMenuOpen: boolean = false;
   constructor(library: FaIconLibrary){
-    library.addIcons(faCartShopping, faMagnifyingGlass, faBars);
+    library.addIcons(faCartShopping, faMagnifyingGlass);
   }
   
   toggleMenu() {

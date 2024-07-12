@@ -133,6 +133,12 @@
     margin-right: 10px;
 }
 
+.register {
+    color:#ffffff;
+    background-color:#ff9900 ;
+    border-radius: 10%;
+    padding: 10px;
+}
 /* Responsivo */
 @media (max-width: 768px) {
     .banner-text h1 {
