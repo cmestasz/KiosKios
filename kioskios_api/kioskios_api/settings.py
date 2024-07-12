@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-t3d4!i7dt-cd%%has+1#gfod0okdpd3^foow7l-au^*0-@b!1g
 DEBUG = True
 
 ALLOWED_HOSTS = [
-  "c682-179-6-146-160.ngrok-free.app",
+  '.vercel.app',
 ]
 
 CORS_ALLOW_HEADERS = (
