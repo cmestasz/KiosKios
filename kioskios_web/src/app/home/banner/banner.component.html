@@ -1,0 +1,30 @@
+<section class="banner">
+    <div class="slider">
+        <div #slide class="slide active" style="background-image: url('banner.png');">
+            <div class="banner-text">
+                <h1>Revisa los nuevos productos disponibles</h1>
+                <p>Encuentra los mejores precios de tus productos y ahorra inteligentemente.</p>
+                <button>Registrate Ya</button>
+            </div>
+        </div>
+        <div #slide class="slide" style="background-image: url('banner2.png');justify-content:flex-end;">
+            <div class="banner-text" style="color: black">
+            <h1>Revisa los nuevos productos disponibles</h1>
+                <p>Encuentra los mejores precios de tus productos y ahorra inteligentemente.</p>
+                <button>Registrate Ya</button>
+            </div>
+        </div>
+
+        <div #slide class="slide" style="background-image: url('banner3.png');">
+            <div class="banner-text" style="color: black;">
+                <h1>Revisa los nuevos productos disponibles</h1>
+                <p>Encuentra los mejores precios de tus productos y ahorra inteligentemente.</p>
+                <button>Registrate Ya</button>
+            </div>
+        </div>
+    </div>
+    <div class="controls">
+        <button (click)="prevSlide()">⟨</button>
+        <button (click)="nextSlide()">⟩</button>
+    </div>
+</section>

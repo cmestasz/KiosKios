@@ -11,7 +11,8 @@
       @case ('select') {
         <select  [formControlName]="field.name"
         >
-          <option value="" disabled selected>{{ field.attributes?.['placeholder'] || 'Seleccione una opción' }}</option>
+   
+        <option value="" disabled selected>{{ field.attributes?.['placeholder'] || 'Seleccione una opción' }}</option>
           @for (option of field.options; track $index) {
             <option [value]="option.value">
               {{ option.label }}
