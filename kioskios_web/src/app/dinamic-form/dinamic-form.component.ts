@@ -69,6 +69,7 @@ export class DinamicFormComponent{
       // Enviar datos a la API
       this.api.postForm(this.form.value, this.model, this.csrf).subscribe(response => {
         console.log(response);
+        alert(response.message);
       });
 
     } else {
