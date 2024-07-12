@@ -1,8 +1,8 @@
 export const TYPE_FORMS = {
-  CREATE_USER: "create_usuario",
-  CREATE_OWNER: "create_dueño",
-  CREATE_STORE: "craete_tienda",
-  CREATE_PRODUCT: "create_producto",
-  CREATE_VENTA: "create_venta",
+  CREATE_USER: "crear_usuario",
+  CREATE_OWNER: "crear_dueño",
+  CREATE_STORE: "crear_tienda",
+  CREATE_PRODUCT: "crear_producto",
+  CREATE_VENTA: "crear_venta",
   LOGIN: "iniciar_sesion"
 };
