@@ -26,14 +26,14 @@ def verify_login(request):
     return False
 
 
-def process_create_form(request, form):
+def process_create_form(self, request, form):
     if form.is_valid():
         form.save()
         return JsonResponse(MESSAGES['created'])
     return JsonResponse(MESSAGES['fields_error'])
 
 
-def send_create_form(request, form):
+def send_create_form(self, request, form):
     response = JsonResponse({
         'status': 200,
         'campos': form_serializer(form)
