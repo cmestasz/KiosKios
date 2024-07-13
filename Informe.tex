@@ -235,23 +235,23 @@
 	\caption{serializers.py}
 	\inputminted[breaklines]{Python}{kioskios_api/api/serializers.py}
 	\begin{itemize}
-		\item Se crea el serializador para formularios, que puede convertir todos los campos del formulario en un JSON.
-		\item Se crea el serializador para los modelos, que puede convertir todos los campos del modelo en un JSON.
-	\end{itemize}
-
-	\caption{decorators.py}
-	\inputminted{Python}{kioskios_api/api/decorators.py}
-	\begin{itemize}
-		\item Se crea el decorador \textbf{api\_login\_required} para verificar si el usuario está autenticado al hacer las peticiones por api.
+		\item Se usan los serializadores de Django Rest Framework para los modelos \textbf{Usuario}, \textbf{Dueño}, \textbf{Admin}, \textbf{Tienda}, \textbf{Producto} y \textbf{Venta}.
+		\item Adicionalmente, se crea un serializador de formularios para poder enviar los datos de los formularios por api.
 	\end{itemize}
 
 	\caption{views.py}
 	\inputminted[breaklines]{Python}{kioskios_api/api/views.py}
 	\begin{itemize}
 		\item Se crean las vistas para los formularios de \textbf{Usuario}, \textbf{Dueño}, \textbf{Admin}, \textbf{Tienda}, \textbf{Producto} y \textbf{Venta}.
-		\item También se crean las vistas para obtener los listados de los modelos de acuerdo al nivel de acceso.
+		\item También se crean las vistas que hacer uso de los viewsets para listar los objetos de los modelos.
 		\item Estas vistas retornan un JSON con los datos del formulario tras ser serializados y reciben las respuestas del form.
 		\item Se crean las vistas \textbf{iniciar\_sesion} y \textbf{cerrar\_sesion} para el inicio y cierre de sesión.
+	\end{itemize}
+
+	\caption{viewsets.py}
+	\inputminted{Python}{kioskios_api/api/viewsets.py}
+	\begin{itemize}
+		\item Se crean los viewset para listar los objetos de los modelos \textbf{Usuario}, \textbf{Dueño}, \textbf{Admin}, \textbf{Tienda}, \textbf{Producto} y \textbf{Venta}.
 	\end{itemize}
 
 	\caption{urls.py}
@@ -313,22 +313,40 @@
 		\item Componente que se encarga de mostrar el footer de la página.
 	\end{itemize}
 
-	\caption[breaklines]{header.component.ts}
-	\inputminted{TypeScript}{kioskios_web/src/app/home/header/header.component.ts}
+	\caption{footer.component.html}
+	\inputminted[breaklines]{HTML}{kioskios_web/src/app/home/footer/footer.component.html}
+	\begin{itemize}
+		\item Plantilla del componente \textbf{footer}.
+	\end{itemize}
+
+	\caption{header.component.ts}
+	\inputminted[breaklines]{TypeScript}{kioskios_web/src/app/home/header/header.component.ts}
 	\begin{itemize}
 		\item Componente que se encarga de mostrar el header de la página.
 	\end{itemize}
 
-	\caption[breaklines]{nav.component.ts}
-	\inputminted{TypeScript}{kioskios_web/src/app/home/nav/nav.component.ts}
+	\caption{header.component.html}
+	\inputminted[breaklines]{HTML}{kioskios_web/src/app/home/header/header.component.html}
+	\begin{itemize}
+		\item Plantilla del componente \textbf{header}.
+	\end{itemize}
+
+	\caption{nav.component.ts}
+	\inputminted[breaklines]{TypeScript}{kioskios_web/src/app/home/nav/nav.component.ts}
 	\begin{itemize}
 		\item Componente que se encarga de mostrar la barra de navegación de la página.
 	\end{itemize}
 
-	\caption[breaklines]{banner.component.ts}
-	\inputminted{TypeScript}{kioskios_web/src/app/home/banner/banner.component.ts}
+	\caption{banner.component.ts}
+	\inputminted[breaklines]{TypeScript}{kioskios_web/src/app/home/banner/banner.component.ts}
 	\begin{itemize}
 		\item Componente que se encarga de mostrar el banner de la página.
+	\end{itemize}
+
+	\caption{banner.component.html}
+	\inputminted[breaklines]{HTML}{kioskios_web/src/app/home/banner/banner.component.html}
+	\begin{itemize}
+		\item Plantilla del componente \textbf{banner}.
 	\end{itemize}
 
 	\caption{home.component.ts}
@@ -342,7 +360,7 @@
 	\inputminted{HTML}{kioskios_web/src/app/home/home.component.html}
 	\begin{itemize}
 		\item Plantilla del componente \textbf{home}.
-		\item Se muestran los componentes \textbf{header}, \textbf{nav} y \textbf{footer}.
+		\item Desde aquí se puede acceder a las demás páginas de la aplicación.
 	\end{itemize}
 \end{block}
 
@@ -400,7 +418,6 @@
 	\inputminted[breaklines]{TypeScript}{kioskios_web/src/app/services/auth-interceptor.service.ts}
 	\begin{itemize}
 		\item Servicio que se encarga de interceptar las peticiones al backend.
-		\item Se encarga de enviar el token de autenticación en las peticiones.
 	\end{itemize}
 \end{block}
 
@@ -447,6 +464,11 @@
 	\caption{Lista de commits.}
 \end{figure}
 \pagebreak
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\textwidth,keepaspectratio]{img/commits4.png}
+	\caption{Lista de commits.}
+\end{figure}
 \pagebreak
 
 \section{URL del repositorio en GitHub}
@@ -456,7 +478,7 @@
 
 \section{Enlace al video}
 \begin{itemize}
-	\item \url{https://youtu.be/uV5e1j8fDv0}
+	\item \url{https://youtu.be/SwXIicDCeu4}
 \end{itemize}
 
 \section{Estructura de laboratorio \itemPracticeNumber}
@@ -472,7 +494,6 @@ KiosKios/
 		|--- __init__.py
 		|--- admin.py
 		|--- apps.py
-		|--- decorators.py
 		|--- forms.py
 		|--- migrations
 		|--- models.py
@@ -480,6 +501,7 @@ KiosKios/
 		|--- tests.py
 		|--- urls.py
 		|--- views.py
+		|--- viewsets.py
 	|--- kioskios_api
 		|--- __init__.py
 		|--- settings.py
@@ -503,12 +525,15 @@ KiosKios/
 			|--- home
 				|--- footer
 					|--- footer.component.ts
+					|--- footer.component.html
 				|--- header
 					|--- header.component.ts
+					|--- header.component.html
 				|--- nav
 					|--- nav.component.ts
 				|--- banner
 					|--- banner.component.ts
+					|--- banner.component.html
 				|--- home.component.ts
 				|--- home.component.html
 				|--- home.component.css
@@ -541,6 +566,7 @@ KiosKios/
 	|--- commits1.png
 	|--- commits2.png
 	|--- commits3.png
+	|--- commits4.png
 \end{minted}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
