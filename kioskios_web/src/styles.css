@@ -18,14 +18,13 @@ html, body {
     min-height: 100vh;
 }
 
-header {
-}
-
 main {
     flex: 1;
-    padding: 20px;
 }
 
 footer {
     text-align: center;
+}
+header{
+    margin-top: 0px;
 }
