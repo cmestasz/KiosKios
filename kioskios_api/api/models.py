@@ -62,12 +62,24 @@ class Tienda(models.Model):
 
 
 class Producto(models.Model):
+    class Categories(models.TextChoices):
+        COMIDA = 'COM', 'Comida'
+        LIBRERIA = 'LIB', 'Librería'
+        SNACKS = 'SNA', 'Snacks'
+        BEBIDAS = 'BEB', 'Bebidas'
+        IMPRESIONES = 'IMP', 'Impresiones'
+        ELECTRONICOS = 'ELE', 'Electrónicos'
+        ASEO = 'ASE', 'Aseo'
+        OTROS = 'OTR', 'Otros'
+
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField()
     precio = models.DecimalField(max_digits=6, decimal_places=2)
     imagen = models.ImageField(upload_to='productos/', blank=True, null=True)
     tienda = models.ForeignKey(Tienda, on_delete=models.CASCADE)
     stock = models.PositiveIntegerField()
+    categoria = models.CharField(
+        max_length=3, choices=Categories.choices, default=Categories.OTROS)
 
 
 class Venta(models.Model):

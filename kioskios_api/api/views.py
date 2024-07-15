@@ -40,18 +40,20 @@ def send_create_form(self, request, form):
     })
     return response
 
+
 def is_user(request):
     return request.user.tipo == 'US'
 
+
 def is_owner(request):
     return request.user.tipo == 'DU'
+
 
 def is_admin(request):
     return request.user.tipo == 'AD'
 
 
 # TODO :admin forms
-
 
 
 class IniciarSesion(APIView):
@@ -183,20 +185,23 @@ class GetTiendas(APIView):
         serializer = TiendaSerializer(
             tiendas, many=True, context={'request': request})
         return JsonResponse({'status': 200, 'tiendas': serializer.data}, safe=False)
-    
+
+
 class GetProductos(APIView):
     def post(self, request, format=None):
         if (is_user(request)):
-            productos = Producto.objects.filter(tienda=request.json()['tienda'])
+            productos = Producto.objects.filter(
+                tienda=request.json()['tienda'])
         elif (is_owner(request)):
             productos = Producto.objects.filter(tienda__dueño=request.user)
         else:
             productos = Producto.objects.all()
-        
+
         serializer = ProductoSerializer(
             productos, many=True, context={'request': request})
         return JsonResponse({'status': 200, 'productos': serializer.data}, safe=False)
-    
+
+
 class GetVentas(APIView):
     def post(self, request, format=None):
         if (is_user(request)):
@@ -205,7 +210,28 @@ class GetVentas(APIView):
             ventas = Venta.objects.filter(producto__tienda__dueño=request.user)
         else:
             ventas = Venta.objects.all()
-        
+
         serializer = VentaSerializer(
             ventas, many=True, context={'request': request})
         return JsonResponse({'status': 200, 'ventas': serializer.data}, safe=False)
+
+
+class GetCategoriasProductos(APIView):
+    def post(self, request, format=None):
+        productos = []
+        json_productos = {
+            'COM': [],
+            'LIB': [],
+            'SNA': [],
+            'BEB': [],
+            'IMP': [],
+            'ELE': [],
+            'ASE': [],
+            'OTR': []
+        }
+        for category in Producto.Categories.choices:
+            productos.append(Producto.objects.filter(categoria=category[0]))
+            serializer = ProductoSerializer(
+                productos, many=True, context={'request': request})
+            json_productos[category[0]] = serializer.data
+        return JsonResponse({'status': 200, 'productos': json_productos}, safe=False)

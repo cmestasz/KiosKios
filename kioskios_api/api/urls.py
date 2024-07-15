@@ -25,4 +25,5 @@ urlpatterns = [
     path('get_tiendas/', views.GetTiendas.as_view()),
     path('get_productos/', views.GetProductos.as_view()),
     path('get_ventas/', views.GetVentas.as_view()),
+    path('get_categorias_productos/', views.GetCategoriasProductos.as_view()),
 ]
