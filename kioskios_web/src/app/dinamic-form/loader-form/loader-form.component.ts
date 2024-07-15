@@ -1,4 +1,4 @@
-import { Component, ComponentRef, ViewContainerRef } from '@angular/core';
+import { Component, ComponentRef, EventEmitter, Output, ViewContainerRef } from '@angular/core';
 import { DinamicFormComponent } from '../dinamic-form.component';
 import { TYPE_FORMS } from '../../constants';
 
@@ -11,6 +11,8 @@ import { TYPE_FORMS } from '../../constants';
 })
 export class LoaderFormComponent {
   private componentRef!: ComponentRef<DinamicFormComponent>;
+  @Output() formSubmitted: EventEmitter<void> = new EventEmitter();
+
 
   constructor(
     private viewContainer: ViewContainerRef,
@@ -24,6 +26,10 @@ export class LoaderFormComponent {
     this.componentRef = this.viewContainer.createComponent(DinamicFormComponent);
     if(this.componentRef && this.componentRef.instance){
       this.componentRef.instance.loadSchema(typeForm);
+      this.componentRef.instance.formSubmitted.subscribe(() => {
+        console.log("reemitiendo el evento");
+        this.formSubmitted.emit();
+      });
     }else{
       console.log("El componente no se ha podido cargar correctamente");
     }

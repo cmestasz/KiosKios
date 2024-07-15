@@ -5,27 +5,27 @@ from rest_framework import serializers, viewsets
 from .models import Usuario, Tienda, Producto, Venta
 
 
-class UsuarioSerializer(serializers.ModelSerializer):
+class UsuarioSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Usuario
-        fields = ['id', 'username', 'password', 'telefono', 'tipo', 'yape_qr']
+        fields = ['id', 'username', 'email', 'password', 'telefono', 'tipo', 'yape_qr']
 
 
-class TiendaSerializer(serializers.ModelSerializer):
+class TiendaSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Tienda
         fields = ['id', 'nombre', 'descripcion',
                   'categoria', 'dueño', 'latitud', 'longitud']
 
 
-class ProductoSerializer(serializers.ModelSerializer):
+class ProductoSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Producto
         fields = ['id', 'nombre', 'descripcion',
-                  'precio', 'imagen', 'tienda', 'stock']
+                  'precio', 'imagen', 'tienda', 'stock', 'categoria']
 
 
-class VentaSerializer(serializers.ModelSerializer):
+class VentaSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Venta
         fields = ['id', 'usuario', 'producto', 'fecha', 'cantidad']

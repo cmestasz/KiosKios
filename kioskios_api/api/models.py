@@ -50,6 +50,9 @@ class Usuario(AbstractUser):
     REQUIRED_FIELDS = []
     USERNAME_FIELD = 'email'
 
+    def __str__(self):
+        return self.email
+
 
 class Tienda(models.Model):
     nombre = models.CharField(max_length=100)
@@ -60,14 +63,32 @@ class Tienda(models.Model):
     latitud = models.DecimalField(max_digits=9, decimal_places=6)
     longitud = models.DecimalField(max_digits=9, decimal_places=6)
 
+    def __str__(self):
+        return self.nombre
+
 
 class Producto(models.Model):
+    class Categories(models.TextChoices):
+        COMIDA = 'COM', 'Comida'
+        LIBRERIA = 'LIB', 'Librería'
+        SNACKS = 'SNA', 'Snacks'
+        BEBIDAS = 'BEB', 'Bebidas'
+        IMPRESIONES = 'IMP', 'Impresiones'
+        ELECTRONICOS = 'ELE', 'Electrónicos'
+        ASEO = 'ASE', 'Aseo'
+        OTROS = 'OTR', 'Otros'
+
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField()
     precio = models.DecimalField(max_digits=6, decimal_places=2)
     imagen = models.ImageField(upload_to='productos/', blank=True, null=True)
     tienda = models.ForeignKey(Tienda, on_delete=models.CASCADE)
     stock = models.PositiveIntegerField()
+    categoria = models.CharField(
+        max_length=3, choices=Categories.choices, default=Categories.OTROS)
+    
+    def __str__(self):
+        return self.nombre
 
 
 class Venta(models.Model):
@@ -76,3 +97,6 @@ class Venta(models.Model):
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     fecha = models.DateTimeField(auto_now_add=True)
     cantidad = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f'{self.usuario} - {self.producto}'

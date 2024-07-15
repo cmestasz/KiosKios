@@ -1,8 +1,9 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { LoaderFormComponent } from '../dinamic-form/loader-form/loader-form.component';
 import { TYPE_FORMS } from '../constants';
 import { FooterComponent } from '../home/footer/footer.component';
 import { HeaderComponent } from '../home/header/header.component';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -16,11 +17,20 @@ export class LoginComponent implements AfterViewInit {
 
   @ViewChild(LoaderFormComponent) loaderForm!: LoaderFormComponent;
 
+  constructor(private router: Router) {}
+
   ngAfterViewInit(): void {
-    if(this.loaderForm)
+    if(this.loaderForm){
       this.loaderForm.createForm(TYPE_FORMS.LOGIN);
-    else
+      this.loaderForm.formSubmitted.subscribe(() => {
+        this.router.navigate(['/']);
+      });
+    }else{
       console.log("No se pudo cargar el formulario de login");
+    }
   }
+  
+
+
 
 }
