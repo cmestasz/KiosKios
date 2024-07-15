@@ -5,6 +5,7 @@ import { FooterComponent } from '../home/footer/footer.component';
 import { HeaderComponent } from '../home/header/header.component';
 import { Router, RouterLink } from '@angular/router';
 import { Response } from '../models/response';
+import { GoogleAuthService } from '../services/google-auth.service';
 
 
 @Component({
@@ -18,7 +19,7 @@ export class LoginComponent implements AfterViewInit {
 
   @ViewChild(LoaderFormComponent) loaderForm!: LoaderFormComponent;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: GoogleAuthService) {}
 
   ngAfterViewInit(): void {
     if (this.loaderForm){
@@ -34,6 +35,10 @@ export class LoginComponent implements AfterViewInit {
     }else{
       console.log("No se pudo cargar el formulario de login");
     }
+  }
+
+  signInWithGoogle() {
+    this.authService.login();
   }
   
 
