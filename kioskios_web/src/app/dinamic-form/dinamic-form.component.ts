@@ -16,7 +16,6 @@ export class DinamicFormComponent{
   form: FormGroup;
   fields: FormField[] = [];
   model!: string;
-  csrf!: string;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -67,7 +66,7 @@ export class DinamicFormComponent{
     if (this.form.valid) {
       console.log('Formulario enviado:', this.form.value);
       // Enviar datos a la API
-      this.api.postForm(this.form.value, this.model, this.csrf).subscribe(response => {
+      this.api.postForm(this.form.value, this.model).subscribe(response => {
         console.log(response);
         alert(response.message);
       });

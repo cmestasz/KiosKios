@@ -12,7 +12,7 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  postForm(formtoSend: Form, to: string, token: string):Observable<any>{
+  postForm(formtoSend: Form, to: string):Observable<any>{
     const url = this.urlBaseApi + `/${to}/`;
     const httpOptions = {
       headers: new HttpHeaders({ 
