@@ -14,12 +14,20 @@
   </div>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-        document.getElementById('menu-toggle').addEventListener('click', () => {
-        document.getElementById('nav-list').classList.toggle('active');
-        });
+      const menuToggle = document.querySelector('.menu-toggle');
+      const nav = document.querySelector('.nav');
+  
+      menuToggle.addEventListener('click', () => {
+          nav.classList.toggle('active');
+      });
+  
+      document.addEventListener('click', (event) => {
+          if (!nav.contains(event.target) && !menuToggle.contains(event.target)) {
+              nav.classList.remove('active');
+          }
+      });
     });
-</script>
+  </script>
 
 </body>
-
 </html>

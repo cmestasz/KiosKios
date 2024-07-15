@@ -2,15 +2,14 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.1em 4%;
+    padding: 0.5em 5%;
     background: #fff;
     border-bottom: 1px solid #ddd;
-    position: sticky;
+    position: fixed;
     top: 0;
     width: 100%;
     z-index: 1000;
     box-sizing: border-box;
-    padding-top: -10px;
 }
 
 header .logo img {
@@ -41,6 +40,7 @@ nav ul li .register {
     background-color: #ff9900;
     border-radius: 10%;
     padding: 10px;
+    max-width: 100px;
 }
 
 .busqueda {
@@ -66,6 +66,7 @@ nav ul li .register {
 
 .search-bar input {
     padding: 10px;
+    width: 80%;
     max-width: 500px;
     border: 1px solid #e2e2e2;
     border-radius: 4px;
@@ -75,7 +76,6 @@ nav ul li .register {
     margin-right: 10px;
 }
 
-/* Estilo del menú "hamburguesa" */
 .menu-toggle {
     display: none;
     font-size: 24px;
@@ -96,7 +96,7 @@ nav ul li .register {
     }
 
     .search-bar input {
-        width: calc(100% - 50px); /* Deja espacio para el botón */
+        width: calc(100% - 50px); 
     }
 }
 
@@ -110,6 +110,7 @@ nav ul li .register {
         width: 100%;
         display: flex;
         justify-content: space-between;
+        align-items: center;
     }
 
     .header-right {
@@ -119,11 +120,7 @@ nav ul li .register {
     nav ul {
         flex-direction: column;
         width: 100%;
-        display: none;
-    }
-
-    nav ul.active {
-        display: flex;
+        /*display: none;*/
     }
 
     nav ul li {
@@ -145,10 +142,36 @@ nav ul li .register {
     }
 
     .search-bar input {
-        width: calc(100% - 50px); /* Deja espacio para el botón */
+        width: calc(100% - 50px); 
     }
 
     .menu-toggle {
         display: block;
     }
+    .nav {
+        position: absolute;
+        top: 100%;
+        right: 4%;
+        background: #fff;
+        border: 1px solid #ddd;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 1001;
+        width: 200px;
+        
+    }
+    
+    .nav.active {
+        display: flex;
+    }
+    .register{
+        align-self: center;
+        margin-left: 30px;
+    }
+    nav{
+        margin-right: 20px;
+    }
+    
 }
