@@ -218,7 +218,6 @@ class GetVentas(APIView):
 
 class GetCategoriasProductos(APIView):
     def post(self, request, format=None):
-        productos = []
         json_productos = {
             'COM': [],
             'LIB': [],
@@ -230,7 +229,7 @@ class GetCategoriasProductos(APIView):
             'OTR': []
         }
         for category in Producto.Categories.choices:
-            productos.append(Producto.objects.filter(categoria=category[0]))
+            productos = Producto.objects.filter(categoria=category[0])
             serializer = ProductoSerializer(
                 productos, many=True, context={'request': request})
             json_productos[category[0]] = serializer.data
