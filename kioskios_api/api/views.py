@@ -1,15 +1,16 @@
-from django.shortcuts import render
-from django.urls import reverse
-from django.http import JsonResponse
-from .forms import UsuarioForm, DueñoForm, TiendaForm, ProductoForm, VentaForm, LoginForm, LogoutForm, TiendaFormAdmin, ProductoFormAdmin, VentaFormAdmin
-from .models import Tienda, Producto, Venta, Usuario
-from .serializers import UsuarioSerializer, TiendaSerializer, ProductoSerializer, VentaSerializer, form_serializer
-from django.contrib.auth import authenticate, login, logout
-from django.middleware.csrf import get_token
 from rest_framework.views import APIView
-from django.views.decorators.csrf import csrf_exempt
-import requests
-# Create your views here.
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from django.contrib.auth import authenticate, login, logout
+from .forms import (
+    UsuarioForm, DueñoForm, TiendaForm, ProductoForm, VentaForm, LoginForm,
+    TiendaFormAdmin, ProductoFormAdmin
+)
+from .models import Tienda, Producto, Venta, Usuario
+from .serializers import (
+    UsuarioSerializer, TiendaSerializer, ProductoSerializer, VentaSerializer,
+    form_serializer
+)
 
 MESSAGES = {
     'correct': {'status': 200, 'message': 'Correcto'},
@@ -21,242 +22,239 @@ MESSAGES = {
 }
 
 
-def process_create_form(request, form):
-    if form.is_valid():
-        form.save()
-        return JsonResponse(MESSAGES['created'])
-    return JsonResponse(MESSAGES['fields_error'])
+def is_user(user):
+    return user.tipo == 'US'
 
 
-def send_create_form(request, form):
-    response = JsonResponse({
-        'status': 200,
-        'campos': form_serializer(form)
-    })
-    return response
+def is_owner(user):
+    return user.tipo == 'DU'
 
 
-def is_user(request):
-    return request.user.tipo == 'US'
+def is_admin(user):
+    return user.tipo == 'AD'
 
 
-def is_owner(request):
-    return request.user.tipo == 'DU'
-
-
-def is_admin(request):
-    return request.user.tipo == 'AD'
-
-
-# TODO :admin forms
-
-@csrf_exempt
-def iniciar_session(request):
-    if (request.method == 'POST'):
-        form = LoginForm(request.POST)
+class IniciarSessionView(APIView):
+    def post(self, request):
+        form = LoginForm(request.data)
         if form.is_valid():
             user = authenticate(
-                request, username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+                request, username=form.cleaned_data['username'], password=form.cleaned_data['password']
+            )
             if user:
                 login(request, user)
-                get_token(request)
-                return JsonResponse(MESSAGES['correct'].update({'user': UsuarioSerializer(user).data}))
-            return JsonResponse(MESSAGES['wrong_password'])
-        return JsonResponse(MESSAGES['fields_error'])
-    response = JsonResponse({
-        'status': 200,
-        'campos': form_serializer(LoginForm())
-    })
-    return response
+                return Response({**MESSAGES['correct'], 'user': UsuarioSerializer(user).data})
+            return Response(MESSAGES['wrong_password'])
+        return Response(MESSAGES['fields_error'])
+
+    def get(self, request):
+        return Response({'status': 200, 'campos': form_serializer(LoginForm())})
 
 
-def cerrar_session(request):
-    if request.user.is_authenticated:
+class CerrarSessionView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
         logout(request)
-        return JsonResponse(MESSAGES['correct'])
-    return JsonResponse(MESSAGES['no_login'])
+        return Response(MESSAGES['correct'])
 
-@csrf_exempt
-def crear_usuario(request):
-    if (request.method == 'POST'):
-        form = UsuarioForm(request.POST)
+
+class CrearUsuarioView(APIView):
+    def post(self, request):
+        form = UsuarioForm(request.data)
         if form.is_valid():
             form.save()
-            return JsonResponse(MESSAGES['created'])
-        return JsonResponse(MESSAGES['fields_error'])
-    return send_create_form(request, UsuarioForm())
+            return Response(MESSAGES['created'])
+        return Response(MESSAGES['fields_error'])
 
-@csrf_exempt
-def crear_dueño(request):
-    if (request.method == 'POST'):
-        form = DueñoForm(request.POST)
+    def get(self, request):
+        return Response({'status': 200, 'campos': form_serializer(UsuarioForm())})
+
+
+class CrearDueñoView(APIView):
+    def post(self, request):
+        form = DueñoForm(request.data)
         if form.is_valid():
             form.save()
-            return JsonResponse(MESSAGES['created'])
-        return JsonResponse(MESSAGES['fields_error'])
-    return send_create_form(request, DueñoForm())
+            return Response(MESSAGES['created'])
+        return Response(MESSAGES['fields_error'])
+
+    def get(self, request):
+        return Response({'status': 200, 'campos': form_serializer(DueñoForm())})
 
 
-def crear_tienda(request):
-    if (not is_owner(request)):
-        return JsonResponse(MESSAGES['unallowed'])
-    if (request.method == 'POST'):
-        form = TiendaForm(request.POST)
+class CrearTiendaView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        if not is_owner(request.user):
+            return Response(MESSAGES['unallowed'])
+        form = TiendaForm(request.data)
         if form.is_valid():
             instance = form.save(commit=False)
             instance.dueño = request.user
             instance.save()
-            return JsonResponse(MESSAGES['created'])
-        return JsonResponse(MESSAGES['fields_error'])
-    return send_create_form(request, TiendaForm())
+            return Response(MESSAGES['created'])
+        return Response(MESSAGES['fields_error'])
+
+    def get(self, request):
+        return Response({'status': 200, 'campos': form_serializer(TiendaForm())})
 
 
-def crear_producto(request):
-    if (not is_owner(request)):
-        return JsonResponse(MESSAGES['unallowed'])
-    if (request.method == 'POST'):
-        form = ProductoForm(request.POST, request.FILES)
+class CrearProductoView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        if not is_owner(request.user):
+            return Response(MESSAGES['unallowed'])
+        form = ProductoForm(request.data, request.FILES)
         if form.is_valid():
             form.save()
-            return JsonResponse(MESSAGES['created'])
-        return JsonResponse(MESSAGES['fields_error'])
-    return send_create_form(request, ProductoForm())
+            return Response(MESSAGES['created'])
+        return Response(MESSAGES['fields_error'])
+
+    def get(self, request):
+        return Response({'status': 200, 'campos': form_serializer(ProductoForm())})
 
 
-def crear_venta(request):
-    if (not is_user(request)):
-        return JsonResponse(MESSAGES['unallowed'])
-    if (request.method == 'POST'):
-        form = VentaForm(request.POST)
+class CrearVentaView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        if not is_user(request.user):
+            return Response(MESSAGES['unallowed'])
+        form = VentaForm(request.data)
         if form.is_valid():
             instance = form.save(commit=False)
             instance.usuario = request.user
             instance.save()
-            return JsonResponse(MESSAGES['created'])
-        return JsonResponse(MESSAGES['fields_error'])
-    return send_create_form(request, VentaForm())
+            return Response(MESSAGES['created'])
+        return Response(MESSAGES['fields_error'])
+
+    def get(self, request):
+        return Response({'status': 200, 'campos': form_serializer(VentaForm())})
 
 
-def get_tiendas(request):
-    if (not is_owner(request)):
-        return JsonResponse(MESSAGES['unallowed'])
-    if (request.method == 'POST'):
+class GetTiendasView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        if not is_owner(request.user):
+            return Response(MESSAGES['unallowed'])
         tiendas = Tienda.objects.filter(dueño=request.user)
         serializer = TiendaSerializer(
             tiendas, many=True, context={'request': request})
-        return JsonResponse({'status': 200, 'tiendas': serializer.data}, safe=False)
-    return JsonResponse(MESSAGES['unallowed'])
+        return Response({'status': 200, 'tiendas': serializer.data})
 
 
-def get_productos(request):
-    if (request.method == 'POST'):
-        if (is_user(request)):
+class GetProductosView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        if is_user(request.user):
             productos = Producto.objects.filter(
-                tienda=request.json()['tienda'])
-        elif (is_owner(request)):
+                tienda=request.data.get('tienda'))
+        elif is_owner(request.user):
             productos = Producto.objects.filter(tienda__dueño=request.user)
-
+        else:
+            return Response(MESSAGES['unallowed'])
         serializer = ProductoSerializer(
             productos, many=True, context={'request': request})
-        return JsonResponse({'status': 200, 'productos': serializer.data}, safe=False)
+        return Response({'status': 200, 'productos': serializer.data})
 
 
-def get_ventas(request):
-    if (request.method == 'POST'):
-        if (is_user(request)):
+class GetVentasView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        if is_user(request.user):
             ventas = Venta.objects.filter(usuario=request.user)
-        elif (is_owner(request)):
+        elif is_owner(request.user):
             ventas = Venta.objects.filter(producto__tienda__dueño=request.user)
-
+        else:
+            return Response(MESSAGES['unallowed'])
         serializer = VentaSerializer(
             ventas, many=True, context={'request': request})
-        return JsonResponse({'status': 200, 'ventas': serializer.data}, safe=False)
+        return Response({'status': 200, 'ventas': serializer.data})
 
 
-def get_categorias_productos(request):
-    if (request.method == 'POST'):
-        json_productos = {
-            'COM': [],
-            'LIB': [],
-            'SNA': [],
-            'BEB': [],
-            'IMP': [],
-            'ELE': [],
-            'ASE': [],
-            'OTR': []
-        }
+class GetCategoriasProductosView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        json_productos = {category[0]: []
+                          for category in Producto.Categories.choices}
         for category in Producto.Categories.choices:
             productos = Producto.objects.filter(categoria=category[0])
             serializer = ProductoSerializer(
                 productos, many=True, context={'request': request})
             json_productos[category[0]] = serializer.data
-        return JsonResponse({'status': 200, 'productos': json_productos}, safe=False)
-    return JsonResponse(MESSAGES['unallowed'])
+        return Response({'status': 200, 'productos': json_productos})
 
 
-def crear_tienda_admin(request):
-    if (not is_admin(request)):
-        return JsonResponse(MESSAGES['unallowed'])
-    if (request.method == 'POST'):
-        form = TiendaFormAdmin(request.POST)
+class CrearTiendaAdminView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def post(self, request):
+        form = TiendaFormAdmin(request.data)
         if form.is_valid():
             form.save()
-            return JsonResponse(MESSAGES['created'])
-        return JsonResponse(MESSAGES['fields_error'])
-    return send_create_form(request, TiendaFormAdmin())
+            return Response(MESSAGES['created'])
+        return Response(MESSAGES['fields_error'])
+
+    def get(self, request):
+        return Response({'status': 200, 'campos': form_serializer(TiendaFormAdmin())})
 
 
-def crear_producto_admin(request):
-    if (not is_admin(request)):
-        return JsonResponse(MESSAGES['unallowed'])
-    if (request.method == 'POST'):
-        form = ProductoFormAdmin(request.POST, request.FILES)
+class CrearProductoAdminView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def post(self, request):
+        form = ProductoFormAdmin(request.data, request.FILES)
         if form.is_valid():
             form.save()
-            return JsonResponse(MESSAGES['created'])
-        return JsonResponse(MESSAGES['fields_error'])
-    return send_create_form(request, ProductoFormAdmin())
+            return Response(MESSAGES['created'])
+        return Response(MESSAGES['fields_error'])
+
+    def get(self, request):
+        return Response({'status': 200, 'campos': form_serializer(ProductoFormAdmin())})
 
 
-def get_usuarios_admin(request):
-    if (not is_admin(request)):
-        return JsonResponse(MESSAGES['unallowed'])
-    if (request.method == 'POST'):
+class GetUsuariosAdminView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def post(self, request):
         usuarios = Usuario.objects.all()
         serializer = UsuarioSerializer(
             usuarios, many=True, context={'request': request})
-        return JsonResponse({'status': 200, 'usuarios': serializer.data}, safe=False)
-    return JsonResponse(MESSAGES['unallowed'])
+        return Response({'status': 200, 'usuarios': serializer.data})
 
 
-def get_tiendas_admin(request):
-    if (not is_admin(request)):
-        return JsonResponse(MESSAGES['unallowed'])
-    if (request.method == 'POST'):
+class GetTiendasAdminView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def post(self, request):
         tiendas = Tienda.objects.all()
         serializer = TiendaSerializer(
             tiendas, many=True, context={'request': request})
-        return JsonResponse({'status': 200, 'tiendas': serializer.data}, safe=False)
-    return JsonResponse(MESSAGES['unallowed'])
+        return Response({'status': 200, 'tiendas': serializer.data})
 
 
-def get_productos_admin(request):
-    if (not is_admin(request)):
-        return JsonResponse(MESSAGES['unallowed'])
-    if (request.method == 'POST'):
+class GetProductosAdminView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def post(self, request):
         productos = Producto.objects.all()
         serializer = ProductoSerializer(
             productos, many=True, context={'request': request})
-        return JsonResponse({'status': 200, 'productos': serializer.data}, safe=False)
-    return JsonResponse(MESSAGES['unallowed'])
+        return Response({'status': 200, 'productos': serializer.data})
 
 
-def get_ventas_admin(request):
-    if (not is_admin(request)):
-        return JsonResponse(MESSAGES['unallowed'])
-    if (request.method == 'POST'):
+class GetVentasAdminView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def post(self, request):
         ventas = Venta.objects.all()
         serializer = VentaSerializer(
             ventas, many=True, context={'request': request})
-        return JsonResponse({'status': 200, 'ventas': serializer.data}, safe=False)
-    return JsonResponse(MESSAGES['unallowed'])
+        return Response({'status': 200, 'ventas': serializer.data})

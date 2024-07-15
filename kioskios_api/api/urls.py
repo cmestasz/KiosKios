@@ -1,5 +1,11 @@
 from django.urls import path
-from . import views
+from .views import (
+    IniciarSessionView, CerrarSessionView, CrearUsuarioView, CrearDueñoView,
+    CrearTiendaView, CrearProductoView, CrearVentaView, GetTiendasView,
+    GetProductosView, GetVentasView, GetCategoriasProductosView,
+    CrearTiendaAdminView, CrearProductoAdminView, GetUsuariosAdminView,
+    GetTiendasAdminView, GetProductosAdminView, GetVentasAdminView
+)
 from rest_framework import routers
 from .viewsets import UsuarioViewSet, TiendaViewSet, ProductoViewSet, VentaViewSet
 from django.urls import include
@@ -14,19 +20,27 @@ router.register(r'ventas', VentaViewSet)
 urlpatterns = [
     path('rest/', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('iniciar_sesion/', views.iniciar_session),
-    path('cerrar_sesion/', views.cerrar_session),
-    path('crear_usuario/', views.crear_usuario),
-    path('crear_dueño/', views.crear_dueño),
-    path('crear_tienda/', views.crear_tienda),
-    path('crear_producto/', views.crear_producto),
-    path('crear_venta/', views.crear_venta),
-    path('get_tiendas/', views.get_tiendas),
-    path('get_productos/', views.get_productos),
-    path('get_ventas/', views.get_ventas),
-    path('get_categorias_productos/', views.get_categorias_productos),
-    path('crear_tienda_admin/', views.crear_tienda_admin),
-    path('crear_producto_admin/', views.crear_producto_admin),
-    path('get_usuarios_admin/', views.get_usuarios_admin),
-    path('get_tiendas_admin/', views.get_tiendas_admin),
+    path('iniciar_sesion/', IniciarSessionView.as_view(), name='iniciar_sesion'),
+    path('cerrar_sesion/', CerrarSessionView.as_view(), name='cerrar_sesion'),
+    path('crear_usuario/', CrearUsuarioView.as_view(), name='crear_usuario'),
+    path('crear_dueño/', CrearDueñoView.as_view(), name='crear_dueño'),
+    path('crear_tienda/', CrearTiendaView.as_view(), name='crear_tienda'),
+    path('crear_producto/', CrearProductoView.as_view(), name='crear_producto'),
+    path('crear_venta/', CrearVentaView.as_view(), name='crear_venta'),
+    path('get_tiendas/', GetTiendasView.as_view(), name='get_tiendas'),
+    path('get_productos/', GetProductosView.as_view(), name='get_productos'),
+    path('get_ventas/', GetVentasView.as_view(), name='get_ventas'),
+    path('get_categorias_productos/', GetCategoriasProductosView.as_view(),
+         name='get_categorias_productos'),
+    path('crear_tienda_admin/', CrearTiendaAdminView.as_view(),
+         name='crear_tienda_admin'),
+    path('crear_producto_admin/', CrearProductoAdminView.as_view(),
+         name='crear_producto_admin'),
+    path('get_usuarios_admin/', GetUsuariosAdminView.as_view(),
+         name='get_usuarios_admin'),
+    path('get_tiendas_admin/', GetTiendasAdminView.as_view(),
+         name='get_tiendas_admin'),
+    path('get_productos_admin/', GetProductosAdminView.as_view(),
+         name='get_productos_admin'),
+    path('get_ventas_admin/', GetVentasAdminView.as_view(), name='get_ventas_admin'),
 ]
