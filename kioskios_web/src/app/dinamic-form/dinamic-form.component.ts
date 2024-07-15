@@ -2,7 +2,7 @@ import { Component, EventEmitter, Output} from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormField } from '../models/form-field';
 import { ApiService } from '../services/api.service';
-import { response } from 'express';
+import { Response } from '../models/response';
 
 @Component({
   selector: 'dinamic-form',
@@ -12,7 +12,7 @@ import { response } from 'express';
   styleUrl: './dinamic-form.component.css'
 })
 export class DinamicFormComponent{
-  @Output() formSubmitted: EventEmitter<void> = new EventEmitter(); 
+  @Output() formSubmitted: EventEmitter<Response> = new EventEmitter(); 
   form: FormGroup;
   fields: FormField[] = [];
   model!: string;
@@ -66,12 +66,12 @@ export class DinamicFormComponent{
     if (this.form.valid) {
       console.log('Formulario enviado:', this.form.value);
       // Enviar datos a la API
-      this.api.postForm(this.form.value, this.model).subscribe(response => {
+      this.api.postForm(this.form.value, this.model).subscribe((response: Response) => {
         console.log(response);
         alert(response.message);
-        if (response.status == 201) {
+        if (response.status == 201 || response.status == 200) {
           console.log("emitiendo evento");
-          this.formSubmitted.emit();
+          this.formSubmitted.emit(response);
         }
       });
 
