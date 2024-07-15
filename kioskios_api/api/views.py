@@ -7,6 +7,7 @@ from .serializers import UsuarioSerializer, TiendaSerializer, ProductoSerializer
 from django.contrib.auth import authenticate, login, logout
 from django.middleware.csrf import get_token
 from rest_framework.views import APIView
+from django.views.decorators.csrf import csrf_exempt
 import requests
 # Create your views here.
 
@@ -49,7 +50,7 @@ def is_admin(request):
 
 # TODO :admin forms
 
-
+@csrf_exempt
 def iniciar_session(request):
     if (request.method == 'POST'):
         form = LoginForm(request.POST)
@@ -75,7 +76,7 @@ def cerrar_session(request):
         return JsonResponse(MESSAGES['correct'])
     return JsonResponse(MESSAGES['no_login'])
 
-
+@csrf_exempt
 def crear_usuario(request):
     if (request.method == 'POST'):
         form = UsuarioForm(request.POST)
@@ -85,7 +86,7 @@ def crear_usuario(request):
         return JsonResponse(MESSAGES['fields_error'])
     return send_create_form(request, UsuarioForm())
 
-
+@csrf_exempt
 def crear_dueño(request):
     if (request.method == 'POST'):
         form = DueñoForm(request.POST)
