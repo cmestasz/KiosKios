@@ -1,6 +1,5 @@
 import { Component, ComponentRef, EventEmitter, Output, ViewContainerRef } from '@angular/core';
 import { DinamicFormComponent } from '../dinamic-form.component';
-import { TYPE_FORMS } from '../../constants';
 import { Response } from '../../models/response';
 
 @Component({

@@ -3,14 +3,14 @@ import { LoaderFormComponent } from '../dinamic-form/loader-form/loader-form.com
 import { TYPE_FORMS } from '../constants';
 import { FooterComponent } from '../home/footer/footer.component';
 import { HeaderComponent } from '../home/header/header.component';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Response } from '../models/response';
 
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [LoaderFormComponent, FooterComponent, HeaderComponent],
+  imports: [LoaderFormComponent, FooterComponent, HeaderComponent, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
