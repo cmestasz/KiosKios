@@ -12,16 +12,9 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  postForm(formtoSend: Form, to: string):Observable<any>{
+  postForm(formtoSend: FormData, to: string):Observable<any>{
     const url = this.urlBaseApi + `/${to}/`;
-    const httpOptions = {
-      headers: new HttpHeaders({ 
-        'Content-Type': 'application/json',
-        //'Authorization':'authkey',
-        //'userid':'1'
-      })
-    };
-    return this.http.post<Form>(url, formtoSend, httpOptions);
+    return this.http.post<Form>(url, formtoSend);
   }
 
   getFormSchema(formToGet : string) : Observable<FormField[]> {
