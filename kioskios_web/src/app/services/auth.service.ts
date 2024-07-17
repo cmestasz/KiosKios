@@ -22,7 +22,11 @@ export class AuthService {
     if (isPlatformBrowser(platformid)) {
       const userData = localStorage.getItem('user');
       if (userData)
-        this.user = JSON.parse(userData);
+        try {
+          this.user = JSON.parse(userData);          
+        } catch (error) {
+          console.error("No se pudo obtener los datos de usuario desde el localstorage");
+        }
       this.googleAuth.getEmailObservable().subscribe(email => {
         if (email) {
           this.api.getUser(email).subscribe(response => {
@@ -31,7 +35,7 @@ export class AuthService {
             localStorage.setItem('user', JSON.stringify(response));
           });
         } else {
-          console.error('No se pudo obtener el correo elec  trónico del usuario.');
+          console.error('No se pudo obtener el correo electrónico del usuario.');
           this.userSubject.next(undefined);
         }
       });
