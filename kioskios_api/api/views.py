@@ -162,6 +162,12 @@ class GetProductosView(APIView):
             productos, many=True, context={'request': request})
         return Response({'status': 200, 'productos': serializer.data})
 
+class GetUsuarioByIdView(APIView):
+    # TODO: para quien es esto?
+    def post(self, request):
+        usuario = Usuario.objects.get(id=request.data.get('id'))
+        serializer = UsuarioSerializer(usuario)
+        return Response({'status': 200, 'usuario': serializer.data})
 
 class GetVentasView(APIView):
     permission_classes = [IsAuthenticated]

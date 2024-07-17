@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     IniciarSessionView, CerrarSessionView, CrearUsuarioView, CrearDueñoView,
     CrearTiendaView, CrearProductoView, CrearVentaView, GetTiendasView,
-    GetProductosView, GetVentasView, GetCategoriasProductosView,
+    GetProductosView, GetUsuarioByIdView, GetVentasView, GetCategoriasProductosView,
     CrearTiendaAdminView, CrearProductoAdminView, GetUsuariosAdminView,
     GetTiendasAdminView, GetProductosAdminView, GetVentasAdminView
 )
@@ -29,6 +29,7 @@ urlpatterns = [
     path('crear_venta/', CrearVentaView.as_view(), name='crear_venta'),
     path('get_tiendas/', GetTiendasView.as_view(), name='get_tiendas'),
     path('get_productos/', GetProductosView.as_view(), name='get_productos'),
+    path('get_usuario_by_id/', GetUsuarioByIdView.as_view(), name='get_usuario_by_id'),
     path('get_ventas/', GetVentasView.as_view(), name='get_ventas'),
     path('get_categorias_productos/', GetCategoriasProductosView.as_view(),
          name='get_categorias_productos'),
