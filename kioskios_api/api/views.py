@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from django.contrib.auth import authenticate, login, logout
+from django.core.exceptions import ObjectDoesNotExist
 from .forms import (
     UsuarioForm, DueñoForm, TiendaForm, ProductoForm, VentaForm, LoginForm,
     TiendaFormAdmin, ProductoFormAdmin
@@ -176,7 +177,10 @@ class GetUsuarioPorCorreoView(APIView):
         if not email:
             return Response({'status': 404, 'usuario': 'Usuario no encontrado'})
         email = email.strip()
-        usuario = Usuario.objects.get(email=email)
+        try:
+            usuario = Usuario.objects.get(email=email)
+        except ObjectDoesNotExist:
+            return Response({'status': 404, 'usuario': 'Usuario no encontrado'})
         serializer = UsuarioSerializer(usuario)
         return Response({'status': 200, 'usuario': serializer.data})
 
