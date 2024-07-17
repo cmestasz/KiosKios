@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output} from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormField } from '../models/form-field';
 import { ApiService } from '../services/api.service';
@@ -11,41 +11,48 @@ import { Response } from '../models/response';
   templateUrl: './dinamic-form.component.html',
   styleUrl: './dinamic-form.component.css'
 })
-export class DinamicFormComponent{
-  @Output() formSubmitted: EventEmitter<Response> = new EventEmitter(); 
+export class DinamicFormComponent {
+  @Output() formSubmitted: EventEmitter<Response> = new EventEmitter();
   form: FormGroup;
   fields: FormField[] = [];
   model!: string;
+  isMultiple: boolean = false;
+  selectedFiles: {[key: string]: File} = {};
 
   constructor(
     private formBuilder: FormBuilder,
     private api: ApiService
-  ){
+  ) {
     this.form = this.formBuilder.group({
     });
   }
 
-  loadSchema(model: string): void{
+  loadSchema(model: string): void {
     this.model = model;
     this.form = this.formBuilder.group({});
-    this.api.getFormSchema(model, ).subscribe(fieldsReceived => {
+    this.api.getFormSchema(model,).subscribe(fieldsReceived => {
       this.fields = fieldsReceived;
       this.buildForm();
     });
   }
 
-  buildForm(){
-    for(const field of this.fields) {
-      const control = this.formBuilder.control('', this.getValidators(field));
+  buildForm() { 
+    for (const field of this.fields) {
+      let control;
+      if(field.attributes?.['type'] == 'file'){
+        this.isMultiple = true;
+        console.log("Este form enviará archivos");
+      }
+      control = this.formBuilder.control('', this.getValidators(field));
       this.form.addControl(field.name, control);
     }
   }
 
-  getValidators(field: FormField){
+  getValidators(field: FormField) {
     const validators = [];
-    if(field.validators){
-      for(const [key, value] of Object.entries(field.validators)){
-        switch(key){
+    if (field.validators) {
+      for (const [key, value] of Object.entries(field.validators)) {
+        switch (key) {
           case 'required':
             validators.push(Validators.required); break;
           case 'maxlength':
@@ -64,9 +71,26 @@ export class DinamicFormComponent{
 
   onSubmit(): void {
     if (this.form.valid) {
-      console.log('Formulario enviado:', this.form.value);
+
       // Enviar datos a la API
-      this.api.postForm(this.form.value, this.model).subscribe((response: Response) => {
+      let formToSend = this.form.value;
+      if (this.isMultiple) {
+        formToSend = new FormData();
+        Object.keys(this.form.controls).forEach(key => {
+          const controlValue = this.form.get(key)?.value;
+          console.log("Creando el campo ", key, " en el formData ");
+          if (this.selectedFiles[key]) {
+            console.log("Se detectó un campo file");
+            formToSend.append(key, this.selectedFiles[key], this.selectedFiles[key]);
+          } else {
+            formToSend.append(key, controlValue);
+          }
+        });
+
+      }
+      console.log("El formulario es de tipo FormData: ", formToSend instanceof FormData);
+      console.log('Formulario enviado:', formToSend);
+      this.api.postForm(formToSend, this.model).subscribe((response: Response) => {
         console.log(response);
         alert(response.message);
         if (response.status == 201 || response.status == 200) {
@@ -76,9 +100,17 @@ export class DinamicFormComponent{
       });
 
     } else {
-      this.form.markAllAsTouched();  
+      this.form.markAllAsTouched();
       console.error('Formulario no válido');
     }
+  }
+
+  imageInputPicked(event: Event, name: string) {
+    const input = (event.target as HTMLInputElement)
+    const file = input.files?.item(0);
+    if(file)
+      this.selectedFiles[name] = file;
+    console.log("Clave del campo de archivo: ", name);
   }
 
   getValidatorMessage(fieldName: string) {
