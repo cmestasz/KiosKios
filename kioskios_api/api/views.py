@@ -1,6 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated
+from .permissions import IsAdmin, IsOwner, IsUser
+from . import renderers
 from django.contrib.auth import authenticate, login, logout
 from django.core.exceptions import ObjectDoesNotExist
 from .forms import (
@@ -91,11 +93,9 @@ class CrearDueñoView(APIView):
 
 
 class CrearTiendaView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwner]
 
     def post(self, request):
-        if not is_owner(request.user):
-            return Response(MESSAGES['unallowed'])
         form = TiendaForm(request.data)
         if form.is_valid():
             instance = form.save(commit=False)
@@ -109,11 +109,9 @@ class CrearTiendaView(APIView):
 
 
 class CrearProductoView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwner]
 
     def post(self, request):
-        if not is_owner(request.user):
-            return Response(MESSAGES['unallowed'])
         form = ProductoForm(request.data, request.FILES)
         if form.is_valid():
             form.save()
@@ -125,29 +123,40 @@ class CrearProductoView(APIView):
 
 
 class CrearVentaView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsUser]
 
     def post(self, request):
-        if not is_user(request.user):
-            return Response(MESSAGES['unallowed'])
         form = VentaForm(request.data)
         if form.is_valid():
             instance = form.save(commit=False)
             instance.usuario = request.user
             instance.save()
-            return Response(MESSAGES['created'])
+            return Response(MESSAGES['created'] + {'id': instance.id})
         return Response(MESSAGES['fields_error'])
 
     def get(self, request):
         return Response({'status': 200, 'campos': form_serializer(VentaForm())})
 
 
-class GetTiendasView(APIView):
+class GetPDFVentaView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        if not is_owner(request.user):
-            return Response(MESSAGES['unallowed'])
+        venta = Venta.objects.get(id=request.data.get('id'))
+        context = {
+            'titulo': venta.id,
+            'usuario': venta.usuario,
+            'producto': venta.producto,
+            'fecha': venta.fecha,
+            'cantidad': venta.cantidad,
+        }
+        return generate_pdf(request, context, 'venta_pdf.html', venta.id)
+
+
+class GetTiendasView(APIView):
+    permission_classes = [IsAuthenticated, IsOwner]
+
+    def post(self, request):
         tiendas = Tienda.objects.filter(dueño=request.user)
         serializer = TiendaSerializer(
             tiendas, many=True, context={'request': request})
@@ -171,6 +180,8 @@ class GetProductosView(APIView):
 
 
 class GetUsuarioPorCorreoView(APIView):
+    permission_classes = [IsAuthenticated]
+
     # TODO: para quien es esto?
     def post(self, request):
         email = request.data.get('email')
@@ -215,7 +226,7 @@ class GetCategoriasProductosView(APIView):
 
 
 class CrearTiendaAdminView(APIView):
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated, IsAdmin]
 
     def post(self, request):
         form = TiendaFormAdmin(request.data)
@@ -229,7 +240,7 @@ class CrearTiendaAdminView(APIView):
 
 
 class CrearProductoAdminView(APIView):
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated, IsAdmin]
 
     def post(self, request):
         form = ProductoFormAdmin(request.data, request.FILES)
@@ -243,7 +254,7 @@ class CrearProductoAdminView(APIView):
 
 
 class GetUsuariosAdminView(APIView):
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated, IsAdmin]
 
     def post(self, request):
         usuarios = Usuario.objects.all()
@@ -253,7 +264,7 @@ class GetUsuariosAdminView(APIView):
 
 
 class GetTiendasAdminView(APIView):
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated, IsAdmin]
 
     def post(self, request):
         tiendas = Tienda.objects.all()
@@ -263,7 +274,7 @@ class GetTiendasAdminView(APIView):
 
 
 class GetProductosAdminView(APIView):
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated, IsAdmin]
 
     def post(self, request):
         productos = Producto.objects.all()
@@ -273,10 +284,21 @@ class GetProductosAdminView(APIView):
 
 
 class GetVentasAdminView(APIView):
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated, IsAdmin]
 
     def post(self, request):
         ventas = Venta.objects.all()
         serializer = VentaSerializer(
             ventas, many=True, context={'request': request})
         return Response({'status': 200, 'ventas': serializer.data})
+
+
+def generate_pdf(request, context, template, filename):
+    response = renderers.render_to_pdf(template, context)
+
+    content = f"inline; filename={filename}.pdf"
+    download = request.GET.get("download")
+    if download:
+        content = f"attachment; filename={filename}.pdf"
+    response['Content-Disposition'] = content
+    return response
