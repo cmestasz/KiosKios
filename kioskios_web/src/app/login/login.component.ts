@@ -5,7 +5,7 @@ import { FooterComponent } from '../home/footer/footer.component';
 import { HeaderComponent } from '../home/header/header.component';
 import { Router, RouterLink } from '@angular/router';
 import { Response } from '../models/response';
-import { GoogleAuthService } from '../services/google-auth.service';
+import { AuthService } from '../services/auth.service';
 
 
 @Component({
@@ -19,28 +19,33 @@ export class LoginComponent implements AfterViewInit {
 
   @ViewChild(LoaderFormComponent) loaderForm!: LoaderFormComponent;
 
-  constructor(private router: Router, private authService: GoogleAuthService) {}
+  constructor(private router: Router, private authService: AuthService) {
+  }
 
   ngAfterViewInit(): void {
-    if (this.loaderForm){
+    if (this.loaderForm) {
       this.loaderForm.createForm(TYPE_FORMS.LOGIN);
       this.loaderForm.formSubmitted.subscribe((response: Response) => {
-        console.log("Escuchando desde el componnete login");
-        if (response?.['user']?.['tipo'] == 'US') {
-          this.router.navigate(['/user'], {state: {user: response.user}});
-        } else {
-          this.router.navigate(['/owner'], {state: {user: response.user}});
+        console.log("Escuchando desde el componente login");
+        if (response.user) {
+          this.authService.signIn(response.user);
+          if (response?.['user']?.['tipo'] == 'US') {
+            this.router.navigate(['/user']);
+          } else {
+            this.router.navigate(['/owner']);
+          }
         }
+
       });
-    }else{
+    } else {
       console.log("No se pudo cargar el formulario de login");
     }
   }
 
   signInWithGoogle() {
-    this.authService.login();
+    this.authService.signInWithGoogle();
   }
-  
+
 
 
 
