@@ -6,6 +6,7 @@ import { UserHomeComponent } from './home/user-home/user-home.component';
 import { OwnerHomeComponent } from './home/owner-home/owner-home.component';
 import { AnyHomeComponent } from './home/any-home/any-home.component';
 import { HomeComponent } from './home/home.component';
+import { AuthRedirectComponent } from './auth-redirect/auth-redirect.component';
 
 export const routes: Routes = [
   {
@@ -29,5 +30,8 @@ export const routes: Routes = [
   },
   {
     path: 'test', component: TestComponent
+  },
+  {
+    path: 'google_auth', component: AuthRedirectComponent
   }
 ];
