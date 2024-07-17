@@ -11,6 +11,7 @@ from .serializers import (
     UsuarioSerializer, TiendaSerializer, ProductoSerializer, VentaSerializer,
     form_serializer
 )
+from rest_framework.parsers import MultiPartParser
 
 MESSAGES = {
     'correct': {'status': 200, 'message': 'Correcto'},
@@ -72,8 +73,13 @@ class CrearUsuarioView(APIView):
 
 
 class CrearDueñoView(APIView):
+    parser_classes = [MultiPartParser]
+
     def post(self, request):
-        form = DueñoForm(request.data)
+        request.FILES['yape_qr']._name = request.data.get('email') + '.png'
+        print(request.FILES['yape_qr'].__dict__)
+        form = DueñoForm(request.data, request.FILES)
+        print(form.errors)
         if form.is_valid():
             form.save()
             return Response(MESSAGES['created'])
@@ -162,6 +168,7 @@ class GetProductosView(APIView):
             productos, many=True, context={'request': request})
         return Response({'status': 200, 'productos': serializer.data})
 
+
 class GetUsuarioPorCorreoView(APIView):
     # TODO: para quien es esto?
     def post(self, request):
@@ -169,6 +176,7 @@ class GetUsuarioPorCorreoView(APIView):
         usuario = Usuario.objects.get(email=email)
         serializer = UsuarioSerializer(usuario)
         return Response({'status': 200, 'usuario': serializer.data})
+
 
 class GetVentasView(APIView):
     permission_classes = [IsAuthenticated]

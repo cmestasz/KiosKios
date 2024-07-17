@@ -7,6 +7,7 @@
           <input [type]="field.attributes?.['type']" (change)="imageInputPicked($event, field.name)"
                [formControlName]="field.name"
                [attr.placeholder]="field.attributes?.['placeholder'] || field.name"
+               [accept]="field.attributes?.['accept'] || 'image/*'"
         >
         } @else {
           <input [type]="field.attributes?.['type']" 
