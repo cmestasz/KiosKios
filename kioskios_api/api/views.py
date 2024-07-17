@@ -162,10 +162,11 @@ class GetProductosView(APIView):
             productos, many=True, context={'request': request})
         return Response({'status': 200, 'productos': serializer.data})
 
-class GetUsuarioByIdView(APIView):
+class GetUsuarioPorCorreoView(APIView):
     # TODO: para quien es esto?
     def post(self, request):
-        usuario = Usuario.objects.get(id=request.data.get('id'))
+        email = request.data.get('email').strip()
+        usuario = Usuario.objects.get(email=email)
         serializer = UsuarioSerializer(usuario)
         return Response({'status': 200, 'usuario': serializer.data})
 
