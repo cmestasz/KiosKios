@@ -174,7 +174,7 @@ class GetUsuarioPorCorreoView(APIView):
     def post(self, request):
         email = request.data.get('email')
         if not email:
-            return Response({'status': 404, 'message': 'Usuario no encontrado'})
+            return Response({'status': 404, 'usuario': 'Usuario no encontrado'})
         email = email.strip()
         usuario = Usuario.objects.get(email=email)
         serializer = UsuarioSerializer(usuario)
