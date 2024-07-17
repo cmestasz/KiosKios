@@ -14,13 +14,13 @@ export class AuthRedirectComponent {
       if(user){
       
         if (user.tipo == 'US') {
-          this.router.navigate(['/user']);
+          this.router.navigate(['/user'], {replaceUrl: true});
         } else {
-          this.router.navigate(['/owner']);
+          this.router.navigate(['/owner'], {replaceUrl: true});
         }
       }else{
         console.log("Usuario no existe, debe crear cuenta");
-        this.router.navigate(['/register']);
+        this.router.navigate(['/register'], {replaceUrl: true});
       }
     });
     
