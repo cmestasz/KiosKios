@@ -1,5 +1,7 @@
-import { Injectable } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
+import { platform } from 'os';
 import { Subject } from 'rxjs';
 
 
@@ -11,15 +13,18 @@ export class GoogleAuthService {
   private emailSubject: Subject<string | null> = new Subject<string | null>();
 
   constructor(
-    private oAuthService: OAuthService
-  ) { 
-    this.initConfiguration();
-    this.oAuthService.events.subscribe(event => {
-      if (event.type === 'token_received') {
-        const email = this.getEmail();
-        this.emailSubject.next(email);
-      }
-    });
+    private oAuthService: OAuthService,
+    @Inject(PLATFORM_ID) private platformId: object
+  ) {
+    if (isPlatformBrowser(this.platformId)) {
+      this.initConfiguration();
+      this.oAuthService.events.subscribe(event => {
+        if (event.type === 'token_received') {
+          const email = this.getEmail();
+          this.emailSubject.next(email);
+        }
+      });
+    }
   }
 
 
@@ -39,7 +44,7 @@ export class GoogleAuthService {
 
   login() {
     this.oAuthService.initImplicitFlow();
-    
+
   }
 
   logout() {

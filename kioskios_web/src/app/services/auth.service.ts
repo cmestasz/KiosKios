@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { GoogleAuthService } from './google-auth.service';
 import { User } from '../models/user';
 import { ApiService } from './api.service';
 import { response } from 'express';
 import { Observable, Subject } from 'rxjs';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -15,23 +16,26 @@ export class AuthService {
 
   constructor(
     private googleAuth: GoogleAuthService,
-    private api: ApiService
-  ) { 
-    const userData = localStorage.getItem('user');
-    if(userData)
-      this.user = JSON.parse(userData);
-    this.googleAuth.getEmailObservable().subscribe(email => {
-      if (email) {
-        this.api.getUser(email).subscribe(response => {
-          this.user = response;
-          this.userSubject.next(this.user);
-          localStorage.setItem('user', JSON.stringify(response));
-        });
-      } else {
-        console.error('No se pudo obtener el correo elec  trónico del usuario.');
-        this.userSubject.next(undefined); 
-      }
-    });
+    private api: ApiService,
+    @Inject(PLATFORM_ID) private platformid: object
+  ) {
+    if (isPlatformBrowser(platformid)) {
+      const userData = localStorage.getItem('user');
+      if (userData)
+        this.user = JSON.parse(userData);
+      this.googleAuth.getEmailObservable().subscribe(email => {
+        if (email) {
+          this.api.getUser(email).subscribe(response => {
+            this.user = response;
+            this.userSubject.next(this.user);
+            localStorage.setItem('user', JSON.stringify(response));
+          });
+        } else {
+          console.error('No se pudo obtener el correo elec  trónico del usuario.');
+          this.userSubject.next(undefined);
+        }
+      });
+    }
   }
 
   signInWithGoogle() {
@@ -42,7 +46,7 @@ export class AuthService {
     return this.userSubject.asObservable();
   }
 
-  getUserLoaded(): User | undefined  {
+  getUserLoaded(): User | undefined {
     return this.user;
   }
 
