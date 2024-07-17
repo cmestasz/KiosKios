@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Usuario, Tienda, Producto, Venta
+from .models import Usuario, Tienda, Producto
 
 
 class LoginForm(forms.Form):
@@ -92,12 +92,6 @@ class ProductoForm(ModelForm):
                   'imagen', 'tienda', 'stock', 'categoria']
 
 
-class VentaForm(ModelForm):
-    class Meta:
-        model = Venta
-        fields = ['producto', 'cantidad']
-
-
 class TiendaFormAdmin(TiendaForm):
     class Meta:
         model = Tienda
@@ -113,14 +107,3 @@ class ProductoFormAdmin(ProductoForm):
     class Meta:
         model = Producto
         fields = '__all__'
-
-
-class VentaFormAdmin(VentaForm):
-    class Meta:
-        model = Venta
-        fields = '__all__'
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['usuario'].queryset = Usuario.objects.filter(
-            tipo=Usuario.Types.USUARIO)

@@ -18,13 +18,15 @@
               <tr>
                 <th>Producto</th>
                 <th>Precio</th>
+                <th>Cantidad</th>
               </tr>
             </thead>
             <tbody>
-              {% for producto in productos %}
+              {% for venta_producto in venta_productos %}
               <tr>
-                <td>{{ producto }}</td>
-                <td>S/. {{ producto.precio }}</td>
+                <td>{{ venta_producto.producto }}</td>
+                <td>{{ venta_producto.cantidad }}</td>
+                <td>S/. {{ venta_producto.producto.precio }}</td>
               </tr>
               {% endfor %}
               <tr>

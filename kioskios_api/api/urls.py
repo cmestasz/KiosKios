@@ -4,7 +4,7 @@ from .views import (
     CrearTiendaView, CrearProductoView, CrearVentaView, GetTiendasView,
     GetProductosView, GetUsuarioPorCorreoView, GetVentasView, GetCategoriasProductosView,
     CrearTiendaAdminView, CrearProductoAdminView, GetUsuariosAdminView,
-    GetTiendasAdminView, GetProductosAdminView, GetVentasAdminView
+    GetTiendasAdminView, GetProductosAdminView, GetVentasAdminView, GetPDFVentaView
 )
 from rest_framework import routers
 from .viewsets import UsuarioViewSet, TiendaViewSet, ProductoViewSet, VentaViewSet
@@ -29,10 +29,12 @@ urlpatterns = [
     path('crear_venta/', CrearVentaView.as_view(), name='crear_venta'),
     path('get_tiendas/', GetTiendasView.as_view(), name='get_tiendas'),
     path('get_productos/', GetProductosView.as_view(), name='get_productos'),
-    path('get_usuario_por_correo/', GetUsuarioPorCorreoView.as_view(), name='get_usuario_por_correo'),
+    path('get_usuario_por_correo/', GetUsuarioPorCorreoView.as_view(),
+         name='get_usuario_por_correo'),
     path('get_ventas/', GetVentasView.as_view(), name='get_ventas'),
     path('get_categorias_productos/', GetCategoriasProductosView.as_view(),
          name='get_categorias_productos'),
+    path('get_pdf_venta', GetPDFVentaView.as_view(), name='get_pdf_venta'),
     path('crear_tienda_admin/', CrearTiendaAdminView.as_view(),
          name='crear_tienda_admin'),
     path('crear_producto_admin/', CrearProductoAdminView.as_view(),

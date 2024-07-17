@@ -94,9 +94,15 @@ class Producto(models.Model):
 class Venta(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, limit_choices_to={
                                 'tipo': Usuario.Types.USUARIO})
-    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     fecha = models.DateTimeField(auto_now_add=True)
-    cantidad = models.PositiveIntegerField()
 
     def __str__(self):
         return f'{self.usuario} - {self.producto}'
+    
+class VentaProducto(models.Model):
+    venta = models.ForeignKey(Venta, on_delete=models.CASCADE)
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    cantidad = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f'{self.producto} - {self.cantidad}'
