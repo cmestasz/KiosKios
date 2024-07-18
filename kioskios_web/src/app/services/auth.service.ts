@@ -25,7 +25,7 @@ export class AuthService {
         try {
           this.user = JSON.parse(userData);
           if(this.user)
-            this.api.getUser(this.user.email).subscribe(response => {
+            this.api.authUserWithEmail(this.user.email).subscribe(response => {
               console.log("Usuario autenticado desde local storage: ", response
           )});
         } catch (error) {
@@ -33,7 +33,7 @@ export class AuthService {
         }
       this.googleAuth.getEmailObservable().subscribe(email => {
         if (email) {
-          this.api.getUser(email).subscribe(response => {
+          this.api.authUserWithEmail(email).subscribe(response => {
             this.user = response;
             this.userSubject.next(this.user);
             localStorage.setItem('user', JSON.stringify(response));
@@ -54,18 +54,32 @@ export class AuthService {
     return this.userSubject.asObservable();
   }
 
-  getUserAsObservable(): Observable<User | undefined> {
-    return of(this.user);
-  }
 
-  getUserLoaded(): User | undefined {
-    return this.user;
+  getUserLoaded(): Observable<User> {
+    return of(this.user || {} as User);
   }
 
   signIn(user: User) {
     this.user = user;
     localStorage.setItem('user', JSON.stringify(user));
     this.userSubject.next(this.user);
+  }
+
+  signOut() {
+    if (this.user) {
+      this.api.unauthUser(this.user.email).subscribe(
+        response => {
+          if (response) {
+            console.log("Logout actual user");
+            this.user = undefined;
+          } 
+          console.log("Actualizando subject del usuariio");
+          this.userSubject.next(this.user);   
+          console.log("Eliminando del localStorage  ");
+          localStorage.removeItem('user');
+        }
+      );
+    }
   }
 
 }

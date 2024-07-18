@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterLink} from '@angular/router';
+import { Router, RouterLink} from '@angular/router';
 import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCartShopping, faMagnifyingGlass, faBars } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '../../services/auth.service';
@@ -18,13 +18,18 @@ import { CommonModule } from '@angular/common';
 })
 export class HeaderComponent {
   isMenuOpen: boolean = false;
+  showSignOutButton: boolean = false;
   user$: Observable<User | undefined>
   constructor(
     library: FaIconLibrary,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ){
     library.addIcons(faCartShopping, faMagnifyingGlass);
-    this.user$ = this.authService.getUserAsObservable();
+    this.user$ = this.authService.getUserLoaded();
+    this.user$.subscribe(r => {
+      console.log("Usuario recibido: ", r);
+    });
   }
   
   toggleMenu() {
@@ -32,11 +37,17 @@ export class HeaderComponent {
   }
 
   signOut() {
-    // Cerrar sesión del usuario
+    this.authService.signOut();
+    this.user$ = this.authService.getUser();
+    this.user$.subscribe(r => {
+      console.log("Usuario recibido para singOut: ", r);
+    });
+    this.router.navigate(['/']);
+
   }
 
   showSignOut() {
-    
+    this.showSignOutButton = !this.showSignOutButton;
   }
   
 }

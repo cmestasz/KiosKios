@@ -16,6 +16,10 @@ export class UserHomeComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.user = this.authService.getUserLoaded();
+    this.authService.getUserLoaded().subscribe(
+      user => {
+        this.user = user; 
+      }
+    );
   }
 }

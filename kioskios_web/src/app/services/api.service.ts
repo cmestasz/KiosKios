@@ -5,6 +5,7 @@ import { FormField } from '../models/form-field';
 import { Form } from '../form';
 import { User } from '../models/user';
 import { response } from 'express';
+import { error } from 'console';
 @Injectable({
   providedIn: 'root',
 })
@@ -14,7 +15,23 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  getUser(email: string): Observable<User | undefined> {
+  unauthUser(email: string): Observable<boolean> {
+    const url = this.urlBaseApi + '/cerrar_sesion/';
+    return this.http.post<{status: number, message?: string}>(url, {email: email}).pipe(
+      map(response => {
+        if (response.status == 200) {
+          return true;
+        }
+        return false;
+      }),
+      catchError(e => {
+        console.log("Error de cerrado de sesión");
+        return of(false);
+      })
+    );
+  }
+
+  authUserWithEmail(email: string): Observable<User | undefined> {
     const url = this.urlBaseApi + '/get_usuario_por_correo/';
     return this.http.post<{status: number, message?: string, usuario?: User}>(url, {email: email}).pipe(
       map(response => {
