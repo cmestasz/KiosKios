@@ -57,8 +57,8 @@ class IniciarSesionView(APIView):
 
 class IniciarSesionGoogleView(APIView):
     def post(self, request):
-        user = Usuario.objects.get(email=request.data.get('email'))
-        if (user):
+        user = Usuario.objects.filter(email=request.data.get('email'))
+        if (user[0]):
             login(request, user)
             return Response({**MESSAGES['correct'], 'user': UsuarioSerializer(user).data})
         return Response(MESSAGES['no_login'])
