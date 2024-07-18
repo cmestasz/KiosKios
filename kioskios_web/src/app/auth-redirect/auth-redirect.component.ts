@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
+import { EMPTY_USER } from '../constants';
 
 @Component({
   selector: 'app-auth-redirect',
@@ -11,7 +12,7 @@ export class AuthRedirectComponent {
 
   constructor(private authService: AuthService,private router: Router){
     this.authService.getUser().subscribe(user => {
-      if(user){
+      if(user.email){ // Si es undefined, significa que está vacío
       
         if (user.tipo == 'US') {
           this.router.navigate(['/user'], {replaceUrl: true});
