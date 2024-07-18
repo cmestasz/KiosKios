@@ -1,10 +1,10 @@
 from django.urls import path
 from .views import (
-    IniciarSessionView, CerrarSessionView, CrearUsuarioView, CrearDueñoView,
+    IniciarSesionView, CerrarSessionView, CrearUsuarioView, CrearDueñoView,
     CrearTiendaView, CrearProductoView, CrearVentaView, GetTiendasView,
     GetProductosView, GetUsuarioPorCorreoView, GetVentasView, GetCategoriasProductosView,
     CrearTiendaAdminView, CrearProductoAdminView, GetUsuariosAdminView,
-    GetTiendasAdminView, GetProductosAdminView, GetVentasAdminView, GetPDFVentaView
+    GetTiendasAdminView, GetProductosAdminView, GetVentasAdminView, GetPDFVentaView, IniciarSesionGoogleView
 )
 from rest_framework import routers
 from .viewsets import UsuarioViewSet, TiendaViewSet, ProductoViewSet, VentaViewSet
@@ -20,7 +20,8 @@ router.register(r'ventas', VentaViewSet)
 urlpatterns = [
     path('rest/', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('iniciar_sesion/', IniciarSessionView.as_view(), name='iniciar_sesion'),
+    path('iniciar_sesion/', IniciarSesionView.as_view(), name='iniciar_sesion'),
+    path('iniciar_sesion_google/', IniciarSesionGoogleView.as_view(), name='iniciar_sesion_google'),
     path('cerrar_sesion/', CerrarSessionView.as_view(), name='cerrar_sesion'),
     path('crear_usuario/', CrearUsuarioView.as_view(), name='crear_usuario'),
     path('crear_dueño/', CrearDueñoView.as_view(), name='crear_dueño'),

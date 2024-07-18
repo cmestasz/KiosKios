@@ -38,7 +38,7 @@ def is_admin(user):
     return user.tipo == 'AD'
 
 
-class IniciarSessionView(APIView):
+class IniciarSesionView(APIView):
     def post(self, request):
         form = LoginForm(request.data)
         if form.is_valid():
@@ -54,6 +54,11 @@ class IniciarSessionView(APIView):
     def get(self, request):
         return Response({'status': 200, 'campos': form_serializer(LoginForm())})
 
+class IniciarSesionGoogleView(APIView):
+    def post(self, request):
+        user = Usuario.objects.get(email=request.data.get('email'))
+        login(request, user)
+        return Response({**MESSAGES['correct'], 'user': UsuarioSerializer(user).data})
 
 class CerrarSessionView(APIView):
     permission_classes = [IsAuthenticated]
