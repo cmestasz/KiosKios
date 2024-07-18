@@ -1,3 +1,5 @@
+import { User } from "./models/user";
+
 export const TYPE_FORMS = {
   CREATE_USER: "crear_usuario",
   CREATE_OWNER: "crear_dueño",
@@ -6,3 +8,5 @@ export const TYPE_FORMS = {
   CREATE_VENTA: "crear_venta",
   LOGIN: "iniciar_sesion"
 };
+
+export const EMPTY_USER = {} as User;
