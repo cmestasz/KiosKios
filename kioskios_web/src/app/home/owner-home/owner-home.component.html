@@ -1,2 +1,4 @@
 <p>owner-home works!</p>
-<p>{{ user }}</p>
+@if (user$ | async; as user) {
+  <p>{{ user }}</p>
+}
