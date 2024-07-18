@@ -8,32 +8,30 @@
         <div class="search">
             <section class="search-bar">
                 <form action="." method="GET">
-                  <label for="q"></label>
-                  <input type="text" name="q" placeholder="Busca un artículo">
-                  <button class="busqueda" ><fa-icon [icon]="['fas', 'magnifying-glass']"></fa-icon></button>
+                    <label for="q"></label>
+                    <input type="text" name="q" placeholder="Busca un artículo">
+                    <button class="busqueda"><fa-icon [icon]="['fas', 'magnifying-glass']"></fa-icon></button>
                 </form>
             </section>
         </div>
-      
+
     </div>
 
-    
+
     <button class="menu-toggle" id="menu-toggle">☰</button>
     <nav class="nav">
         <ul class="nav-list" id="nav-list">
-            @if (user$ | async; as user) {
-                @if (user.email) {
-                <li><a routerLink="/cart"><fa-icon [icon]="['fas', 'cart-shopping']"></fa-icon> Carrito</a></li>
-                <li><a (click)="showSignOut()"> {{ user.email }}</a></li>
-                @if (showSignOutButton) {
-                    <li><a (click)="signOut()">Cerrar Sesión</a></li>
-                }
-                } @else {
-                    <li><a routerLink="/login">Iniciar Sesión</a></li>
-                <li><a routerLink="/register" class="register">Regístrate</a></li>
-                }   
+            @if (user.email) {
+            <li><a routerLink="/cart"><fa-icon [icon]="['fas', 'cart-shopping']"></fa-icon> Carrito</a></li>
+            <li><a (click)="showSignOut()"> {{ user.email }}</a></li>
+            @if (showSignOutButton) {
+            <li><a (click)="signOut()">Cerrar Sesión</a></li>
+            }
+            } @else {
+            <li><a routerLink="/login">Iniciar Sesión</a></li>
+            <li><a routerLink="/register" class="register">Regístrate</a></li>
             }
         </ul>
     </nav>
-    
+
 </header>

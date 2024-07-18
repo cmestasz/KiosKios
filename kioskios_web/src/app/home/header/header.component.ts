@@ -6,6 +6,7 @@ import { AuthService } from '../../services/auth.service';
 import { User } from '../../models/user';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { EMPTY_USER } from '../../constants';
 
 
 @Component({
@@ -19,17 +20,20 @@ import { CommonModule } from '@angular/common';
 export class HeaderComponent {
   isMenuOpen: boolean = false;
   showSignOutButton: boolean = false;
-  user$: Observable<User | undefined>
+  user: User;
   constructor(
     library: FaIconLibrary,
     private authService: AuthService,
     private router: Router
   ){
     library.addIcons(faCartShopping, faMagnifyingGlass);
-    this.user$ = this.authService.getUserLoaded();
-    this.user$.subscribe(r => {
-      console.log("Usuario recibido: ", r);
-    });
+    this.user = EMPTY_USER;
+    this.authService.getUser().subscribe(
+      user => {
+        console.log("Recibiendo el usuario en el componente header: ", user);
+        this.user = user;
+      }
+    );
   }
   
   toggleMenu() {
@@ -38,11 +42,7 @@ export class HeaderComponent {
 
   signOut() {
     this.authService.signOut();
-    this.user$ = this.authService.getUser();
-    this.user$.subscribe(r => {
-      console.log("Usuario recibido para singOut: ", r);
-    });
-    this.router.navigate(['/']);
+    this.router.navigate(['/']);    
 
   }
 

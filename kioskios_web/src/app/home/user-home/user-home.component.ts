@@ -13,9 +13,13 @@ import { CommonModule } from '@angular/common';
   styleUrl: './user-home.component.css'
 })
 export class UserHomeComponent{
-  user$: Observable<User>;
+  user: User = EMPTY_USER;
   constructor(private authService: AuthService){
-    this.user$ = this.authService.getUser();
+    this.authService.getUser().subscribe(
+      user => {
+        console.log("Recibiendo usuario en el componente User: " + user);    
+        this.user = user;
+    });
   }
 
 }
