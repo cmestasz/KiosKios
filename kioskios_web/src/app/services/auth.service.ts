@@ -3,7 +3,7 @@ import { GoogleAuthService } from './google-auth.service';
 import { User } from '../models/user';
 import { ApiService } from './api.service';
 import { response } from 'express';
-import { Observable, Subject } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
@@ -23,9 +23,13 @@ export class AuthService {
       const userData = localStorage.getItem('user');
       if (userData)
         try {
-          this.user = JSON.parse(userData);          
+          this.user = JSON.parse(userData);
+          if(this.user)
+            this.api.getUser(this.user.email).subscribe(response => {
+              console.log("Usuario autenticado desde local storage: ", response
+          )});
         } catch (error) {
-          console.error("No se pudo obtener los datos de usuario desde el localstorage");
+          console.error("No se pudo obtener los datos de usuario desde el localstorage: ", error);
         }
       this.googleAuth.getEmailObservable().subscribe(email => {
         if (email) {
@@ -48,6 +52,10 @@ export class AuthService {
 
   getUser(): Observable<User | undefined> {
     return this.userSubject.asObservable();
+  }
+
+  getUserAsObservable(): Observable<User | undefined> {
+    return of(this.user);
   }
 
   getUserLoaded(): User | undefined {
