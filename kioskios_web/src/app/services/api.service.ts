@@ -32,7 +32,7 @@ export class ApiService {
   }
 
   authUserWithEmail(email: string): Observable<User | undefined> {
-    const url = this.urlBaseApi + '/get_usuario_por_correo/';
+    const url = this.urlBaseApi + '/iniciar_sesion_google/';
     return this.http.post<{status: number, message?: string, usuario?: User}>(url, {email: email}).pipe(
       map(response => {
         if (response.status != 200) {
