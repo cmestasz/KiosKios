@@ -6,6 +6,7 @@ import { Form } from '../form';
 import { User } from '../models/user';
 import { response } from 'express';
 import { error } from 'console';
+import { EMPTY_USER } from '../constants';
 @Injectable({
   providedIn: 'root',
 })
@@ -31,14 +32,17 @@ export class ApiService {
     );
   }
 
-  authUserWithEmail(email: string): Observable<User | undefined> {
+  authUserWithEmail(email: string): Observable<User> {
     const url = this.urlBaseApi + '/iniciar_sesion_google/';
     return this.http.post<{status: number, message?: string, user?: User}>(url, {email: email}).pipe(
       map(response => {
-        if (response.status != 200) {
-          return undefined;
+        console.log("Repuesta de la api: ", response);
+        if (response.user) {
+          console.log("Enviando respuesta final, usuario enviado: ", response.user);
+          return response.user;
         }
-        return response.user;
+        console.log("Enviando respuesta final: ", EMPTY_USER);
+        return EMPTY_USER;
       })
     );
   }
