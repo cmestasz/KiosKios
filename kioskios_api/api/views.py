@@ -1,7 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from .permissions import IsAdmin, IsOwner, IsUser
+from .permissions import IsAdmin, IsOwner, IsUser, IsAuth
 from . import renderers
 from django.contrib.auth import authenticate, login, logout
 from django.core.exceptions import ObjectDoesNotExist
@@ -15,7 +14,6 @@ from .serializers import (
     form_serializer
 )
 from rest_framework.parsers import MultiPartParser
-from django.contrib.sessions.models import Session
 
 MESSAGES = {
     'correct': {'status': 200, 'message': 'Correcto'},
@@ -27,16 +25,20 @@ MESSAGES = {
 }
 
 
-def is_user(user):
-    return user.tipo == 'US'
+def get_user(request):
+    return request.session['user']
 
 
-def is_owner(user):
-    return user.tipo == 'DU'
+def is_user(request):
+    return get_user(request).tipo == 'US'
 
 
-def is_admin(user):
-    return user.tipo == 'AD'
+def is_owner(request):
+    return get_user(request).tipo == 'DU'
+
+
+def is_admin(request):
+    return get_user(request).tipo == 'AD'
 
 
 class IniciarSesionView(APIView):
@@ -46,7 +48,8 @@ class IniciarSesionView(APIView):
             user = authenticate(
                 request, username=form.cleaned_data['username'], password=form.cleaned_data['password']
             )
-            # user.is_active = True
+            request.session['is_authenticated'] = 1
+            request.session['user'] = user
             if user:
                 login(request, user)
                 return Response({**MESSAGES['correct'], 'user': UsuarioSerializer(user).data})
@@ -62,10 +65,12 @@ class IniciarSesionGoogleView(APIView):
         try:
             email = request.data.get('email')
             user = Usuario.objects.get(email=email)
-            
+
             if (user):
-                print("Se encontró al usuario: " + str(user) + " con email " + str(email))
-                # user.is_active = True
+                print("Se encontró al usuario: " +
+                      str(user) + " con email " + str(email))
+                request.session['is_authenticated'] = 1
+                request.session['user'] = user
                 login(request, user)
                 print(request.user)
                 return Response({**MESSAGES['correct'], 'user': UsuarioSerializer(user).data})
@@ -77,12 +82,14 @@ class IniciarSesionGoogleView(APIView):
 
 
 class CerrarSessionView(APIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuth]
 
     def post(self, request):
         print(request.user.is_active)
         print(request.user)
         print(request.user and request.user.is_authenticated)
+        request.session['is_authenticated'] = 0
+        request.session['user'] = None
         logout(request)
         return Response(MESSAGES['correct'])
 
@@ -117,13 +124,13 @@ class CrearDueñoView(APIView):
 
 
 class CrearTiendaView(APIView):
-    permission_classes = [IsAuthenticated, IsOwner]
+    permission_classes = [IsAuth, IsOwner]
 
     def post(self, request):
         form = TiendaForm(request.data)
         if form.is_valid():
             instance = form.save(commit=False)
-            instance.dueño = request.user
+            instance.dueño = get_user(request)
             instance.save()
             return Response(MESSAGES['created'])
         return Response(MESSAGES['fields_error'])
@@ -133,7 +140,7 @@ class CrearTiendaView(APIView):
 
 
 class CrearProductoView(APIView):
-    permission_classes = [IsAuthenticated, IsOwner]
+    permission_classes = [IsAuth, IsOwner]
 
     def post(self, request):
         form = ProductoForm(request.data, request.FILES)
@@ -147,7 +154,7 @@ class CrearProductoView(APIView):
 
 
 class CrearVentaView(APIView):
-    permission_classes = [IsAuthenticated, IsUser]
+    permission_classes = [IsAuth, IsUser]
 
     '''
     {
@@ -165,7 +172,7 @@ class CrearVentaView(APIView):
     '''
 
     def post(self, request):
-        venta = Venta.objects.create(usuario=request.user)
+        venta = Venta.objects.create(usuario=get_user(request))
         for producto in request.data.get('productos'):
             VentaProducto.objects.create(
                 venta=venta, producto=producto['id'], cantidad=producto['cantidad'])
@@ -173,7 +180,7 @@ class CrearVentaView(APIView):
 
 
 class GetPDFVentaView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuth]
 
     def post(self, request):
         venta = Venta.objects.get(id=request.data.get('id'))
@@ -189,24 +196,24 @@ class GetPDFVentaView(APIView):
 
 
 class GetTiendasView(APIView):
-    permission_classes = [IsAuthenticated, IsOwner]
+    permission_classes = [IsAuth, IsOwner]
 
     def post(self, request):
-        tiendas = Tienda.objects.filter(dueño=request.user)
+        tiendas = Tienda.objects.filter(dueño=get_user(request))
         serializer = TiendaSerializer(
             tiendas, many=True, context={'request': request})
         return Response({'status': 200, 'tiendas': serializer.data})
 
 
 class GetProductosView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuth]
 
     def post(self, request):
-        if is_user(request.user):
+        if is_user(request):
             productos = Producto.objects.filter(
                 tienda=request.data.get('tienda'))
-        elif is_owner(request.user):
-            productos = Producto.objects.filter(tienda__dueño=request.user)
+        elif is_owner(request):
+            productos = Producto.objects.filter(tienda__dueño=get_user(request))
         else:
             return Response(MESSAGES['unallowed'])
         serializer = ProductoSerializer(
@@ -231,13 +238,13 @@ class GetUsuarioPorCorreoView(APIView):
 
 
 class GetVentasView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuth]
 
     def post(self, request):
-        if is_user(request.user):
-            ventas = Venta.objects.filter(usuario=request.user)
-        elif is_owner(request.user):
-            ventas = Venta.objects.filter(producto__tienda__dueño=request.user)
+        if is_user(request):
+            ventas = Venta.objects.filter(usuario=get_user(request))
+        elif is_owner(request):
+            ventas = Venta.objects.filter(producto__tienda__dueño=get_user(request))
         else:
             return Response(MESSAGES['unallowed'])
         serializer = VentaSerializer(
@@ -246,7 +253,7 @@ class GetVentasView(APIView):
 
 
 class GetCategoriasProductosView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuth]
 
     def post(self, request):
         json_productos = {category[0]: []
@@ -260,7 +267,7 @@ class GetCategoriasProductosView(APIView):
 
 
 class CrearTiendaAdminView(APIView):
-    permission_classes = [IsAuthenticated, IsAdmin]
+    permission_classes = [IsAuth, IsAdmin]
 
     def post(self, request):
         form = TiendaFormAdmin(request.data)
@@ -274,7 +281,7 @@ class CrearTiendaAdminView(APIView):
 
 
 class CrearProductoAdminView(APIView):
-    permission_classes = [IsAuthenticated, IsAdmin]
+    permission_classes = [IsAuth, IsAdmin]
 
     def post(self, request):
         form = ProductoFormAdmin(request.data, request.FILES)
@@ -288,7 +295,7 @@ class CrearProductoAdminView(APIView):
 
 
 class GetUsuariosAdminView(APIView):
-    permission_classes = [IsAuthenticated, IsAdmin]
+    permission_classes = [IsAuth, IsAdmin]
 
     def post(self, request):
         usuarios = Usuario.objects.all()
@@ -298,7 +305,7 @@ class GetUsuariosAdminView(APIView):
 
 
 class GetTiendasAdminView(APIView):
-    permission_classes = [IsAuthenticated, IsAdmin]
+    permission_classes = [IsAuth, IsAdmin]
 
     def post(self, request):
         tiendas = Tienda.objects.all()
@@ -308,7 +315,7 @@ class GetTiendasAdminView(APIView):
 
 
 class GetProductosAdminView(APIView):
-    permission_classes = [IsAuthenticated, IsAdmin]
+    permission_classes = [IsAuth, IsAdmin]
 
     def post(self, request):
         productos = Producto.objects.all()
@@ -318,7 +325,7 @@ class GetProductosAdminView(APIView):
 
 
 class GetVentasAdminView(APIView):
-    permission_classes = [IsAuthenticated, IsAdmin]
+    permission_classes = [IsAuth, IsAdmin]
 
     def post(self, request):
         ventas = Venta.objects.all()
