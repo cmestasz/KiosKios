@@ -200,7 +200,6 @@ class GetProductosView(APIView):
 
 
 class GetUsuarioPorCorreoView(APIView):
-    permission_classes = [IsAuthenticated]
 
     # TODO: para quien es esto?
     def post(self, request):
@@ -210,6 +209,7 @@ class GetUsuarioPorCorreoView(APIView):
         email = email.strip()
         try:
             usuario = Usuario.objects.get(email=email)
+            login(request, usuario)
         except ObjectDoesNotExist:
             return Response({'status': 404, 'usuario': 'Usuario no encontrado'})
         serializer = UsuarioSerializer(usuario)
