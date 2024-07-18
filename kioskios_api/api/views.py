@@ -54,11 +54,15 @@ class IniciarSesionView(APIView):
     def get(self, request):
         return Response({'status': 200, 'campos': form_serializer(LoginForm())})
 
+
 class IniciarSesionGoogleView(APIView):
     def post(self, request):
         user = Usuario.objects.get(email=request.data.get('email'))
-        login(request, user)
-        return Response({**MESSAGES['correct'], 'user': UsuarioSerializer(user).data})
+        if (user):
+            login(request, user)
+            return Response({**MESSAGES['correct'], 'user': UsuarioSerializer(user).data})
+        return Response(MESSAGES['no_login'])
+
 
 class CerrarSessionView(APIView):
     permission_classes = [IsAuthenticated]
