@@ -21,9 +21,15 @@
     <button class="menu-toggle" id="menu-toggle">☰</button>
     <nav class="nav">
         <ul class="nav-list" id="nav-list">
-            <li><a routerLink="/cart"><fa-icon [icon]="['fas', 'cart-shopping']"></fa-icon> Carrito</a></li>
-            <li><a routerLink="/login">Iniciar Sesión</a></li>
-            <li><a routerLink="/register" class="register">Regístrate</a></li>
+            @if (user$ | async; as user) {
+                @if (user) {
+                <li><a routerLink="/cart"><fa-icon [icon]="['fas', 'cart-shopping']"></fa-icon> Carrito</a></li>
+                <li><a (click)="showSignOut()"> {{ user.email }}</a></li>
+                } @else {
+                    <li><a routerLink="/login">Iniciar Sesión</a></li>
+                <li><a routerLink="/register" class="register">Regístrate</a></li>
+                }   
+            }
         </ul>
     </nav>
     
