@@ -15,6 +15,7 @@ from .serializers import (
     form_serializer
 )
 from rest_framework.parsers import MultiPartParser
+from django.contrib.sessions.models import Session
 
 MESSAGES = {
     'correct': {'status': 200, 'message': 'Correcto'},
@@ -45,6 +46,7 @@ class IniciarSesionView(APIView):
             user = authenticate(
                 request, username=form.cleaned_data['username'], password=form.cleaned_data['password']
             )
+            # user.is_active = True
             if user:
                 login(request, user)
                 return Response({**MESSAGES['correct'], 'user': UsuarioSerializer(user).data})
@@ -57,17 +59,30 @@ class IniciarSesionView(APIView):
 
 class IniciarSesionGoogleView(APIView):
     def post(self, request):
-        user = Usuario.objects.filter(email=request.data.get('email'))
-        if (user[0]):
-            login(request, user)
-            return Response({**MESSAGES['correct'], 'user': UsuarioSerializer(user).data})
-        return Response(MESSAGES['no_login'])
+        try:
+            email = request.data.get('email')
+            user = Usuario.objects.get(email=email)
+            
+            if (user):
+                print("Se encontró al usuario: " + str(user) + " con email " + str(email))
+                # user.is_active = True
+                login(request, user)
+                print(request.user)
+                return Response({**MESSAGES['correct'], 'user': UsuarioSerializer(user).data})
+            print("c")
+            return Response(MESSAGES['wrong_password'])
+        except Exception as e:
+            print("d")
+            return Response(MESSAGES['no_login'])
 
 
 class CerrarSessionView(APIView):
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     def post(self, request):
+        print(request.user.is_active)
+        print(request.user)
+        print(request.user and request.user.is_authenticated)
         logout(request)
         return Response(MESSAGES['correct'])
 
@@ -154,7 +169,7 @@ class CrearVentaView(APIView):
         for producto in request.data.get('productos'):
             VentaProducto.objects.create(
                 venta=venta, producto=producto['id'], cantidad=producto['cantidad'])
-        return Response(MESSAGES['created'] + {'id': venta.id})
+        return Response({**MESSAGES['created'], 'id': venta.id})
 
 
 class GetPDFVentaView(APIView):

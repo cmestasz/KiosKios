@@ -69,6 +69,11 @@ REST_FRAMEWORK = {
     ]
 }
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'api.auth_backends.EmailBackend',
+]
+
 CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'kioskios_api.urls'
