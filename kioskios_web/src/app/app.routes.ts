@@ -12,26 +12,23 @@ export const routes: Routes = [
   {
     path: '', component: HomeComponent, children: [
       {
-        path: '', component: AnyHomeComponent
+        path: '', component: AnyHomeComponent, title: 'KiosKios - Tu tienda virtual'
       },
       {
-        path: 'user', component: UserHomeComponent
+        path: 'user', component: UserHomeComponent, title: 'Home - Usuario'
       },
       {
-        path: 'owner', component: OwnerHomeComponent
+        path: 'owner', component: OwnerHomeComponent, title: 'Home - Dueño'
       }
     ]
   },
   {
-    path: 'login', component: LoginComponent
+    path: 'login', component: LoginComponent, title: 'KiosKios - Login'
   },
   {
-    path: 'register', component: RegisterComponent
+    path: 'register', component: RegisterComponent, title: 'KiosKios - Register'
   },
   {
-    path: 'test', component: TestComponent
-  },
-  {
-    path: 'google_auth', component: AuthRedirectComponent
+    path: 'google_auth', component: AuthRedirectComponent, title: 'Redirecting'
   }
 ];
