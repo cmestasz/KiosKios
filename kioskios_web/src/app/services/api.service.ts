@@ -8,6 +8,7 @@ import { User } from '../models/user';
 import { response } from 'express';
 import { error } from 'console';
 import { EMPTY_USER } from '../constants';
+import { Tienda } from '../tienda';
 @Injectable({
   providedIn: 'root',
 })
@@ -15,6 +16,30 @@ export class ApiService {
   private urlBaseApi: string = 'http://localhost:8000/api';
 
   constructor(private http: HttpClient) {}
+
+  getTiendas(email: string): Observable<Tienda[] | undefined> {
+    const url = this.urlBaseApi + '/get_tiendas/';
+    return this.http.post<{status: number, tiendas: Tienda[]}>(url, {email: email, token: localStorage.getItem('token')}).pipe(
+      map(response => {
+        if (response.status == 200) {
+          return response.tiendas;
+        }
+        return undefined;
+      })
+    );
+  }
+
+  getProducts(email: string): Observable<Producto[] | undefined> {
+    const url = this.urlBaseApi + '/get_productos/';
+    return this.http.post<{status: number, tiendas: Producto[]}>(url, {email: email, token: localStorage.getItem('token')}).pipe(
+      map(response => {
+        if (response.status == 200) {
+          return response.tiendas;
+        }
+        return undefined;
+      })
+    );
+  }
 
   unauthUser(email: string): Observable<boolean> {
     const url = this.urlBaseApi + '/cerrar_sesion/';
