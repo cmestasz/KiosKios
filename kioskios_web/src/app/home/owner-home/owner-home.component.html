@@ -1,4 +1,21 @@
 <p>owner-home works!</p>
+<div class="elementos-de-edicion">
+  <div class="agregarArticulos">
+      
+      <a href='/additem'> <i class="bi bi-database-add"></i>   Agregar producto</a>
+    <div>
+        
+      <!-- articulos -->
+      <section>
+          <div class="grid">
+              $articuloshtml           
+          </div>
+      </section>
+    </div>
+  </div>
+
+</div>
+
 @if (user$ | async; as user) {
   <p>{{ user }}</p>
 }
