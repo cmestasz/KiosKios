@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, map, of } from 'rxjs';
 import { FormField } from '../models/form-field';
 import { Producto } from '../models/product';
@@ -30,16 +30,25 @@ export class ApiService {
     );
   }
 
-  getProducts(): Observable<Producto[] | undefined> {
-    const url = this.urlBaseApi + '/get_productos/';
-    return this.http.post<{status: number, productos: Producto[]}>(url, {token: localStorage.getItem('token')}).pipe(
-      map(response => {
-        if (response.status == 200) {
+  getProducts(): Observable<Producto[]> {
+    const url = this.urlBaseApi + '/get_productos';
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+    };
+
+    return this.http
+      .get<{ status: number; productos: Producto[] }>(url, httpOptions)
+      .pipe(
+        map((response) => {
+          if (response.status != 200) throw new HttpErrorResponse({status: 401, statusText: "Desautorizado, probablemente el token ha expirado"});
           return response.productos;
-        }
-        return undefined;
-      })
-    );
+        }),
+        catchError((error: HttpErrorResponse) => {
+          throw error;
+        })
+      )
   }
 
   getVentas(): Observable<Venta[] | undefined> {
@@ -119,24 +128,4 @@ export class ApiService {
       );
   }
 
-  getObjectSchema(): Observable<Producto[]> {
-    const url = this.urlBaseApi + '/get_productos';
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-      }),
-    };
-
-    return this.http
-      .get<{ status: number; productos: Producto[] }>(url, httpOptions)
-      .pipe(
-        map((response) => {
-          if (response.status != 200) throw new Error('No autorizado');
-          return response.productos;
-        }),
-        catchError((error) => {
-          throw error;
-        })
-      );
-  }
 }

@@ -18,7 +18,7 @@ import { ApiService } from '../../services/api.service';
 export class OwnerHomeComponent {
   productos: Producto[] = [];
   constructor(private apiService: ApiService, private router: Router) {
-    this.apiService.getObjectSchema().subscribe((objects) => {
+    this.apiService.getProducts().subscribe((objects) => {
       this.productos = objects;
     });
   }
