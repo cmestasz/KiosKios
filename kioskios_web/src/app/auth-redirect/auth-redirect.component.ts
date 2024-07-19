@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { EMPTY_USER } from '../constants';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-auth-redirect',
@@ -11,9 +12,11 @@ import { EMPTY_USER } from '../constants';
 export class AuthRedirectComponent {
 
   constructor(private authService: AuthService,private router: Router){
-    this.authService.getUser().subscribe(user => {
+    this.authService.getUser().pipe(
+      filter(user => user.email !== undefined && user.email !== '')
+    ).subscribe(user => {
       if(user.email){ // Si es undefined, significa que está vacío
-      
+        console.log("Escuchando usuario en el redirect");
         if (user.tipo == 'US') {
           this.router.navigate(['/user'], {replaceUrl: true});
         } else {
