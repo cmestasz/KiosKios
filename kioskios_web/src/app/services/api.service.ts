@@ -9,6 +9,7 @@ import { response } from 'express';
 import { error } from 'console';
 import { EMPTY_USER } from '../constants';
 import { Tienda } from '../tienda';
+import { Venta } from '../venta';
 @Injectable({
   providedIn: 'root',
 })
@@ -31,14 +32,26 @@ export class ApiService {
 
   getProducts(): Observable<Producto[] | undefined> {
     const url = this.urlBaseApi + '/get_productos/';
-    return this.http.post<{status: number, tiendas: Producto[]}>(url, {token: localStorage.getItem('token')}).pipe(
+    return this.http.post<{status: number, productos: Producto[]}>(url, {token: localStorage.getItem('token')}).pipe(
       map(response => {
         if (response.status == 200) {
-          return response.tiendas;
+          return response.productos;
         }
         return undefined;
       })
     );
+  }
+
+  getVentas(): Observable<Venta[] | undefined> {
+    const url = this.urlBaseApi + '/get_productos/';
+    return this.http.post<{status: number, ventas: Venta[]}>(url, {token: localStorage.getItem('token')}).pipe(
+      map(response => {
+        if (response.status == 200) {
+          return response.ventas;
+        }
+        return undefined;
+      })
+    ); 
   }
 
   unauthUser(email: string): Observable<boolean> {
