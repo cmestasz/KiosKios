@@ -1,4 +1,26 @@
 <p>owner-home works!</p>
-@if (user$ | async; as user) {
-  <p>{{ user }}</p>
-}
+<div class="elementos-de-edicion">
+  <div class="agregarArticulos">
+      
+      <a href='/additem'> <i class="bi bi-database-add"></i>   Agregar producto</a>
+    <div>
+        
+      @for (producto of productos; track $index) {
+        <div class="producto">
+          <h3>{{ producto.nombre }}</h3>
+          <p>{{ producto.descripcion }}</p>
+          <p>{{ producto.precio }}</p>
+        </div>
+      
+      }
+
+      <!-- articulos -->
+      <section>
+          <div class="grid">           
+              
+          </div>
+      </section>
+    </div>
+  </div>
+
+</div>

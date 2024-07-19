@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, map, of } from 'rxjs';
 import { FormField } from '../models/form-field';
+import { Producto } from '../models/product';
 import { Form } from '../form';
 import { User } from '../models/user';
 import { response } from 'express';
@@ -11,10 +12,9 @@ import { EMPTY_USER } from '../constants';
   providedIn: 'root',
 })
 export class ApiService {
+  private urlBaseApi: string = 'http://localhost:8000/api';
 
-  private urlBaseApi : string = 'http://localhost:8000/api';
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   unauthUser(email: string): Observable<boolean> {
     const url = this.urlBaseApi + '/cerrar_sesion/';
@@ -34,42 +34,71 @@ export class ApiService {
 
   authUserWithEmail(email: string): Observable<User> {
     const url = this.urlBaseApi + '/iniciar_sesion_google/';
-    return this.http.post<{status: number, message?: string, user?: User}>(url, {email: email}).pipe(
-      map(response => {
-        console.log("Repuesta de la api: ", response);
-        if (response.user) {
-          console.log("Enviando respuesta final, usuario enviado: ", response.user);
-          return response.user;
-        }
-        console.log("Enviando respuesta final: ", EMPTY_USER);
-        return EMPTY_USER;
+    return this.http
+      .post<{ status: number; message?: string; user?: User }>(url, {
+        email: email,
       })
-    );
+      .pipe(
+        map((response) => {
+          console.log('Repuesta de la api: ', response);
+          if (response.user) {
+            console.log(
+              'Enviando respuesta final, usuario enviado: ',
+              response.user
+            );
+            return response.user;
+          }
+          console.log('Enviando respuesta final: ', EMPTY_USER);
+          return EMPTY_USER;
+        })
+      );
   }
 
-  postForm(formtoSend: FormData, to: string):Observable<any>{
+  postForm(formtoSend: FormData, to: string): Observable<any> {
     const url = this.urlBaseApi + `/${to}/`;
     return this.http.post<Form>(url, formtoSend);
   }
 
-  getFormSchema(formToGet : string) : Observable<FormField[]> {
+  getFormSchema(formToGet: string): Observable<FormField[]> {
     const url = this.urlBaseApi + `/${formToGet}`;
     const httpOptions = {
-      headers: new HttpHeaders({ 
+      headers: new HttpHeaders({
         'Content-Type': 'application/json',
         //'Authorization':'authkey',
         //'userid':'1'
-      })
-    };
-    return this.http.get<{status: number, campos: FormField[]}>(url, httpOptions).pipe(
-      map(response => {
-        if(response.status != 200)
-          throw new Error("No autorizado")
-        return response.campos;
       }),
-      catchError(error => {
-        throw error;
-      })
-    );
+    };
+    return this.http
+      .get<{ status: number; campos: FormField[] }>(url, httpOptions)
+      .pipe(
+        map((response) => {
+          if (response.status != 200) throw new Error('No autorizado');
+          return response.campos;
+        }),
+        catchError((error) => {
+          throw error;
+        })
+      );
+  }
+
+  getObjectSchema(): Observable<Producto[]> {
+    const url = this.urlBaseApi + '/get_productos';
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+    };
+
+    return this.http
+      .get<{ status: number; productos: Producto[] }>(url, httpOptions)
+      .pipe(
+        map((response) => {
+          if (response.status != 200) throw new Error('No autorizado');
+          return response.productos;
+        }),
+        catchError((error) => {
+          throw error;
+        })
+      );
   }
 }
