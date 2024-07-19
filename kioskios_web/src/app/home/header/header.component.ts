@@ -20,17 +20,19 @@ import { EMPTY_USER } from '../../constants';
 export class HeaderComponent {
   isMenuOpen: boolean = true;
   showSignOutButton: boolean = false;
-  user: User;
+  user!: User;
+  userReceived: boolean;
   constructor(
     library: FaIconLibrary,
     private authService: AuthService,
     private router: Router
   ){
     library.addIcons(faCartShopping, faMagnifyingGlass);
-    this.user = EMPTY_USER;
+    this.userReceived = false;
     this.authService.getUser().subscribe(
       user => {
         console.log("Recibiendo el usuario en el componente header: ", user);
+        this.userReceived = true;
         this.user = user;
       }
     );
