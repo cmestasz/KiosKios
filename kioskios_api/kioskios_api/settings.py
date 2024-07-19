@@ -36,7 +36,6 @@ CORS_ALLOW_HEADERS = (
   "content-type"
 )
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -68,11 +67,6 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ]
 }
-
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'api.auth_backends.EmailBackend',
-]
 
 CORS_ALLOW_ALL_ORIGINS = True
 

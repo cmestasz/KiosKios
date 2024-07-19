@@ -68,9 +68,10 @@ export class AuthService {
     return this.userSubject.asObservable();
   }
 
-  signIn(user: User) {
+  signIn(user: User, token: string) {
     this.user = user;
     localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem('token', token);
     this.userSubject.next(this.user);
   }
 

@@ -27,8 +27,8 @@ export class LoginComponent implements AfterViewInit {
       this.loaderForm.createForm(TYPE_FORMS.LOGIN);
       this.loaderForm.formSubmitted.subscribe((response: Response) => {
         console.log("Escuchando desde el componente login");
-        if (response.user) {
-          this.authService.signIn(response.user);
+        if (response.user && response.token) {
+          this.authService.signIn(response.user, response.token);
           if (response?.['user']?.['tipo'] == 'US') {
             this.router.navigate(['/user']);
           } else {

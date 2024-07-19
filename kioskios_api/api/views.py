@@ -2,18 +2,20 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .permissions import IsAdmin, IsOwner, IsUser, IsAuth
 from . import renderers
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate
 from django.core.exceptions import ObjectDoesNotExist
 from .forms import (
     UsuarioForm, DueñoForm, TiendaForm, ProductoForm, LoginForm,
     TiendaFormAdmin, ProductoFormAdmin
 )
-from .models import Tienda, Producto, Venta, Usuario, VentaProducto
+from .models import Tienda, Producto, Venta, Usuario, VentaProducto, ActiveSessions
 from .serializers import (
     UsuarioSerializer, TiendaSerializer, ProductoSerializer, VentaSerializer,
     form_serializer
 )
 from rest_framework.parsers import MultiPartParser
+from django.core import serializers
+from django.utils.crypto import get_random_string
 
 MESSAGES = {
     'correct': {'status': 200, 'message': 'Correcto'},
@@ -26,7 +28,7 @@ MESSAGES = {
 
 
 def get_user(request):
-    return request.session['user']
+    return ActiveSessions.objects.get(session_key=request.data.get('token')).user
 
 
 def is_user(request):
@@ -48,11 +50,13 @@ class IniciarSesionView(APIView):
             user = authenticate(
                 request, username=form.cleaned_data['username'], password=form.cleaned_data['password']
             )
-            request.session['is_authenticated'] = 1
-            request.session['user'] = user
             if user:
-                login(request, user)
-                return Response({**MESSAGES['correct'], 'user': UsuarioSerializer(user).data})
+                token = get_random_string(32)
+                ActiveSessions.objects.create(user=user, session_key=token)
+
+                response = Response({**MESSAGES['correct'], 'user': UsuarioSerializer(user).data, 'token': token})
+                response.set_cookie('user', user)
+                return response
             return Response(MESSAGES['wrong_password'])
         return Response(MESSAGES['fields_error'])
 
@@ -66,18 +70,10 @@ class IniciarSesionGoogleView(APIView):
             email = request.data.get('email')
             user = Usuario.objects.get(email=email)
 
-            if (user):
-                print("Se encontró al usuario: " +
-                      str(user) + " con email " + str(email))
-                request.session['is_authenticated'] = 1
-                request.session['user'] = user
-                login(request, user)
-                print(request.user)
-                return Response({**MESSAGES['correct'], 'user': UsuarioSerializer(user).data})
-            print("c")
-            return Response(MESSAGES['wrong_password'])
-        except Exception as e:
-            print("d")
+            token = get_random_string(32)
+            ActiveSessions.objects.create(user=user, session_key=token)
+            return Response({**MESSAGES['correct'], 'user': UsuarioSerializer(user).data, 'token': token})
+        except:
             return Response(MESSAGES['no_login'])
 
 
@@ -85,12 +81,7 @@ class CerrarSessionView(APIView):
     permission_classes = [IsAuth]
 
     def post(self, request):
-        print(request.user.is_active)
-        print(request.user)
-        print(request.user and request.user.is_authenticated)
-        request.session['is_authenticated'] = 0
-        request.session['user'] = None
-        logout(request)
+        ActiveSessions.objects.get(session_key=request.data.get('token')).delete()
         return Response(MESSAGES['correct'])
 
 
