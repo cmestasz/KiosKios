@@ -19,21 +19,15 @@ export class GoogleAuthService {
     if (isPlatformBrowser(this.platformId)) {
       this.initConfiguration();
       this.oAuthService.events.subscribe(event => {
-        console.log("Evento de google capturado: ", event);
         if (event.type === 'discovery_document_loaded') {
           console.log('Documento de descubrimiento cargado.');
         } else if (event.type === 'token_received') {
           console.log('Token recibido.');
           this.emailSubject.next(this.getEmail());
-        } else if (event.type === 'token_expires') {
-          console.log('Token expirado.');
-        } else if (event.type === 'session_terminated') {
-          console.log('Sesión terminada.');
         } else if (event.type === 'token_error') {
           console.log('No se inició sesión con google');
           this.emailSubject.next(null);
         }
-        console.log("Evento de google manejado");
       });
     }
   }

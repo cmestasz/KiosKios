@@ -92,6 +92,7 @@ export class AuthService {
             this.user = EMPTY_USER;
             console.log("Eliminando del localStorage  ");
             localStorage.removeItem('user');
+            localStorage.removeItem('token');
             console.log("Actualizando subject del usuario");
             this.userSubject.next(EMPTY_USER);
           }

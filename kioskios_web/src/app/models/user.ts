@@ -5,4 +5,5 @@ export interface User {
   telefono: string;
   yape_qr?: string;
   tipo: 'US' | 'DU' | 'AD';
+  token: string;
 }
