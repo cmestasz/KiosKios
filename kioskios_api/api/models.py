@@ -106,3 +106,12 @@ class VentaProducto(models.Model):
 
     def __str__(self):
         return f'{self.producto} - {self.cantidad}'
+
+
+class ActiveSessions(models.Model):
+    user = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    session_key = models.CharField(max_length=40)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.user} - {self.session_key}'

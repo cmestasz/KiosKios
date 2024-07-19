@@ -214,3 +214,5 @@ Informe.fls
 Informe.synctex.gz
 Informe.fdb_latexmk
 .vercel
+
+db.sqlite3
