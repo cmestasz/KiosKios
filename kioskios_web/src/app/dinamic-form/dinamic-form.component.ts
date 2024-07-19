@@ -74,6 +74,8 @@ export class DinamicFormComponent {
 
       // Enviar datos a la API
       let formToSend = this.form.value;
+      formToSend = { ...formToSend, token: localStorage.getItem('token') || '' };
+
       if (this.isMultiple) {
         formToSend = new FormData();
         Object.keys(this.form.controls).forEach(key => {
@@ -86,6 +88,7 @@ export class DinamicFormComponent {
             formToSend.append(key, controlValue);
           }
         });
+        formToSend.append('token', localStorage.getItem('token') || '');
 
       }
       console.log("El formulario es de tipo FormData: ", formToSend instanceof FormData);

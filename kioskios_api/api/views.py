@@ -28,7 +28,7 @@ MESSAGES = {
 
 
 def get_user(request):
-    return serializers.deserialize('json', request.get('token'))[0].object
+    return ActiveSessions.objects.get(session_key=request.data.get('token')).user
 
 
 def is_user(request):
@@ -81,7 +81,7 @@ class CerrarSessionView(APIView):
     permission_classes = [IsAuth]
 
     def post(self, request):
-        ActiveSessions.objects.get(session_key=request.get('token')).delete()
+        ActiveSessions.objects.get(session_key=request.data.get('token')).delete()
         return Response(MESSAGES['correct'])
 
 

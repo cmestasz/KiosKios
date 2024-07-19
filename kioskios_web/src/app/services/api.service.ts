@@ -18,7 +18,7 @@ export class ApiService {
 
   unauthUser(email: string): Observable<boolean> {
     const url = this.urlBaseApi + '/cerrar_sesion/';
-    return this.http.post<{status: number, message?: string}>(url, {email: email}).pipe(
+    return this.http.post<{status: number, message?: string}>(url, {email: email, token: localStorage.getItem('token')}).pipe(
       map(response => {
         if (response.status == 200) {
           return true;
@@ -57,7 +57,6 @@ export class ApiService {
     const httpOptions = {
       headers: new HttpHeaders({ 
         'Content-Type': 'application/json',
-
         //'Authorization':'authkey',
         //'userid':'1'
       })
