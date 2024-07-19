@@ -32,10 +32,9 @@ export class AuthService {
           console.log("User es vacio: ", this.user.email === undefined);
           if (this.user.email) { // si no tiene email es porque está vacío
             this.userSubject.next(this.user);
-            //this.api.authUserWithEmail(this.user.email).subscribe(response => {
-              //console.log("Usuario autenticado desde local storage: ", response
-             // )
-           // });
+            this.api.authUserWithEmail(this.user.email).subscribe(response => {
+              console.log("Usuario autenticado desde local storage: ", response)
+          }); 
           }
         } catch (error) {
           console.error("No se pudo obtener los datos de usuario desde el localstorage: ", error);
