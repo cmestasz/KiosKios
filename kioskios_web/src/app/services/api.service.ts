@@ -17,9 +17,9 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
-  getTiendas(email: string): Observable<Tienda[] | undefined> {
+  getTiendas(): Observable<Tienda[] | undefined> {
     const url = this.urlBaseApi + '/get_tiendas/';
-    return this.http.post<{status: number, tiendas: Tienda[]}>(url, {email: email, token: localStorage.getItem('token')}).pipe(
+    return this.http.post<{status: number, tiendas: Tienda[]}>(url, {token: localStorage.getItem('token')}).pipe(
       map(response => {
         if (response.status == 200) {
           return response.tiendas;
@@ -29,9 +29,9 @@ export class ApiService {
     );
   }
 
-  getProducts(email: string): Observable<Producto[] | undefined> {
+  getProducts(): Observable<Producto[] | undefined> {
     const url = this.urlBaseApi + '/get_productos/';
-    return this.http.post<{status: number, tiendas: Producto[]}>(url, {email: email, token: localStorage.getItem('token')}).pipe(
+    return this.http.post<{status: number, tiendas: Producto[]}>(url, {token: localStorage.getItem('token')}).pipe(
       map(response => {
         if (response.status == 200) {
           return response.tiendas;
