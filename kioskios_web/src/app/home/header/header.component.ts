@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Router, RouterLink} from '@angular/router';
 import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCartShopping, faMagnifyingGlass, faBars } from '@fortawesome/free-solid-svg-icons';
@@ -18,7 +18,7 @@ import { EMPTY_USER } from '../../constants';
 
 })
 export class HeaderComponent {
-  isMenuOpen: boolean = false;
+  isMenuOpen: boolean = true;
   showSignOutButton: boolean = false;
   user: User;
   constructor(
@@ -34,6 +34,14 @@ export class HeaderComponent {
         this.user = user;
       }
     );
+  }
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event) {
+    if (window.innerWidth <= 868) {
+      this.isMenuOpen = false;
+    } else {
+      this.isMenuOpen = true;
+    }
   }
   
   toggleMenu() {

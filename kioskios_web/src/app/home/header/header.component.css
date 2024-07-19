@@ -155,7 +155,6 @@ nav ul li .register {
         right: 4%;
         background: #fff;
         border: 1px solid #ddd;
-        display: none;
         flex-direction: column;
         align-items: center;
         justify-content: center;
@@ -164,9 +163,6 @@ nav ul li .register {
         
     }
     
-    .nav.active {
-        display: flex;
-    }
     .register{
         align-self: center;
         margin-left: 30px;

@@ -18,8 +18,9 @@
     </div>
 
 
-    <button class="menu-toggle" id="menu-toggle">☰</button>
-    <nav class="nav">
+    <button (click)="toggleMenu()" class="menu-toggle" id="menu-toggle">☰</button>
+    @if (isMenuOpen) {
+        <nav class="nav">
         <ul class="nav-list" id="nav-list">
             @if (user.email) {
             <li><a routerLink="/cart"><fa-icon [icon]="['fas', 'cart-shopping']"></fa-icon> Carrito</a></li>
@@ -33,5 +34,6 @@
             }
         </ul>
     </nav>
+    }
 
 </header>
