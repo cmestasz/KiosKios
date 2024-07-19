@@ -14,6 +14,7 @@ export class AuthService {
 
   private user: User;
   private userSubject: BehaviorSubject<User>;
+  private userForRedirect: Subject<User>;
 
   constructor(
     private googleAuth: GoogleAuthService,
@@ -21,6 +22,7 @@ export class AuthService {
     @Inject(PLATFORM_ID) private platformid: object
   ) {
     this.user = EMPTY_USER;
+    this.userForRedirect = new Subject<User>;
     this.userSubject = new BehaviorSubject<User>(this.user);
     if (isPlatformBrowser(platformid)) {
       const userData = localStorage.getItem('user');
@@ -47,13 +49,13 @@ export class AuthService {
           this.api.authUserWithEmail(email).subscribe(response => {
             this.user = response;
             this.userSubject.next(this.user);
+            this.userForRedirect.next(this.user);
             console.log("Configurando objeto actual en el servicio de autenticación: ", response);
             localStorage.setItem('user', JSON.stringify(response));
           });
         } else {
           console.error('No se pudo obtener el correo electrónico del usuario.');
-          this.user = EMPTY_USER;
-          this.userSubject.next(EMPTY_USER);
+          //this.userForRedirect.next(EMPTY_USER);
         }
       });
     }
@@ -66,6 +68,11 @@ export class AuthService {
   getUser(): Observable<User> {
     console.log("Enviando el usuario como observable: ", this.user);
     return this.userSubject.asObservable();
+  }
+
+  getUserForRedirect(): Observable<User> {
+    console.log("Enviando usuario para redirección como observable");
+    return this.userForRedirect.asObservable();
   }
 
   signIn(user: User, token: string) {

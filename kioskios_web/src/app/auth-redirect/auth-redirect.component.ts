@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
-import { EMPTY_USER } from '../constants';
-import { filter } from 'rxjs';
+import { catchError } from 'rxjs';
 
 @Component({
   selector: 'app-auth-redirect',
@@ -12,18 +11,17 @@ import { filter } from 'rxjs';
 export class AuthRedirectComponent {
 
   constructor(private authService: AuthService,private router: Router){
-    this.authService.getUser().pipe(
-      filter(user => user.email !== undefined && user.email !== '')
-    ).subscribe(user => {
+
+    this.authService.getUserForRedirect().subscribe(user => {
       if(user.email){ // Si es undefined, significa que está vacío
-        console.log("Escuchando usuario en el redirect");
+        console.log("Se recibió una respuesta en el redirect");
         if (user.tipo == 'US') {
           this.router.navigate(['/user'], {replaceUrl: true});
         } else {
           this.router.navigate(['/owner'], {replaceUrl: true});
         }
       }else{
-        console.log("Usuario no existe, debe crear cuenta");
+        console.log("Usuario no existe, debe crear cuenta, redirigiendo al registro");
         this.router.navigate(['/register'], {replaceUrl: true});
       }
     });

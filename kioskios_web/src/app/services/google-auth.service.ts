@@ -1,9 +1,8 @@
 import { isPlatformBrowser } from '@angular/common';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthConfig, JwksValidationHandler, OAuthService } from 'angular-oauth2-oidc';
-import { platform } from 'os';
-import { Subject } from 'rxjs';
+import { AuthConfig, JwksValidationHandler, OAuthErrorEvent, OAuthService } from 'angular-oauth2-oidc';
+import { catchError, Subject } from 'rxjs';
 
 
 @Injectable({
@@ -15,7 +14,6 @@ export class GoogleAuthService {
 
   constructor(
     private oAuthService: OAuthService,
-    private router: Router,
     @Inject(PLATFORM_ID) private platformId: object
   ) {
     if (isPlatformBrowser(this.platformId)) {
@@ -26,20 +24,19 @@ export class GoogleAuthService {
           console.log('Documento de descubrimiento cargado.');
         } else if (event.type === 'token_received') {
           console.log('Token recibido.');
-          const email = this.getEmail();
-          this.emailSubject.next(email);
+          this.emailSubject.next(this.getEmail());
         } else if (event.type === 'token_expires') {
           console.log('Token expirado.');
         } else if (event.type === 'session_terminated') {
           console.log('Sesión terminada.');
         } else if (event.type === 'token_error') {
           console.log('No se inició sesión con google');
-          this.router.navigate(['/']);
+          this.emailSubject.next(null);
         }
+        console.log("Evento de google manejado");
       });
     }
   }
-
 
   initConfiguration() {
     const authConfig: AuthConfig = {
