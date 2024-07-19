@@ -5,6 +5,8 @@
                 <img src="logo.png" alt="Kioskios Logo">
             </a>
         </div>
+        @if(user.tipo=='US'){
+        
         <div class="search">
             <section class="search-bar">
                 <form action="." method="GET">
@@ -14,20 +16,24 @@
                 </form>
             </section>
         </div>
-
+        }
     </div>
 
 
     <button (click)="toggleMenu()" class="menu-toggle" id="menu-toggle">☰</button>
     @if (isMenuOpen) {
-        <nav class="nav">
+    <nav class="nav">
         <ul class="nav-list" id="nav-list">
             @if (user.email) {
-            <li><a routerLink="/cart"><fa-icon [icon]="['fas', 'cart-shopping']"></fa-icon> Carrito</a></li>
-            <li><a (click)="showSignOut()"> {{ user.email }}</a></li>
-            @if (showSignOutButton) {
-            <li><a (click)="signOut()">Cerrar Sesión</a></li>
-            }
+                <li><a routerLink="/cart"><fa-icon [icon]="['fas', 'cart-shopping']"></fa-icon> Carrito</a></li>
+                @if(user.tipo=='DU'){
+                    <li><a routerLink="/register" class="register1">Administrar Productos</a></li>
+                    <li><a routerLink="/register" class="register1">Ventas</a></li>
+                }
+                <li><a (click)="showSignOut()"> {{ user.email }}</a></li>
+                @if (showSignOutButton) {
+                <li><a (click)="signOut()" class="register">Cerrar Sesión</a></li>
+                }
             } @else {
             <li><a routerLink="/login">Iniciar Sesión</a></li>
             <li><a routerLink="/register" class="register">Regístrate</a></li>
