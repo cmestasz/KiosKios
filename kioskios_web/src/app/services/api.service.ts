@@ -3,10 +3,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Observable, catchError, map, of } from 'rxjs';
 import { FormField } from '../models/form-field';
 import { Producto } from '../models/product';
-import { Form } from '../form';
 import { User } from '../models/user';
-import { response } from 'express';
-import { error } from 'console';
 import { EMPTY_USER } from '../constants';
 import { Tienda } from '../models/tienda';
 import { Venta } from '../models/venta';
@@ -129,7 +126,7 @@ export class ApiService {
 
   postForm(formtoSend: FormData, to: string): Observable<any> {
     const url = this.urlBaseApi + `/${to}/`;
-    return this.http.post<Form>(url, formtoSend);
+    return this.http.post<FormData>(url, formtoSend);
   }
 
   getFormSchema(formToGet: string): Observable<FormField[]> {
