@@ -43,9 +43,7 @@ export class OwnerHomeComponent implements OnInit {
   handleUser(): void {
     
     this.user = getUserLocal();
-    this.authService.getUser().pipe(
-      filter( user => ++this.counterUserChange == 2)
-    ).subscribe(
+    this.authService.getUser().subscribe(
       user => {
         this.user = user;
         this.handleTypeUser();
@@ -59,7 +57,7 @@ export class OwnerHomeComponent implements OnInit {
       this.redirectTo('/user');
     } else if (this.user.tipo == 'AD') {
       this.redirectTo('/admin');
-    } else {
+    } else if (!this.user.email) {
       console.log("Usuario vacío");
       this.redirectTo('/');
     }
