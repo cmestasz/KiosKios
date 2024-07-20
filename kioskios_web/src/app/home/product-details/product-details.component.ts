@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Producto } from '../models/product';
-import { ApiService } from '../services/api.service';
+import { Producto } from '../../models/product';
+import { ApiService } from '../../services/api.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Component({

@@ -8,8 +8,8 @@ import { User } from '../models/user';
 import { response } from 'express';
 import { error } from 'console';
 import { EMPTY_USER } from '../constants';
-import { Tienda } from '../tienda';
-import { Venta } from '../venta';
+import { Tienda } from '../models/tienda';
+import { Venta } from '../models/venta';
 @Injectable({
   providedIn: 'root',
 })

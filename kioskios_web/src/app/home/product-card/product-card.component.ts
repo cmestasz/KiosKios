@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Producto } from '../models/product';
-import { ApiService } from '../services/api.service';
+import { Producto } from '../../models/product';
+import { ApiService } from '../../services/api.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { CATEGORY, CategoryKey } from '../constants';
+import { CATEGORY, CategoryKey } from '../../constants';
 import { Router } from '@angular/router';
 import { catchError } from 'rxjs';
 

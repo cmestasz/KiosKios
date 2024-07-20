@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { BannerComponent } from '../banner/banner.component';
+import { BannerComponent } from './banner/banner.component';
 
 @Component({
   selector: 'app-any-home',

@@ -7,7 +7,7 @@ import { OwnerHomeComponent } from './home/owner-home/owner-home.component';
 import { AnyHomeComponent } from './home/any-home/any-home.component';
 import { HomeComponent } from './home/home.component';
 import { AuthRedirectComponent } from './auth-redirect/auth-redirect.component';
-import { ProductDetailsComponent } from './product-details/product-details.component';
+import { ProductDetailsComponent } from './home/product-details/product-details.component';
 
 export const routes: Routes = [
   {
