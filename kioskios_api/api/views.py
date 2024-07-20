@@ -187,10 +187,13 @@ class GetPDFVentaView(APIView):
 
 
 class GetTiendasView(APIView):
-    permission_classes = [IsAuth, IsOwner]
+    permission_classes = [IsAuth]
 
     def post(self, request):
-        tiendas = Tienda.objects.filter(dueño=get_user(request))
+        if (get_user(request).tipo == 'DU'):
+            tiendas = Tienda.objects.filter(dueño=get_user(request))
+        else:
+            tiendas = Tienda.objects.all()
         serializer = TiendaSerializer(
             tiendas, many=True, context={'request': request})
         return Response({'status': 200, 'tiendas': serializer.data})
