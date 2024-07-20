@@ -30,8 +30,6 @@ export class AuthService {
       if (userData) {
         try {
           this.user = JSON.parse(userData);
-          console.log("Valor de usuario extraído del localStorage: ", this.user);
-          console.log("User es vacio: ", this.user.email === undefined);
           if (this.user.email) { // si no tiene email es porque está vacío
             this.userSubject.next(this.user);
             this.api.authUserWithEmail(this.user.email).subscribe(response => {

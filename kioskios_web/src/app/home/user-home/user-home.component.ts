@@ -18,28 +18,19 @@ import { ProductListComponent } from '../../product-list/product-list.component'
 })
 export class UserHomeComponent{
   user: User;
-  tiendas!: Tienda[];
+  tiendas: Tienda[] = [];
   constructor(
     private authService: AuthService,
     private router: Router,
     private api: ApiService
   ){
+    const userData = localStorage.getItem('user');
     this.user = EMPTY_USER;
-    this.authService.getUser().pipe(
-      tap(
-        user => {
-          if (user.email === undefined || user.email === '') {
-            console.log("Usuario no autentificado");
-            this.router.navigate(['/']);
-          }
-        }
-      ),
-      filter(user => user.email !== undefined && user.email !== '')
-    ).subscribe(
-      user => {
-        console.log("Recibiendo usuario en el componente User: " + user);    
-        this.user = user;
-    });
+    if(userData)
+      this.user = JSON.parse(userData);
+    else
+      this.router.navigate(['/']);
+    
 
     this.api.getTiendas().subscribe(
       tiendas => {

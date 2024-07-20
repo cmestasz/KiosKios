@@ -1,7 +1,11 @@
 <div>
   <h1>Encuentra tus productos favoritos</h1>
-  @for (tienda  of tiendas; track $index) {
-    <app-product-list [tienda]="tienda" ></app-product-list>
+  @if (tiendas.length > 0) {
+    @for (tienda of tiendas; track $index) {
+      <p> Se enviará esta tienda {{ tienda.id }}</p>
+      <app-product-list [tienda]="tienda" ></app-product-list>
+    }
   }
+  
 </div>
 

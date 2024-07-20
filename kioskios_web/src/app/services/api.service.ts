@@ -36,6 +36,7 @@ export class ApiService {
 
   getProducts(tienda?: Tienda): Observable<Producto[]> {
     const url = this.urlBaseApi + '/get_productos/';
+    console.log("Enviando la request de productos con este body: ", {tienda: tienda?.id});
     return this.http
       .post<{ status: number; productos: Producto[] }>(url,{token: localStorage.getItem('token'), tienda: tienda?.id})
       .pipe(
