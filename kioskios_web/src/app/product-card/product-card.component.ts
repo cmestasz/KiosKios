@@ -24,7 +24,7 @@ export class ProductCardComponent implements OnInit{
   ){}
 
   viewProduct() {
-    this.router.navigate(['/user/product/' + this.product.id]);
+    this.router.navigate([`/user/product/${this.product.id}`]);
   }
 
   ngOnInit(): void {

@@ -52,10 +52,10 @@ export class ApiService {
       )
   }
 
-  getProductById(product: Producto): Observable<Producto> {
+  getProductById(id: Number): Observable<Producto> {
     const url = this.urlBaseApi + '/get_producto/';
     return this.http
-      .post<{ status: number; producto: Producto }>(url,{token: localStorage.getItem('token'), id: product.id})
+      .post<{ status: number; producto: Producto }>(url,{token: localStorage.getItem('token'), id})
       .pipe(
         map((response) => {
           if (response.status != 200) throw new HttpErrorResponse({status: 401, statusText: "Desautorizado, probablemente el token ha expirado"});
