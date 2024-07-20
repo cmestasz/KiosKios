@@ -29,6 +29,7 @@
                 @if(user.tipo=='DU'){
                     <li><a routerLink="/register" class="register1">Administrar Productos</a></li>
                     <li><a routerLink="/register" class="register1">Ventas</a></li>
+                    <li><a routerLink="/owner" class="register1">Home</a></li>
                 }
                 <li><a (click)="showSignOut()"> {{ user.email }}</a></li>
                 @if (showSignOutButton) {
