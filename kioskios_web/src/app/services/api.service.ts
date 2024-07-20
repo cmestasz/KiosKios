@@ -18,8 +18,40 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
-  getModel<T>(getModelType: string):Observable<T[]> {
-    const url = this.urlBaseApi + getModelType;
+  getTiendas(): Observable<Tienda[]> {
+    const url = this.urlBaseApi + '/get_tiendas/';
+    return this.http
+      .post<{ status: number; tiendas: Tienda[] }>(url, {token: localStorage.getItem('token')})
+      .pipe(
+        map((response) => {
+          if (response.status != 200) throw new HttpErrorResponse({status: 401, statusText: "Desautorizado, probablemente el token ha expirado"});
+          console.log("Enviando tiendas: ", response)
+          return response.tiendas;
+        }),
+        catchError((error: HttpErrorResponse) => {
+          throw error;
+        })
+      )
+  }
+
+  getProducts(tienda?: Tienda): Observable<Producto[]> {
+    const url = this.urlBaseApi + '/get_productos/';
+    return this.http
+      .post<{ status: number; productos: Producto[] }>(url,{token: localStorage.getItem('token'), tienda: tienda?.id})
+      .pipe(
+        map((response) => {
+          if (response.status != 200) throw new HttpErrorResponse({status: 401, statusText: "Desautorizado, probablemente el token ha expirado"});
+          console.log("Enviando productos de la tienda: ", tienda, " prodcuts: ", response);
+          return response.productos;
+        }),
+        catchError((error: HttpErrorResponse) => {
+          throw error;
+        })
+      )
+  }
+
+  getVentas(): Observable<Venta[]> {
+    const url = this.urlBaseApi + '/get_productos';
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -27,11 +59,11 @@ export class ApiService {
     };
 
     return this.http
-      .get<{ status: number; models: T[] }>(url, httpOptions)
+      .get<{ status: number; ventas: Venta[] }>(url, httpOptions)
       .pipe(
         map((response) => {
           if (response.status != 200) throw new HttpErrorResponse({status: 401, statusText: "Desautorizado, probablemente el token ha expirado"});
-          return response.models;
+          return response.ventas;
         }),
         catchError((error: HttpErrorResponse) => {
           throw error;
