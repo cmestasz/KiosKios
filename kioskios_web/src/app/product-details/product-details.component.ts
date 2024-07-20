@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Producto } from '../models/product';
 import { ApiService } from '../services/api.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { catchError } from 'rxjs';
 
 @Component({
   selector: 'app-product-details',
@@ -25,12 +24,16 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log("Iniciando componente de detalles");
     this.route.paramMap.subscribe(
       params => {
         const id = Number(params.get('id'));
+        console.log("Parámetros de la ruta: id", id);
         if (id) {
+          console.log("Petición a la api");
           this.api.getProductById(id).subscribe(
             product => {
+              console.log("Una entrega de producto: ", product);
               this.product = product;
               this.loadImage();
             }
