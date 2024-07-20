@@ -7,6 +7,7 @@ import { OwnerHomeComponent } from './home/owner-home/owner-home.component';
 import { AnyHomeComponent } from './home/any-home/any-home.component';
 import { HomeComponent } from './home/home.component';
 import { AuthRedirectComponent } from './auth-redirect/auth-redirect.component';
+import { ProductDetailsComponent } from './product-details/product-details.component';
 
 export const routes: Routes = [
   {
@@ -15,7 +16,11 @@ export const routes: Routes = [
         path: '', component: AnyHomeComponent, title: 'KiosKios - Tu tienda virtual'
       },
       {
-        path: 'user', component: UserHomeComponent, title: 'Home - Usuario'
+        path: 'user', component: UserHomeComponent, title: 'Home - Usuario', children: [
+          {
+            path: 'product/:id', component: ProductDetailsComponent
+          }
+        ]
       },
       {
         path: 'owner', component: OwnerHomeComponent, title: 'Home - Dueño'
