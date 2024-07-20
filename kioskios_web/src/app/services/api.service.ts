@@ -11,8 +11,8 @@ import { Venta } from '../models/venta';
   providedIn: 'root',
 })
 export class ApiService {
-  private urlBaseApi: string = 'http://localhost:8000/api';
-  private urlMediaApi: string = 'http://localhost:8000/media'
+  private urlBaseApi: string = 'https://kios-kios-api.vercel.app/api';
+  private urlMediaApi: string = 'https://kios-kios-api.vercel.app/media';
 
   constructor(private http: HttpClient) {}
 

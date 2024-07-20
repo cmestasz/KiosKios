@@ -13,7 +13,7 @@ export const TYPE_FORMS = {
 export const MODEL_URL = {
   PRODUCTO: 'get_products',
   VENTA: 'get_sales',
-  TIENDAS: 'get_shops'
+  TIENDAS: 'get_shops',
 }
 export type CategoryKey = 'BEB' | 'LIB' | 'SNA' | 'IMP' | 'ELE' | 'ASE' | 'OTR';
 
