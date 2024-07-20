@@ -1,0 +1,6 @@
+<div>
+  <h2>{{ tienda.nombre }}</h2>
+  @for (product of products; track $index) {
+    <app-product-card [product]="product" ></app-product-card>
+  }
+</div>

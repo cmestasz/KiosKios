@@ -9,7 +9,7 @@ import { Producto } from '../models/product';
   styleUrl: './product-card.component.css'
 })
 export class ProductCardComponent {
-  @Input() product: Producto;
+  @Input('product') product!: Producto;
 
   viewProduct() {
     // Detalles del producto
