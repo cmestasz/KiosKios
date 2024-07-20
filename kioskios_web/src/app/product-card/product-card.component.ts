@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Producto } from '../models/product';
 import { ApiService } from '../services/api.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { CATEGORY, CategoryKey } from '../constants';
 
 @Component({
   selector: 'app-product-card',
@@ -24,6 +25,7 @@ export class ProductCardComponent implements OnInit{
   }
 
   ngOnInit(): void {
+    this.product.categoria = CATEGORY[this.product.categoria as CategoryKey] || "Otro";
     this.loadImage();
   }
   loadImage(): void {

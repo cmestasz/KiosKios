@@ -3,7 +3,6 @@ import { ProductCardComponent } from '../product-card/product-card.component';
 import { Tienda } from '../tienda';
 import { ApiService } from '../services/api.service';
 import { Producto } from '../models/product';
-import { MODEL_URL } from '../constants';
 
 @Component({
   selector: 'app-product-list',
