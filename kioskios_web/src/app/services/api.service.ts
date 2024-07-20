@@ -17,7 +17,7 @@ export class ApiService {
   constructor(private http: HttpClient) {}
 
   getTiendas(): Observable<Tienda[]> {
-    const url = this.urlBaseApi + '/get_tiendas/';
+    const url = this.urlBaseApi + '/get_shops/';
     return this.http
       .post<{ status: number; tiendas: Tienda[] }>(url, {token: localStorage.getItem('token')})
       .pipe(
@@ -33,7 +33,7 @@ export class ApiService {
   }
 
   getProducts(tienda?: Tienda): Observable<Producto[]> {
-    const url = this.urlBaseApi + '/get_productos/';
+    const url = this.urlBaseApi + '/get_products/';
     console.log("Enviando la request de productos con este body: ", {tienda: tienda?.id});
     return this.http
       .post<{ status: number; productos: Producto[] }>(url,{token: localStorage.getItem('token'), tienda: tienda?.id})
@@ -66,7 +66,7 @@ export class ApiService {
   }
 
   getVentas(): Observable<Venta[]> {
-    const url = this.urlBaseApi + '/get_productos';
+    const url = this.urlBaseApi + '/get_sales/';
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -87,7 +87,7 @@ export class ApiService {
   }
 
   unauthUser(email: string): Observable<boolean> {
-    const url = this.urlBaseApi + '/cerrar_sesion/';
+    const url = this.urlBaseApi + '/logout/';
     return this.http.post<{status: number, message?: string}>(url, {email: email, token: localStorage.getItem('token')}).pipe(
       
       map(response => {
@@ -101,7 +101,7 @@ export class ApiService {
   }
 
   authUserWithEmail(email: string): Observable<User> {
-    const url = this.urlBaseApi + '/iniciar_sesion_google/';
+    const url = this.urlBaseApi + '/google_login/';
     return this.http
       .post<Response>(url, {
         email: email,

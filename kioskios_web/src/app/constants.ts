@@ -1,15 +1,20 @@
 import { User } from "./models/user";
 
 export const TYPE_FORMS = {
-  CREATE_USER: "crear_usuario",
-  CREATE_OWNER: "crear_dueño",
-  CREATE_STORE: "crear_tienda",
-  CREATE_PRODUCT: "crear_producto",
-  CREATE_VENTA: "crear_venta",
-  LOGIN: "iniciar_sesion",
-  GET_PRODUCTS: "get_productos"
+  CREATE_USER: "create_user",
+  CREATE_OWNER: "create_owner",
+  CREATE_STORE: "create_shop",
+  CREATE_PRODUCT: "create_product",
+  CREATE_VENTA: "create_sale",
+  LOGIN: "login",
+  GET_PRODUCTS: "get_products"
 };
 
+export const MODEL_URL = {
+  PRODUCTO: 'get_products',
+  VENTA: 'get_sales',
+  TIENDAS: 'get_shops',
+}
 export type CategoryKey = 'BEB' | 'LIB' | 'SNA' | 'IMP' | 'ELE' | 'ASE' | 'OTR';
 
 export const CATEGORY: {[key in CategoryKey]: string} = {
