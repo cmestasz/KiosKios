@@ -99,3 +99,16 @@ export class AuthService {
   }
 
 }
+
+export function getUserLocal(): User {
+  const userData = localStorage.getItem('user');
+  let user: User = EMPTY_USER;
+  try {
+    if (userData) {
+      user = JSON.parse(userData);      
+    }
+  }catch(err){
+    throw new Error("No se pudo parsear el usuario");
+  }
+  return user;
+}

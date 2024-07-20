@@ -3,13 +3,10 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Observable, catchError, map, of } from 'rxjs';
 import { FormField } from '../models/form-field';
 import { Producto } from '../models/product';
-import { Form } from '../form';
 import { User } from '../models/user';
-import { response } from 'express';
-import { error } from 'console';
 import { EMPTY_USER } from '../constants';
-import { Tienda } from '../tienda';
-import { Venta } from '../venta';
+import { Tienda } from '../models/tienda';
+import { Venta } from '../models/venta';
 @Injectable({
   providedIn: 'root',
 })
@@ -20,7 +17,7 @@ export class ApiService {
   constructor(private http: HttpClient) {}
 
   getTiendas(): Observable<Tienda[]> {
-    const url = this.urlBaseApi + '/get_tiendas/';
+    const url = this.urlBaseApi + '/get_shops/';
     return this.http
       .post<{ status: number; tiendas: Tienda[] }>(url, {token: localStorage.getItem('token')})
       .pipe(
@@ -36,7 +33,7 @@ export class ApiService {
   }
 
   getProducts(tienda?: Tienda): Observable<Producto[]> {
-    const url = this.urlBaseApi + '/get_productos/';
+    const url = this.urlBaseApi + '/get_products/';
     console.log("Enviando la request de productos con este body: ", {tienda: tienda?.id});
     return this.http
       .post<{ status: number; productos: Producto[] }>(url,{token: localStorage.getItem('token'), tienda: tienda?.id})
@@ -52,8 +49,24 @@ export class ApiService {
       )
   }
 
+  getProductById(id: Number): Observable<Producto> {
+    const url = this.urlBaseApi + '/get_producto_por_id/';
+    return this.http
+      .post<{ status: number; producto: Producto }>(url,{token: localStorage.getItem('token'), id})
+      .pipe(
+        map((response) => {
+          console.log("Resquest de producto por id: ", response);
+          if (response.status != 200) throw new HttpErrorResponse({status: 401, statusText: "Desautorizado, probablemente el token ha expirado"});
+          return response.producto;
+        }),
+        catchError((error: HttpErrorResponse) => {
+          throw error;
+        })
+      )
+  }
+
   getVentas(): Observable<Venta[]> {
-    const url = this.urlBaseApi + '/get_productos';
+    const url = this.urlBaseApi + '/get_sales/';
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -74,7 +87,7 @@ export class ApiService {
   }
 
   unauthUser(email: string): Observable<boolean> {
-    const url = this.urlBaseApi + '/cerrar_sesion/';
+    const url = this.urlBaseApi + '/logout/';
     return this.http.post<{status: number, message?: string}>(url, {email: email, token: localStorage.getItem('token')}).pipe(
       map(response => {
         if (response.status == 200) {
@@ -90,7 +103,7 @@ export class ApiService {
   }
 
   authUserWithEmail(email: string): Observable<User> {
-    const url = this.urlBaseApi + '/iniciar_sesion_google/';
+    const url = this.urlBaseApi + '/google_login/';
     return this.http
       .post<{ status: number; message?: string; user?: User }>(url, {
         email: email,
@@ -113,7 +126,7 @@ export class ApiService {
 
   postForm(formtoSend: FormData, to: string): Observable<any> {
     const url = this.urlBaseApi + `/${to}/`;
-    return this.http.post<Form>(url, formtoSend);
+    return this.http.post<FormData>(url, formtoSend);
   }
 
   getFormSchema(formToGet: string): Observable<FormField[]> {

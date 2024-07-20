@@ -1,9 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ProductCardComponent } from '../product-card/product-card.component';
-import { Tienda } from '../tienda';
-import { ApiService } from '../services/api.service';
-import { Producto } from '../models/product';
-import { MODEL_URL } from '../constants';
+import { Tienda } from '../../models/tienda';
+import { ApiService } from '../../services/api.service';
+import { Producto } from '../../models/product';
 
 @Component({
   selector: 'app-product-list',

@@ -35,7 +35,7 @@
                 @if (showSignOutButton) {
                 <li><a (click)="signOut()" class="register">Cerrar Sesión</a></li>
                 }
-            } @else if (userReceived) {
+            } @else {
                 <li><a routerLink="/login">Iniciar Sesión</a></li>
                 <li><a routerLink="/register" class="register">Regístrate</a></li>
             }
