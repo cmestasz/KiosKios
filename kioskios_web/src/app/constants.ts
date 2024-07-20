@@ -10,4 +10,10 @@ export const TYPE_FORMS = {
   GET_PRODUCTS: "get_productos"
 };
 
+export const MODEL_URL = {
+  PRODUCTO: 'get_productos',
+  VENTA: 'get_ventas',
+  TIENDAS: 'get_tiendas'
+}
+
 export const EMPTY_USER = {} as User;
