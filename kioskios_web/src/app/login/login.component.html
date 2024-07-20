@@ -4,6 +4,9 @@
   <div style="display:flex;align-items: center;justify-content:center;">
     <div class="form-container">
       <loader-form />
+      <p>¿No tienes una cuenta? <a [routerLink]="['/register']">Regístrate ahora</a></p>
+      <h3>o</h3>
+      <button (click)="signInWithGoogle()" >Google</button>
     </div>
   </div>
 </main>

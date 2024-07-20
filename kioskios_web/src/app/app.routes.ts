@@ -1,23 +1,34 @@
 import { Routes } from '@angular/router';
-import { DinamicFormComponent } from './dinamic-form/dinamic-form.component';
-import { HomeComponent } from './home/home.component';
-import { HeaderComponent } from './home/header/header.component';
-import { FooterComponent } from './home/footer/footer.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { TestComponent } from './test/test.component';
+import { UserHomeComponent } from './home/user-home/user-home.component';
+import { OwnerHomeComponent } from './home/owner-home/owner-home.component';
+import { AnyHomeComponent } from './home/any-home/any-home.component';
+import { HomeComponent } from './home/home.component';
+import { AuthRedirectComponent } from './auth-redirect/auth-redirect.component';
 
 export const routes: Routes = [
   {
-    path: '', component: HomeComponent
+    path: '', component: HomeComponent, children: [
+      {
+        path: '', component: AnyHomeComponent, title: 'KiosKios - Tu tienda virtual'
+      },
+      {
+        path: 'user', component: UserHomeComponent, title: 'Home - Usuario'
+      },
+      {
+        path: 'owner', component: OwnerHomeComponent, title: 'Home - Dueño'
+      }
+    ]
   },
   {
-    path: 'login', component: LoginComponent
+    path: 'login', component: LoginComponent, title: 'KiosKios - Login'
   },
   {
-    path: 'register', component: RegisterComponent
+    path: 'register', component: RegisterComponent, title: 'KiosKios - Register'
   },
   {
-    path: 'test', component: TestComponent
+    path: 'google_auth', component: AuthRedirectComponent, title: 'Redirecting'
   }
 ];

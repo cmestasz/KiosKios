@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>{% if titulo %}{{ titulo }}{% else %}PDF{% endif %}</title>
+    </head>
+    <body>
+      <div class="wrapper">
+        <div class="header">
+          <p class="title">Venta #{{ titulo }}</p>
+        </div>
+        <div class="details">
+          <p><strong>Cliente:</strong> {{ usuario }} </p>
+          <p><strong>Fecha:</strong> {{ fecha | date:"d/m/Y" }} </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for venta_producto in venta_productos %}
+              <tr>
+                <td>{{ venta_producto.producto }}</td>
+                <td>{{ venta_producto.cantidad }}</td>
+                <td>S/. {{ venta_producto.producto.precio }}</td>
+              </tr>
+              {% endfor %}
+              <tr>
+                <td>Total</td>
+                <td>{{ total }}</td>
+              </tr>
+            </table>
+            </tbody>
+
+          <p></p>
+        </div>
+      </div>
+
+    </body>
+</html>

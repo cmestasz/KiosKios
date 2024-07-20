@@ -26,6 +26,9 @@
     max-height: 40px;
     border-color: #ff9900;
 }
+.button:disabled {
+    /* Estilos para botón deshabilitado */
+}
 .form-container {
     background-color: rgb(233, 233, 233);
     padding: 20px;

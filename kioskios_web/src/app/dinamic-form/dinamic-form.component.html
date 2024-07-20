@@ -3,10 +3,18 @@
     <label [for]="field.name">{{ field.label }}</label>
     @switch (field.tipoCampo) {
       @case ('input') {
-        <input [type]="field.attributes?.['type']" 
+        @if (field.attributes?.['type'] == 'file') {
+          <input [type]="field.attributes?.['type']" (change)="imageInputPicked($event, field.name)"
+               [formControlName]="field.name"
+               [attr.placeholder]="field.attributes?.['placeholder'] || field.name"
+               [accept]="field.attributes?.['accept'] || 'image/*'"
+        >
+        } @else {
+          <input [type]="field.attributes?.['type']" 
                [formControlName]="field.name"
                [attr.placeholder]="field.attributes?.['placeholder'] || field.name"
         >
+        }
       }
       @case ('select') {
         <select  [formControlName]="field.name"
