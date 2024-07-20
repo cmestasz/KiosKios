@@ -26,7 +26,11 @@ export const routes: Routes = [
         ]
       },
       {
-        path: 'owner', component: OwnerHomeComponent, title: 'Home - Dueño'
+        path: 'owner', children: [
+          {
+            path: '', component: OwnerHomeComponent, title: 'Home - Dueño'
+          }
+        ]
       }
     ]
   },

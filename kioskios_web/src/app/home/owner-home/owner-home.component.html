@@ -1,24 +1,23 @@
-<p>owner-home works!</p>
 <div class="elementos-de-edicion">
   <div class="agregarArticulos">
-      
-      <a href='/additem'> <i class="bi bi-database-add"></i>   Agregar producto</a>
+
+    <h2>Administra tus tiendas</h2>
+
+    <a routerLink="/add/store"> <i class="bi bi-database-add"></i> Agregar tienda</a>
     <div>
-        
-      @for (producto of productos; track $index) {
-        <div class="producto">
-          <h3>{{ producto.nombre }}</h3>
-          <p>{{ producto.descripcion }}</p>
-          <p>{{ producto.precio }}</p>
-        </div>
-      
+
+      @for (tienda of tiendas; track $index) {
+      <div class="producto">
+        <h3>{{ tienda.nombre }}</h3>
+      </div>
+
       }
 
       <!-- articulos -->
       <section>
-          <div class="grid">           
-              
-          </div>
+        <div class="grid">
+
+        </div>
       </section>
     </div>
   </div>

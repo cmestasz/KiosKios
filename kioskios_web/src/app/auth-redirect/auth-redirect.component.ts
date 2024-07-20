@@ -11,7 +11,11 @@ import { unsubscribe } from 'diagnostics_channel';
 })
 export class AuthRedirectComponent implements OnInit{
 
-  constructor(private authService: AuthService,private router: Router){}
+  successRedir: boolean;
+
+  constructor(private authService: AuthService,private router: Router){
+    this.successRedir = false;
+  }
 
   ngOnInit(): void {
     this.authService.getUserForRedirect().subscribe(user => {
@@ -26,10 +30,12 @@ export class AuthRedirectComponent implements OnInit{
         console.log("Usuario no existe, debe crear cuenta, redirigiendo al registro");
         this.router.navigate(['/register'], {replaceUrl: true});
       }
+      this.successRedir = true
     });
-    console.log("Esperando una respuesta durante 5 segundos, se redirigirá al home después de este tiempo");
+    console.log("Esperando una respuesta durante 5 segundos, se redirigirá al home después de este tiempo si no se ha hecho un redirección correcta");
     setTimeout(() => {
-      this.router.navigate(['/']);
+      if(!this.successRedir)
+        this.router.navigate(['/']);
     }, 5000)
   }
 
