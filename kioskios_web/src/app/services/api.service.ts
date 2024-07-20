@@ -15,6 +15,7 @@ import { Venta } from '../venta';
 })
 export class ApiService {
   private urlBaseApi: string = 'http://localhost:8000/api';
+  private urlMediaApi: string = 'http://localhost:8000/media'
 
   constructor(private http: HttpClient) {}
 
@@ -135,6 +136,10 @@ export class ApiService {
           throw error;
         })
       );
+  }
+  
+  getMedia(url: string): Observable<Blob> {
+    return this.http.get(url, { responseType: 'blob' });
   }
 
 }
