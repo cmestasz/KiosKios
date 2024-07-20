@@ -32,9 +32,6 @@ export class AuthService {
           this.user = JSON.parse(userData);
           if (this.user.email) { // si no tiene email es porque está vacío
             this.userSubject.next(this.user);
-            this.api.authUserWithEmail(this.user.email).subscribe(response => {
-              console.log("Usuario autenticado desde local storage: ", response)
-          }); 
           }
         } catch (error) {
           console.error("No se pudo obtener los datos de usuario desde el localstorage: ", error);
@@ -42,7 +39,9 @@ export class AuthService {
       }
 
       this.googleAuth.getEmailObservable().subscribe(email => {
-        if (email) {
+        console.log("Escuchando desde el servicio de autenticación general");
+        console.log("Valor del email recibido: ", email);
+        if (email && email.trim()) {
           console.log("Email recibido por Google: ", email);
           this.api.authUserWithEmail(email).subscribe(response => {
             this.user = response;
@@ -52,9 +51,10 @@ export class AuthService {
             localStorage.setItem('user', JSON.stringify(response));
           });
         } else {
-          console.error('No se pudo obtener el correo electrónico del usuario.');
-          //this.userForRedirect.next(EMPTY_USER);
+          console.log('No se pudo obtener el correo electrónico del usuario.');
         }
+
+        console.log("Se terminó de actuar desde el servicio de autenticación");
       });
     }
   }
@@ -69,7 +69,7 @@ export class AuthService {
   }
 
   getUserForRedirect(): Observable<User> {
-    console.log("Enviando usuario para redirección como observable");
+    console.log("Enviando usuario para redirección como observable", this.user);
     return this.userForRedirect.asObservable();
   }
 

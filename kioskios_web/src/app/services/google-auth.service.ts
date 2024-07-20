@@ -2,7 +2,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthConfig, JwksValidationHandler, OAuthErrorEvent, OAuthService } from 'angular-oauth2-oidc';
-import { catchError, Subject } from 'rxjs';
+import { catchError, map, Subject } from 'rxjs';
 
 
 @Injectable({
@@ -10,11 +10,11 @@ import { catchError, Subject } from 'rxjs';
 })
 export class GoogleAuthService {
 
-  private emailSubject: Subject<string | null> = new Subject<string | null>();
+  private emailSubject: Subject<string> = new Subject<string>();
 
   constructor(
     private oAuthService: OAuthService,
-    @Inject(PLATFORM_ID) private platformId: object
+    @Inject(PLATFORM_ID) private platformId: object,
   ) {
     if (isPlatformBrowser(this.platformId)) {
       this.initConfiguration();
@@ -26,7 +26,7 @@ export class GoogleAuthService {
           this.emailSubject.next(this.getEmail());
         } else if (event.type === 'token_error') {
           console.log('No se inició sesión con google');
-          this.emailSubject.next(null);
+          this.emailSubject.next('');
         }
       });
     }
@@ -42,21 +42,11 @@ export class GoogleAuthService {
     };
 
     this.oAuthService.configure(authConfig);
-    this.oAuthService.setupAutomaticSilentRefresh();
-    this.oAuthService.loadDiscoveryDocumentAndTryLogin().then(() => {
-      if (this.oAuthService.hasValidAccessToken()) {
-        console.log('Token válido encontrado.');
-        const email = this.getEmail();
-        this.emailSubject.next(email);
-      } else {
-        console.log('No se encontró un token válido.');
-      }
-    });
+    this.oAuthService.loadDiscoveryDocumentAndTryLogin();
   }
 
   login() {
     this.oAuthService.initImplicitFlow();
-
   }
 
   logout() {
