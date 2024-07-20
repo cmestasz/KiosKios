@@ -3,7 +3,7 @@ import { HeaderComponent } from './header/header.component';
 import { NavComponent } from './nav/nav.component';
 import { FooterComponent } from './footer/footer.component';
 import { RouterOutlet } from '@angular/router';
-import { BannerComponent } from './banner/banner.component';
+import { BannerComponent } from './any-home/banner/banner.component';
 
 @Component({
   selector: 'app-home',

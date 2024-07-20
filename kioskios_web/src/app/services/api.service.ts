@@ -3,13 +3,10 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Observable, catchError, map, of } from 'rxjs';
 import { FormField } from '../models/form-field';
 import { Producto } from '../models/product';
-import { Form } from '../form';
 import { User } from '../models/user';
-import { response } from 'express';
-import { error } from 'console';
 import { EMPTY_USER } from '../constants';
-import { Tienda } from '../tienda';
-import { Venta } from '../venta';
+import { Tienda } from '../models/tienda';
+import { Venta } from '../models/venta';
 @Injectable({
   providedIn: 'root',
 })
@@ -45,6 +42,22 @@ export class ApiService {
           if (response.status != 200) throw new HttpErrorResponse({status: 401, statusText: "Desautorizado, probablemente el token ha expirado"});
           console.log("Enviando productos de la tienda: ", tienda, " prodcuts: ", response);
           return response.productos;
+        }),
+        catchError((error: HttpErrorResponse) => {
+          throw error;
+        })
+      )
+  }
+
+  getProductById(id: Number): Observable<Producto> {
+    const url = this.urlBaseApi + '/get_producto_por_id/';
+    return this.http
+      .post<{ status: number; producto: Producto }>(url,{token: localStorage.getItem('token'), id})
+      .pipe(
+        map((response) => {
+          console.log("Resquest de producto por id: ", response);
+          if (response.status != 200) throw new HttpErrorResponse({status: 401, statusText: "Desautorizado, probablemente el token ha expirado"});
+          return response.producto;
         }),
         catchError((error: HttpErrorResponse) => {
           throw error;
@@ -113,7 +126,7 @@ export class ApiService {
 
   postForm(formtoSend: FormData, to: string): Observable<any> {
     const url = this.urlBaseApi + `/${to}/`;
-    return this.http.post<Form>(url, formtoSend);
+    return this.http.post<FormData>(url, formtoSend);
   }
 
   getFormSchema(formToGet: string): Observable<FormField[]> {

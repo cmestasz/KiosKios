@@ -6,8 +6,8 @@ import { filter, map, Observable, tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
-import { Tienda } from '../../tienda';
-import { ProductListComponent } from '../../product-list/product-list.component';
+import { Tienda } from '../../models/tienda';
+import { ProductListComponent } from '../product-list/product-list.component';
 
 @Component({
   selector: 'app-user-home',

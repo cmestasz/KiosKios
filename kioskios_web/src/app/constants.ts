@@ -13,7 +13,18 @@ export const TYPE_FORMS = {
 export const MODEL_URL = {
   PRODUCTO: 'get_products',
   VENTA: 'get_sales',
-  TIENDAS: 'get_shops'
+  TIENDAS: 'get_shops',
+}
+export type CategoryKey = 'BEB' | 'LIB' | 'SNA' | 'IMP' | 'ELE' | 'ASE' | 'OTR';
+
+export const CATEGORY: {[key in CategoryKey]: string} = {
+  BEB: 'Bebidas',
+  LIB: 'Librería',
+  SNA: 'Snacks',
+  IMP: 'Impresiones',
+  ELE: 'Electrónicos',
+  ASE: 'Aseo',
+  OTR: 'Otros',
 }
 
 export const EMPTY_USER = {} as User;

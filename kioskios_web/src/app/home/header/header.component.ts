@@ -1,8 +1,8 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Router, RouterLink} from '@angular/router';
 import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCartShopping, faMagnifyingGlass, faBars } from '@fortawesome/free-solid-svg-icons';
-import { AuthService } from '../../services/auth.service';
+import { AuthService, getUserLocal } from '../../services/auth.service';
 import { User } from '../../models/user';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -17,25 +17,17 @@ import { EMPTY_USER } from '../../constants';
   styleUrl: './header.component.css',
 
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit{
   isMenuOpen: boolean = true;
   showSignOutButton: boolean = false;
-  user!: User;
-  userReceived: boolean;
+  user: User;
   constructor(
     library: FaIconLibrary,
     private authService: AuthService,
     private router: Router
   ){
     library.addIcons(faCartShopping, faMagnifyingGlass);
-    this.userReceived = false;
-    this.authService.getUser().subscribe(
-      user => {
-        console.log("Recibiendo el usuario en el componente header: ", user);
-        this.userReceived = true;
-        this.user = user;
-      }
-    );
+    this.user = getUserLocal();
   }
   @HostListener('window:resize', ['$event'])
   onResize(event: Event) {
@@ -45,6 +37,16 @@ export class HeaderComponent {
       this.isMenuOpen = true;
     }
   }
+
+  ngOnInit(): void {
+
+    this.authService.getUser().subscribe(
+      user => {
+        this.user = user;
+      }
+    );
+  }
+
   
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;

@@ -1,4 +1,4 @@
-import { User } from "./models/user";
+import { User } from "./user";
 
 export interface Tienda {
   id: number;
