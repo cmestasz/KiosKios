@@ -14,7 +14,6 @@ from .serializers import (
     form_serializer
 )
 from rest_framework.parsers import MultiPartParser
-from django.core import serializers
 from django.utils.crypto import get_random_string
 
 MESSAGES = {
@@ -55,7 +54,7 @@ class IniciarSesionView(APIView):
                 ActiveSessions.objects.create(user=user, session_key=token)
 
                 response = Response(
-                    {**MESSAGES['correct'], 'user': UsuarioSerializer(user).data, 'token': token})
+                    {**MESSAGES['correct'], 'user': UsuarioSerializer(user, context={'request': request}).data, 'token': token})
                 response.set_cookie('user', user)
                 return response
             return Response(MESSAGES['wrong_password'])
@@ -73,7 +72,7 @@ class IniciarSesionGoogleView(APIView):
 
             token = get_random_string(32)
             ActiveSessions.objects.create(user=user, session_key=token)
-            return Response({**MESSAGES['correct'], 'user': UsuarioSerializer(user).data, 'token': token})
+            return Response({**MESSAGES['correct'], 'user': UsuarioSerializer(user, context={'request': request}).data, 'token': token})
         except:
             return Response(MESSAGES['no_login'])
 
@@ -223,7 +222,7 @@ class GetProductoPorIdView(APIView):
 
     def post(self, request):
         producto = Producto.objects.get(id=request.data.get('id'))
-        serializer = ProductoSerializer(producto)
+        serializer = ProductoSerializer(producto, context={'request': request})
         return Response({'status': 200, 'producto': serializer.data})
 
 
@@ -239,7 +238,7 @@ class GetUsuarioPorCorreoView(APIView):
             usuario = Usuario.objects.get(email=email)
         except ObjectDoesNotExist:
             return Response({'status': 404, 'usuario': 'Usuario no encontrado'})
-        serializer = UsuarioSerializer(usuario)
+        serializer = UsuarioSerializer(usuario, context={'request': request})
         return Response({'status': 200, 'usuario': serializer.data})
 
 
