@@ -54,7 +54,8 @@ class IniciarSesionView(APIView):
                 token = get_random_string(32)
                 ActiveSessions.objects.create(user=user, session_key=token)
 
-                response = Response({**MESSAGES['correct'], 'user': UsuarioSerializer(user).data, 'token': token})
+                response = Response(
+                    {**MESSAGES['correct'], 'user': UsuarioSerializer(user).data, 'token': token})
                 response.set_cookie('user', user)
                 return response
             return Response(MESSAGES['wrong_password'])
@@ -81,7 +82,8 @@ class CerrarSessionView(APIView):
     permission_classes = [IsAuth]
 
     def post(self, request):
-        ActiveSessions.objects.get(session_key=request.data.get('token')).delete()
+        ActiveSessions.objects.get(
+            session_key=request.data.get('token')).delete()
         return Response(MESSAGES['correct'])
 
 
@@ -207,12 +209,22 @@ class GetProductosView(APIView):
             productos = Producto.objects.filter(
                 tienda__id=request.data.get('tienda'))
         elif is_owner(request):
-            productos = Producto.objects.filter(tienda__dueño=get_user(request))
+            productos = Producto.objects.filter(
+                tienda__dueño=get_user(request))
         else:
             return Response(MESSAGES['unallowed'])
         serializer = ProductoSerializer(
             productos, many=True, context={'request': request})
         return Response({'status': 200, 'productos': serializer.data})
+
+
+class GetProductoPorIdView(APIView):
+    permission_classes = [IsAuth]
+
+    def post(self, request):
+        producto = Producto.objects.get(id=request.data.get('id'))
+        serializer = ProductoSerializer(producto)
+        return Response({'status': 200, 'producto': serializer.data})
 
 
 class GetUsuarioPorCorreoView(APIView):
@@ -238,7 +250,8 @@ class GetVentasView(APIView):
         if is_user(request):
             ventas = Venta.objects.filter(usuario=get_user(request))
         elif is_owner(request):
-            ventas = Venta.objects.filter(producto__tienda__dueño=get_user(request))
+            ventas = Venta.objects.filter(
+                producto__tienda__dueño=get_user(request))
         else:
             return Response(MESSAGES['unallowed'])
         serializer = VentaSerializer(
