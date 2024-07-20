@@ -205,7 +205,7 @@ class GetProductosView(APIView):
     def post(self, request):
         if is_user(request):
             productos = Producto.objects.filter(
-                tienda=request.data.get('tienda'))
+                tienda__id=request.data.get('tienda'))
         elif is_owner(request):
             productos = Producto.objects.filter(tienda__dueño=get_user(request))
         else:
