@@ -16,12 +16,14 @@ export const routes: Routes = [
         path: '', component: AnyHomeComponent, title: 'KiosKios - Tu tienda virtual'
       },
       {
-        path: 'user', component: UserHomeComponent, title: 'Home - Usuario', children: [
-          
+        path: 'user', children: [
+          {
+            path: '', title: 'Home - Usuario', component: UserHomeComponent
+          },
+          {
+            path: 'product/:id', component: ProductDetailsComponent, title: 'Ver detalles del producto'
+          }
         ]
-      },
-      {
-        path: 'user/product/:id', component: ProductDetailsComponent, title: 'Ver detalles del productoA'
       },
       {
         path: 'owner', component: OwnerHomeComponent, title: 'Home - Dueño'
