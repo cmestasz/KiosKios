@@ -18,28 +18,8 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
-  getTiendas(): Observable<Tienda[]> {
-    const url = this.urlBaseApi + '/get_productos';
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-      }),
-    };
-
-    return this.http
-      .get<{ status: number; tiendas: Tienda[] }>(url, httpOptions)
-      .pipe(
-        map((response) => {
-          if (response.status != 200) throw new HttpErrorResponse({status: 401, statusText: "Desautorizado, probablemente el token ha expirado"});
-          return response.tiendas;
-        }),
-        catchError((error: HttpErrorResponse) => {
-          throw error;
-        })
-      )
-  }
-  getModel<T>():Observable<T[]> {
-    const url = this.urlBaseApi + '/get_productos';
+  getModel<T>(getModelType: string):Observable<T[]> {
+    const url = this.urlBaseApi + getModelType;
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -52,48 +32,6 @@ export class ApiService {
         map((response) => {
           if (response.status != 200) throw new HttpErrorResponse({status: 401, statusText: "Desautorizado, probablemente el token ha expirado"});
           return response.models;
-        }),
-        catchError((error: HttpErrorResponse) => {
-          throw error;
-        })
-      )
-  }
-
-  getProducts(): Observable<Producto[]> {
-    const url = this.urlBaseApi + '/get_productos';
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-      }),
-    };
-
-    return this.http
-      .get<{ status: number; productos: Producto[] }>(url, httpOptions)
-      .pipe(
-        map((response) => {
-          if (response.status != 200) throw new HttpErrorResponse({status: 401, statusText: "Desautorizado, probablemente el token ha expirado"});
-          return response.productos;
-        }),
-        catchError((error: HttpErrorResponse) => {
-          throw error;
-        })
-      )
-  }
-
-  getVentas(): Observable<Venta[]> {
-    const url = this.urlBaseApi + '/get_productos';
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-      }),
-    };
-
-    return this.http
-      .get<{ status: number; ventas: Venta[] }>(url, httpOptions)
-      .pipe(
-        map((response) => {
-          if (response.status != 200) throw new HttpErrorResponse({status: 401, statusText: "Desautorizado, probablemente el token ha expirado"});
-          return response.ventas;
         }),
         catchError((error: HttpErrorResponse) => {
           throw error;
