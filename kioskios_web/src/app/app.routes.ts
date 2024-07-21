@@ -40,6 +40,9 @@ export const routes: Routes = [
               },
               {
                 path: 'add-item', component: AddItemComponent, title: 'Agregar producto'
+              },
+              {
+                path: 'product/:id', component: ProductDetailsComponent, title: 'Ver detalles del producto'
               }
             ]
           }

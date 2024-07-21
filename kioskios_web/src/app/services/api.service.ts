@@ -50,7 +50,7 @@ export class ApiService {
   }
 
   getProductById(id: Number): Observable<Producto> {
-    const url = this.urlBaseApi + '/get_producto_por_id/';
+    const url = this.urlBaseApi + '/get_product_by_id/';
     return this.http
       .post<{ status: number; producto: Producto }>(url,{token: localStorage.getItem('token'), id})
       .pipe(

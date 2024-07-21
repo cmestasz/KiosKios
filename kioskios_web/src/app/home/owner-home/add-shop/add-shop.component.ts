@@ -14,7 +14,9 @@ export class AddShopComponent implements AfterViewInit{
   @ViewChild(LoaderFormComponent) loaderForm!: LoaderFormComponent;
   @ViewChild('addButton') addButton!: ElementRef<HTMLButtonElement>;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) {
+    
+  }
 
   ngAfterViewInit(): void {
       this.addItem();
@@ -24,7 +26,7 @@ export class AddShopComponent implements AfterViewInit{
   addItem() : void {
     this.loaderForm.createForm(TYPE_FORMS.CREATE_SHOP);
     this.loaderForm.formSubmitted.subscribe(() => {
-      console.log("Rediriiendo al vista owner");
+      console.log("Redirigiendo a la vista owner");
       this.router.navigate(['/owner']);
     });
     this.addButton.nativeElement.disabled = false;
