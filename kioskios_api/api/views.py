@@ -198,6 +198,7 @@ class GetPDFVentaView(APIView):
             'titulo': venta.id,
             'usuario': venta.usuario,
             'producto': venta.producto,
+            'precio': venta.producto.precio,
             'cantidad': venta.cantidad,
             'fecha': venta.fecha,
             'total': venta.producto.precio * venta.cantidad
