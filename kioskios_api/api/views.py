@@ -8,7 +8,7 @@ from .forms import (
     UsuarioForm, DueñoForm, TiendaForm, ProductoForm, LoginForm,
     TiendaFormAdmin, ProductoFormAdmin
 )
-from .models import Tienda, Producto, Venta, Usuario, VentaProducto, ActiveSessions
+from .models import Tienda, Producto, Venta, Usuario, ActiveSessions
 from .serializers import (
     UsuarioSerializer, TiendaSerializer, ProductoSerializer, VentaSerializer,
     form_serializer
@@ -148,10 +148,11 @@ class CrearProductoView(APIView):
         return Response({'status': 200, 'campos': form_serializer(form)})
 
 
+'''
 class CrearVentaView(APIView):
     permission_classes = [IsAuth, IsUser]
 
-    '''
+    
     {
         "productos": [
             {
@@ -164,13 +165,27 @@ class CrearVentaView(APIView):
             }
         ]    
     }
-    '''
+    
 
     def put(self, request):
         venta = Venta.objects.create(usuario=get_user(request))
         for producto in request.data.get('productos'):
             VentaProducto.objects.create(
                 venta=venta, producto=producto['id'], cantidad=producto['cantidad'])
+        return Response({**MESSAGES['created'], 'id': venta.id})
+'''
+
+
+class CrearVentaView(APIView):
+    permission_classes = [IsAuth, IsUser]
+
+    def put(self, request):
+        venta = Venta.objects.create(
+            usuario=get_user(request),
+            producto=request.data.get('producto'),
+            cantidad=request.data.get('cantidad')
+        )
+        venta.save()
         return Response({**MESSAGES['created'], 'id': venta.id})
 
 
@@ -179,13 +194,13 @@ class GetPDFVentaView(APIView):
 
     def post(self, request):
         venta = Venta.objects.get(id=request.data.get('id'))
-        venta_productos = VentaProducto.objects.filter(venta=venta)
         context = {
             'titulo': venta.id,
             'usuario': venta.usuario,
-            'venta_productos': venta_productos,
+            'producto': venta.producto,
+            'cantidad': venta.cantidad,
             'fecha': venta.fecha,
-            'total': sum([vp.producto.precio * vp.cantidad for vp in venta_productos])
+            'total': venta.producto.precio * venta.cantidad
         }
         return generate_pdf(request, context, 'venta_pdf.html', venta.id)
 
