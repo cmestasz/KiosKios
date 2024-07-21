@@ -1,4 +1,3 @@
-import { CategoryKey } from "../constants";
 
 export interface Producto {
   id: number;
@@ -7,5 +6,5 @@ export interface Producto {
   precio: number;
   stock: number;
   categoria: string;
-  imagen: string;
+  imagen: string | File;
 }
