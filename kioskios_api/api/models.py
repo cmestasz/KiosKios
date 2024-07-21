@@ -90,7 +90,7 @@ class Producto(models.Model):
     def __str__(self):
         return self.nombre
 
-
+'''
 class Venta(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, limit_choices_to={
                                 'tipo': Usuario.Types.USUARIO})
@@ -106,6 +106,17 @@ class VentaProducto(models.Model):
 
     def __str__(self):
         return f'{self.producto} - {self.cantidad}'
+'''
+
+class Venta(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, limit_choices_to={
+                                'tipo': Usuario.Types.USUARIO})
+    fecha = models.DateTimeField(auto_now_add=True)
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    cantidad = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f'{self.usuario} - {self.producto}'
 
 
 class ActiveSessions(models.Model):

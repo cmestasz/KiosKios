@@ -27,14 +27,14 @@ SECRET_KEY = os.environ.get('secret_key')
 DEBUG = False
 
 ALLOWED_HOSTS = [
-  'localhost',
-  '127.0.0.1',
-  '.vercel.app',
+    'localhost',
+    '127.0.0.1',
+    '.vercel.app',
 ]
 
 CORS_ALLOW_HEADERS = (
-  "responseType", 
-  "content-type"
+    "responseType",
+    "content-type"
 )
 
 SECURE_SSL_REDIRECT = True
