@@ -28,7 +28,7 @@ export class DinamicFormComponent {
     this.form = this.formBuilder.group({});
   }
 
-  loadSchema<T>(model: string, data?: T): void {
+  loadSchema(model: string): void {
     this.model = model;
     this.form = this.formBuilder.group({});
     this.api.getFormSchema(model).subscribe((fieldsReceived) => {
@@ -37,9 +37,22 @@ export class DinamicFormComponent {
     });
   }
 
+  loadSchemaWithData<T extends {[key: string]: any}>(model: string, data: T): void {
+    this.model = model;
+    this.form = this.formBuilder.group({});
+    this.api.getFormSchema(model).subscribe((fieldsReceived) => {
+      this.fields = fieldsReceived;
+      this.buildForm();
+      Object.keys(this.form.controls).forEach( (key) => {
+        if (key in data)
+          this.form.get(key)?.setValue(data[key]);
+      });
+    });
+  }
 
 
-  buildForm() {
+
+  buildForm(): void {
     for (const field of this.fields) {
       let control;
       if (field.attributes?.['type'] == 'file') {

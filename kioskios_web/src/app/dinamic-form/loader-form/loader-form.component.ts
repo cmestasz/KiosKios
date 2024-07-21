@@ -34,5 +34,6 @@ export class LoaderFormComponent {
       console.log("El componente no se ha podido cargar correctamente");
     }
   }
+  loadFormWithData(): void {}
 
 }

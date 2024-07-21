@@ -37,7 +37,7 @@ export class ProductDetailsComponent implements OnInit {
         this.user = user;
       }
     );
-
+A
     this.route.paramMap.subscribe(
       params => {
         const id = Number(params.get('id'));
