@@ -32,9 +32,6 @@ export class AuthService {
           this.user = JSON.parse(userData);
           if (this.user.email) { // si no tiene email es porque está vacío
             this.userSubject.next(this.user);
-            this.api.authUserWithEmail(this.user.email).subscribe(response => {
-              console.log("Usuario autenticado desde local storage: ", response)
-          }); 
           }
         } catch (error) {
           console.error("No se pudo obtener los datos de usuario desde el localstorage: ", error);
@@ -42,18 +39,15 @@ export class AuthService {
       }
 
       this.googleAuth.getEmailObservable().subscribe(email => {
-        if (email) {
-          console.log("Email recibido por Google: ", email);
+        if (email && email.trim()) {
           this.api.authUserWithEmail(email).subscribe(response => {
             this.user = response;
             this.userSubject.next(this.user);
             this.userForRedirect.next(this.user);
-            console.log("Configurando objeto actual en el servicio de autenticación: ", response);
             localStorage.setItem('user', JSON.stringify(response));
           });
         } else {
-          console.error('No se pudo obtener el correo electrónico del usuario.');
-          //this.userForRedirect.next(EMPTY_USER);
+          console.log('No se pudo obtener el correo electrónico del usuario.');
         }
       });
     }
@@ -64,12 +58,10 @@ export class AuthService {
   }
 
   getUser(): Observable<User> {
-    console.log("Enviando el usuario como observable: ", this.user);
     return this.userSubject.asObservable();
   }
 
   getUserForRedirect(): Observable<User> {
-    console.log("Enviando usuario para redirección como observable");
     return this.userForRedirect.asObservable();
   }
 
@@ -84,14 +76,11 @@ export class AuthService {
     if (this.user) {
       this.api.unauthUser(this.user.email).subscribe(
         response => {
-          console.log("Se logró cerrar la sesión ", response);
+          alert("Se logró cerrar la sesión " + response);
           if (response) {
-            console.log("Logout actual user");
             this.user = EMPTY_USER;
-            console.log("Eliminando del localStorage  ");
             localStorage.removeItem('user');
             localStorage.removeItem('token');
-            console.log("Actualizando subject del usuario");
             this.userSubject.next(EMPTY_USER);
           }
         });

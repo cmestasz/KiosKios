@@ -3,7 +3,7 @@ import { User } from "./models/user";
 export const TYPE_FORMS = {
   CREATE_USER: "create_user",
   CREATE_OWNER: "create_owner",
-  CREATE_STORE: "create_shop",
+  CREATE_SHOP: "create_shop",
   CREATE_PRODUCT: "create_product",
   CREATE_VENTA: "create_sale",
   LOGIN: "login",

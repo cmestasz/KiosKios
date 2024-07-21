@@ -7,12 +7,12 @@ import { User } from '../models/user';
 import { EMPTY_USER } from '../constants';
 import { Tienda } from '../models/tienda';
 import { Venta } from '../models/venta';
+import { Response } from '../models/response';
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
-  private urlBaseApi: string = 'https://kios-kios-api.vercel.app/api';
-  private urlMediaApi: string = 'https://kios-kios-api.vercel.app/media';
+  private urlBaseApi: string = 'http://localhost:8000/api';
 
   constructor(private http: HttpClient) {}
 
@@ -89,14 +89,12 @@ export class ApiService {
   unauthUser(email: string): Observable<boolean> {
     const url = this.urlBaseApi + '/logout/';
     return this.http.post<{status: number, message?: string}>(url, {email: email, token: localStorage.getItem('token')}).pipe(
+      
       map(response => {
-        if (response.status == 200) {
-          return true;
-        }
-        return false;
+        return true;
       }),
       catchError(e => {
-        console.log("Error de cerrado de sesión");
+        console.log("Error de cerrado de sesión", e);
         return of(false);
       })
     );
@@ -105,32 +103,38 @@ export class ApiService {
   authUserWithEmail(email: string): Observable<User> {
     const url = this.urlBaseApi + '/google_login/';
     return this.http
-      .post<{ status: number; message?: string; user?: User }>(url, {
+      .post<Response>(url, {
         email: email,
       })
       .pipe(
         map((response) => {
           console.log('Repuesta de la api: ', response);
-          if (response.user) {
+          if (response.user && response.token) {
             console.log(
               'Enviando respuesta final, usuario enviado: ',
               response.user
             );
+            localStorage.setItem('token',response.token);
             return response.user;
+          } else {
+            throw new HttpErrorResponse({status: response.status});
           }
-          console.log('Enviando respuesta final: ', EMPTY_USER);
-          return EMPTY_USER;
         })
       );
   }
 
   postForm(formtoSend: FormData, to: string): Observable<any> {
     const url = this.urlBaseApi + `/${to}/`;
-    return this.http.post<FormData>(url, formtoSend);
+    return this.http.put<FormData>(url, formtoSend);
   }
 
   getFormSchema(formToGet: string): Observable<FormField[]> {
-    const url = this.urlBaseApi + `/${formToGet}`;
+    const url = this.urlBaseApi + `/${formToGet}/`;
+    const token = localStorage.getItem('token') || '';
+    const formData = {
+      'token': token
+    }
+    console.log(formData);
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -139,7 +143,7 @@ export class ApiService {
       }),
     };
     return this.http
-      .get<{ status: number; campos: FormField[] }>(url, httpOptions)
+      .post<{ status: number; campos: FormField[] }>(url, formData, httpOptions)
       .pipe(
         map((response) => {
           if (response.status != 200) throw new Error('No autorizado');
