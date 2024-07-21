@@ -8,6 +8,11 @@
 
       @for (tienda of tiendas; track $index) {
         <app-product-list [tienda]="tienda" ></app-product-list>
+      } @empty {
+        <div>
+          <h4>Crea tu tienda ahora</h4>
+          <a routerLink="/owner/create/store">Ir a crear mi tienda</a>
+        </div>
       }
 
       <!-- articulos -->
