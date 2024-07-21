@@ -1,0 +1,42 @@
+h2{
+    color: rgb(3, 3, 49);
+}
+.container{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center ;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: auto;
+}
+.buttons{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 20px;
+    height: 100px;
+}
+
+.button{
+    color:#ffffff;
+    background-color:#ff9900 ;
+    border-radius: 10%;
+    padding: 10px;
+    width: 180px;
+    max-width: 180px;
+    max-height: 40px;
+    border-color: #ff9900;
+}
+.button:disabled {
+    /* Estilos para botón deshabilitado */
+}
+.form-container {
+    background-color: rgb(233, 233, 233);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+}
