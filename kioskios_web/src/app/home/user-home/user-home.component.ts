@@ -19,49 +19,19 @@ import { ProductListComponent } from '../product-list/product-list.component';
 export class UserHomeComponent implements OnInit {
   user: User;
   tiendas: Tienda[] = [];
-  counterUserChange: number;
   constructor(
-    private authService: AuthService,
-    private router: Router,
     private api: ApiService
   ) {
-    this.counterUserChange = 0;
     this.user = EMPTY_USER;
   }
 
   ngOnInit(): void {
-    
-    this.handleUser();
-    // this.handleUser();
+    this.user = getUserLocal();
     this.api.getTiendas().subscribe(
       tiendas => {
         this.tiendas = tiendas;
       }
     );
-  }
-
-  handleUser(): void {
-    this.user = getUserLocal();
-    this.authService.getUser().subscribe(
-      user => {
-        this.user = user;
-        this.handleTypeUser();
-      }
-    );
-  }
-
-  handleTypeUser(): void {
-    if (this.user.tipo == 'DU') {
-      this.redirectTo('/owner');
-    } else if (this.user.tipo == 'AD') {
-      this.redirectTo('/admin');
-    } else if (!this.user.email) {
-      this.redirectTo('/');
-    }
-  }
-
-  redirectTo(path: string) {
-    this.router.navigate([path]);
   }
 
 }

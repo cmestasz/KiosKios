@@ -20,51 +20,19 @@ import { ProductListComponent } from '../product-list/product-list.component';
 export class OwnerHomeComponent implements OnInit {
   user: User;
   tiendas: Tienda[];
-  counterUserChange: number;
+
   constructor(
-    private apiService: ApiService,
-    private router: Router,
-    private authService: AuthService
+    private apiService: ApiService
   ) {
-    this.counterUserChange = 0;
     this.tiendas = [];
-    this.user = EMPTY_USER;
-    
+    this.user = EMPTY_USER; 
   }
-
   ngOnInit(): void {
-
+    console.log("Iniciando componente de propietario  ");
     this.apiService.getTiendas().subscribe( tiendas => {
       this.tiendas = tiendas;
     });
-    
-    this.handleUser();
+  
   }
 
-  handleUser(): void {
-    
-    this.user = getUserLocal();
-    this.authService.getUser().subscribe(
-      user => {
-        this.user = user;
-        this.handleTypeUser();
-      }
-    )
-
-  }
-
-  handleTypeUser(): void {
-    if (this.user.tipo == 'US') {
-      this.redirectTo('/user');
-    } else if (this.user.tipo == 'AD') {
-      this.redirectTo('/admin');
-    } else if (!this.user.email) {
-      console.log("Usuario vacío");
-      this.redirectTo('/');
-    }
-  }
-
-  redirectTo(path: string) {
-    this.router.navigate([path]);
-  }
 }

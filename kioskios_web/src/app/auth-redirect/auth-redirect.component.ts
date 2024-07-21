@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { catchError } from 'rxjs';
 import { unsubscribe } from 'diagnostics_channel';
 
 @Component({
   selector: 'app-auth-redirect',
   standalone: true,
-  template: ``,
+  imports: [RouterOutlet],
+  template: '<router-outlet />',
 })
 export class AuthRedirectComponent implements OnInit{
 
@@ -22,9 +23,9 @@ export class AuthRedirectComponent implements OnInit{
       if(user.email){ // Si es undefined, significa que está vacío
         console.log("Se recibió una respuesta en el redirect");
         if (user.tipo == 'US') {
-          this.router.navigate(['/user'], {replaceUrl: true});
+          this.router.navigate(['/dashboard/user'], {replaceUrl: true});
         } else {
-          this.router.navigate(['/owner'], {replaceUrl: true});
+          this.router.navigate(['/dashboard/owner'], {replaceUrl: true});
         }
       }else{
         console.log("Usuario no existe, debe crear cuenta, redirigiendo al registro");
