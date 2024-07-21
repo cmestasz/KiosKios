@@ -125,11 +125,16 @@ export class ApiService {
 
   postForm(formtoSend: FormData, to: string): Observable<any> {
     const url = this.urlBaseApi + `/${to}/`;
-    return this.http.post<FormData>(url, formtoSend);
+    return this.http.put<FormData>(url, formtoSend);
   }
 
   getFormSchema(formToGet: string): Observable<FormField[]> {
-    const url = this.urlBaseApi + `/${formToGet}`;
+    const url = this.urlBaseApi + `/${formToGet}/`;
+    const token = localStorage.getItem('token') || '';
+    const formData = {
+      'token': token
+    }
+    console.log(formData);
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -138,7 +143,7 @@ export class ApiService {
       }),
     };
     return this.http
-      .get<{ status: number; campos: FormField[] }>(url, httpOptions)
+      .post<{ status: number; campos: FormField[] }>(url, formData, httpOptions)
       .pipe(
         map((response) => {
           if (response.status != 200) throw new Error('No autorizado');

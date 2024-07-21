@@ -8,6 +8,8 @@ import { AnyHomeComponent } from './home/any-home/any-home.component';
 import { HomeComponent } from './home/home.component';
 import { AuthRedirectComponent } from './auth-redirect/auth-redirect.component';
 import { ProductDetailsComponent } from './home/product-details/product-details.component';
+import { AddShopComponent } from './home/owner-home/add-shop/add-shop.component';
+import { AddItemComponent } from './home/owner-home/add-item/add-item.component';
 import { FilterUserRouteComponent } from './home/filter-user-route/filter-user-route.component';
 
 export const routes: Routes = [
@@ -32,6 +34,12 @@ export const routes: Routes = [
             path: 'owner', children: [
               {
                 path: '', component: OwnerHomeComponent, title: 'Home - Dueño'
+              },
+              {
+                path: 'add-shop', component:  AddShopComponent, title: 'Agregar tienda'
+              },
+              {
+                path: 'add-item', component: AddItemComponent, title: 'Agregar producto'
               }
             ]
           }
