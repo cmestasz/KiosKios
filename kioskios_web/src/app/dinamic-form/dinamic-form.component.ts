@@ -28,7 +28,7 @@ export class DinamicFormComponent {
     this.form = this.formBuilder.group({});
   }
 
-  loadSchema(model: string): void {
+  loadSchema<T>(model: string, data?: T): void {
     this.model = model;
     this.form = this.formBuilder.group({});
     this.api.getFormSchema(model).subscribe((fieldsReceived) => {
@@ -36,6 +36,8 @@ export class DinamicFormComponent {
       this.buildForm();
     });
   }
+
+
 
   buildForm() {
     for (const field of this.fields) {
