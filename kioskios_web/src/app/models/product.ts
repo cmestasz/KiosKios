@@ -1,3 +1,4 @@
+import { SafeUrl } from "@angular/platform-browser";
 
 export interface Producto {
   id: number;
@@ -6,5 +7,6 @@ export interface Producto {
   precio: number;
   stock: number;
   categoria: string;
-  imagen: string | File;
+  imagen: string | SafeUrl;
+  tienda: string;
 }

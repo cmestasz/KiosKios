@@ -47,14 +47,17 @@ export class ProductCardComponent implements OnInit{
     );
   }
   loadImage(): void {
-    this.api.getMedia(this.product.imagen).subscribe({
-      next: (imageBlob) => {
-        const objectURL = URL.createObjectURL(imageBlob);
-        this.image = this.sanitizer.bypassSecurityTrustUrl(objectURL);
-      },
-      error: err => {
-        throw new Error(err);
-      }
-  });
+    if (typeof this.product.imagen == 'string') {
+      this.api.getMedia(this.product.imagen).subscribe({
+        next: (imageBlob) => {
+          const objectURL = URL.createObjectURL(imageBlob);
+          this.image = this.sanitizer.bypassSecurityTrustUrl(objectURL);
+        },
+        error: err => {
+          throw new Error(err);
+        }
+    }); 
+    }
+    
   }
 }

@@ -37,15 +37,21 @@ export class DinamicFormComponent {
     });
   }
 
-  loadSchemaWithData<T extends {[key: string]: any}>(model: string, data: T): void {
+  loadSchemaWithData<T extends { [key: string]: any }>(model: string, data: T): void {
     this.model = model;
     this.form = this.formBuilder.group({});
     this.api.getFormSchema(model).subscribe((fieldsReceived) => {
       this.fields = fieldsReceived;
       this.buildForm();
-      Object.keys(this.form.controls).forEach( (key) => {
-        if (key in data)
-          this.form.get(key)?.setValue(data[key]);
+      this.form.addControl('id', this.formBuilder.control(null, Validators.required));
+      Object.keys(this.form.controls).forEach((key) => {
+        console.log("trabajando con esta llave: ", key);
+        if (key in data) {
+          const value = data[key];
+          console.log("Objeto que se configurará: ", data[key]);
+          const valueToSet = value && typeof value === 'object' && 'id' in value ? value['id'] : value;
+          this.form.get(key)?.setValue(valueToSet);
+        }
       });
     });
   }

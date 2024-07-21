@@ -1,8 +1,13 @@
 <div>
+  @if (user.tipo == 'US') {
   <img [src]="image" alt="ImageProduct">
   <h4>{{ product.nombre }}</h4>
   <p>{{ product.categoria }}</p>
   <p>{{ product.precio }}</p>
   <button>Add to Cart</button>
   <button (click)="backHome()" >Back</button>
+  } @else {
+    <loader-form />
+  }
+  
 </div>
