@@ -3,6 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Producto } from '../../models/product';
 import { ApiService } from '../../services/api.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { User } from '../../models/user';
+import { EMPTY_USER } from '../../constants';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-product-details',
@@ -13,18 +16,28 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 })
 export class ProductDetailsComponent implements OnInit {
   product!: Producto;
-  image!: SafeUrl
+  image!: SafeUrl;
+  user: User;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private api: ApiService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private authService: AuthService
   ) {
+    this.user = EMPTY_USER;
   }
 
   ngOnInit(): void {
     console.log("Iniciando componente de detalles");
+
+    this.authService.getUser().subscribe(
+      user => {
+        this.user = user;
+      }
+    );
+
     this.route.paramMap.subscribe(
       params => {
         const id = Number(params.get('id'));

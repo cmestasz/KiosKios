@@ -10,7 +10,7 @@ import { AuthRedirectComponent } from './auth-redirect/auth-redirect.component';
 import { ProductDetailsComponent } from './home/product-details/product-details.component';
 import { AddShopComponent } from './home/owner-home/add-shop/add-shop.component';
 import { AddItemComponent } from './home/owner-home/add-item/add-item.component';
-import { FilterUserRouteComponent } from './home/filter-user-route/filter-user-route.component';
+import { UserGuard } from './home/user-guard';
 
 export const routes: Routes = [
   {
@@ -19,7 +19,7 @@ export const routes: Routes = [
         path: '', component: AnyHomeComponent, title: 'KiosKios - Tu tienda virtual'
       },
       {
-        path: 'dashboard', component: FilterUserRouteComponent, children: [
+        path: 'dashboard', canActivate:[UserGuard], children: [
           {
             path: 'user', children: [
               {
