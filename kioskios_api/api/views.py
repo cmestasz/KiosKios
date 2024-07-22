@@ -110,7 +110,7 @@ class CrearDueñoView(APIView):
 
     def put(self, request):
         try:
-            request.FILES['yape_qr']._name = request.data.get('nombre') + '.png'
+            request.FILES['yape_qr']._name = request.data.get('email') + '.png'
         except:
             pass
         print(request.FILES['yape_qr'].__dict__)
