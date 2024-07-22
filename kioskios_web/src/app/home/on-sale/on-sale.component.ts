@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Venta } from '../../models/venta';
 import { SalesService } from '../../services/sales.service';
 import { EMPTY_SALE } from '../../constants';
@@ -13,9 +13,10 @@ import { Router } from '@angular/router';
   templateUrl: './on-sale.component.html',
   styleUrl: './on-sale.component.css'
 })
-export class OnSaleComponent implements OnInit{
+export class OnSaleComponent implements OnInit, AfterViewInit{
   sale: Venta;
   qr!: SafeUrl;
+  @ViewChild('continuebtn') continuebtn!: ElementRef<HTMLButtonElement>;
 
   constructor(
     private salesService: SalesService,
@@ -28,6 +29,7 @@ export class OnSaleComponent implements OnInit{
   }
 
   ngOnInit(): void {
+    
     this.salesService.getCurrentSale().subscribe(
       sale => {
         if (!sale.usuario ) {
@@ -40,6 +42,7 @@ export class OnSaleComponent implements OnInit{
               next: (imageBlob) => {
                 const objectUrl = URL.createObjectURL(imageBlob);
                 this.qr = this.sanitizer.bypassSecurityTrustUrl(objectUrl);
+                this.continuebtn.nativeElement.disabled = false;
               },
               error: err => {
                 throw new Error(err);
@@ -49,6 +52,13 @@ export class OnSaleComponent implements OnInit{
         )
       }
     );
+  }
+  ngAfterViewInit(): void {
+    this.continuebtn.nativeElement.disabled = true;
+  }
+
+  putVenta(): void {
+
   }
 
 }

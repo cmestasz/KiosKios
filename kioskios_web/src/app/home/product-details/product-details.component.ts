@@ -17,7 +17,7 @@ import { Venta } from '../../models/venta';
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.css'
 })
-export class ProductDetailsComponent implements OnInit, AfterViewInit {
+export class ProductDetailsComponent implements OnInit {
   product!: Producto;
   image!: SafeUrl;
   user: User = EMPTY_USER;
@@ -55,6 +55,9 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
                   console.log("Una entrega de producto: ", product);
                   this.product = product;
                   this.loadImage();
+                  if (this.buyButton) {
+                    this.buyButton.nativeElement.disabled = false;
+                  }
                 }
               );
             } else {
@@ -64,13 +67,6 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
         );
       }
     );
-  }
-
-  ngAfterViewInit(): void {
-    if (this.buyButton) {
-      this.buyButton.nativeElement.disabled = false;
-      
-    }
   }
 
   addOne() {
@@ -112,6 +108,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
           if (this.user.tipo == 'DU') {
             this.setOwnerPage();
           }
+          
         },
         error: err => {
           throw new Error(err);
