@@ -21,6 +21,7 @@
     border-radius: 10px;
     align-self: center;
     justify-self: center;
+    width: 100%;
 }
 .product-info {
     flex: 2;

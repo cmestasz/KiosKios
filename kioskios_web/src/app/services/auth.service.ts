@@ -81,12 +81,14 @@ export class AuthService {
     if (this.user) {
       this.api.unauthUser(this.user.email).subscribe(
         response => {
-          alert("Se logró cerrar la sesión " + response);
           if (response) {
+            alert("Se ha cerrado la sesión exitosamente");            
             this.user = EMPTY_USER;
             localStorage.removeItem('user');
             localStorage.removeItem('token');
             this.userSubject.next(EMPTY_USER);
+          } else {
+            alert("No se pudo cerrar sesión");
           }
         });
     }
