@@ -25,7 +25,7 @@
     <nav class="nav">
         <ul class="nav-list" id="nav-list">
             @if (user.email) {                
-                @if(user.tipo =='DU'){
+                @if(user.tipo =='DU' ){
                     <li><a routerLink="/register" class="register1">Ventas</a></li>
                     <li><a routerLink="/dashboard/owner" class="register1">Administrar</a></li>
                 } @else if (user.tipo == 'US' ) {

@@ -1,19 +1,30 @@
-<div>
+<div class="container">
   @if (user.tipo == 'US') {
-  <img [src]="image" alt="ImageProduct">
-  <h4>{{ product.nombre }}</h4>
-  <p>{{ product.categoria }}</p>
-  <p>{{ product.precio }}</p>
-  <div>
-    <button (click)="minusOne()" >-</button>
-    <p >{{ totalProducts }}</p>
-    <button (click)="addOne()" >+</button>
+  <div class="product-details">
+    
+      <div class="product-image">
+        <img src='{{ product.imagen }}' alt="ImageProduct">
+      </div>
+
+      <div class="product-info">
+        <h1 class="product-title">{{ product.nombre }}</h1>
+        <p class="product-description">{{ product.descripcion }}</p>
+        <div class="product-price">S/{{ product.precio }}</div>
+
+        <div class="product-quantity">
+          <button (click)="minusOne()" >-</button>
+          <p class="quantity-input"  >{{ totalProducts }}</p>
+          <button (click)="addOne()" >+</button>
+        </div>
+        <p style="font-size: 20px;" >Precio a pagar: {{ totalProducts * product.precio }}</p>
+        <div class="product-category">Categoría: {{ product.categoria }}</div>
+        <div class="buttons">
+          <button  class="add-to-cart" #buyButton (click)="buy()" >Comprar</button>
+          <button class="back" (click)="backHome()" >Back</button>
+        </div>
+      </div>
   </div>
-  <p>Precio a pagar: {{ totalProducts * product.precio }}</p>
-  <button #buyButton (click)="buy()" >Comprar</button>
-  <button (click)="backHome()" >Back</button>
-  } @else {
+  }@else{
     <loader-form />
   }
-  
 </div>
