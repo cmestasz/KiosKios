@@ -114,6 +114,7 @@ class Venta(models.Model):
     fecha = models.DateTimeField(auto_now_add=True)
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     cantidad = models.PositiveIntegerField()
+    confirmado = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.usuario} - {self.producto}'
