@@ -1,12 +1,21 @@
-<div>
-  @if (user.tipo == 'US') {
-  <h4>{{ tienda.nombre }}</h4>
-  <p>{{ tienda.categoria }}</p>
-  <p>{{ tienda.descripcion }}</p>
-  <app-product-list [tienda]="tienda" />
-  <button (click)="backHome()" >Back</button>
-  } @else {
-    <loader-form />
-  }
-  
+@if (user.tipo == 'US') {
+<div class="body">
+  <div class="store-container">
+    <img src="tienda.png" alt="Imagen de la Tienda" class="store-image">
+    <div class="store-info">
+      <h4>{{ tienda.nombre }}</h4>
+      <p>{{ tienda.categoria }}</p>
+      <p>{{ tienda.descripcion }}</p>
+    </div>
+  </div>
 </div>
+    <app-product-list [tienda]="tienda"></app-product-list>
+    <button (click)="backHome()">Volver</button>
+} @else {
+  <div style="display:flex;flex-direction:column; align-items: center;justify-content:center;">
+    <div class="form-container" >
+      <loader-form />
+    </div>
+  </div>
+  
+}
