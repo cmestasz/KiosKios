@@ -50,3 +50,8 @@
     transform: scale(1.10);
 
 }
+
+.announcement-container img {
+    width: 250px;
+
+}

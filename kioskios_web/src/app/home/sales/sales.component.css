@@ -1,0 +1,27 @@
+.ventas {
+    display: flex;
+    flex-direction: column;
+}
+.ventas h4{
+    color: #1e73be;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.ventas h2{
+    justify-self: center;
+}
+
+
+.title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 34px;
+    color: #000c7c;
+}
+
+.encabezado{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
