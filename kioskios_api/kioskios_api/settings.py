@@ -42,6 +42,15 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SECURE_HSTS_SECONDS = 60
 
+STORAGES = {
+    'default': {
+        "BACKEND": "kioskios_api.db_storage.DBStorage",
+    },
+    'staticfiles': {
+        "BACKEND": "kioskios_api.db_storage.DBStorage",
+    }
+}
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -103,9 +112,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.environ.get('POSTGRES_DATABASE'),
-        'USER': os.environ.get('POSTGRES_USER'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-        'HOST': os.environ.get('POSTGRES_HOST'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
     }
 }
 
