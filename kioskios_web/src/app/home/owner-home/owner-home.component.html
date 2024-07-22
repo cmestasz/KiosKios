@@ -3,8 +3,10 @@
 
     <h2>Administra tus tiendas</h2>
 
-    <a routerLink="add-shop"> <i class="bi bi-database-add"></i> Agregar tienda</a>
-    <a routerLink="add-item"> <i class="bi bi-database-add"></i> Agregar producto</a>
+    <div class="buttons">
+      <a routerLink="add-shop" class="button"> Agregar tienda </a>
+      <a routerLink="add-item" class="button"> Agregar producto </a>
+    </div>
     <div>
 
       @for (tienda of tiendas; track $index) {

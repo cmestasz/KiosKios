@@ -7,7 +7,7 @@ export interface Venta {
   usuario: User;
   fecha?: Date;
   producto: Producto;
-  confirmado?: boolean;
+  confirmado: boolean;
   cantidad: number;
   tiendaId: number;
 }

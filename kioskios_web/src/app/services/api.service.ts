@@ -24,17 +24,42 @@ export class ApiService {
 
   }
 
-  putSale(sale: Venta): Observable<Response> {
-    const url = this.urlBaseApi + '/create_sale/';
+  getSaleTicket(id: number): Observable<Blob> {
+    const url = this.urlBaseApi + '/get_pdf_sale';
     return this.http
-      .put<Response>(url, {token: localStorage.getItem('token'), producto: sale.producto.id, cantidad: sale.cantidad})
+      .post(url, {token: localStorage.getItem('token'), id}, {responseType: 'blob'});
+  } 
+
+  confirmSale(id: number): Observable<boolean> {
+    const url = this.urlBaseApi + '/confirm_sale/';
+    return this.http
+      .put<Response>(url, {token: localStorage.getItem('token'), id})
       .pipe(
         map((response) => {
           if (response.status == 401) {
             console.log("Ha ocurrido un error en la respuesta: ", response);
             throw new HttpErrorResponse({status: 401, statusText: "Desautorizado, probablemente el token ha expirado"});
           }
-          return response;
+          return true;
+        }),
+        catchError((error: HttpErrorResponse) => {
+          console.log("He capturado un error en la respuesta: ", error);
+          throw error;
+        })
+      )
+  }
+
+  putSale(sale: Venta): Observable<number> {
+    const url = this.urlBaseApi + '/create_sale/';
+    return this.http
+      .put<{status:number, message: string, id: number}>(url, {token: localStorage.getItem('token'), producto: sale.producto.id, cantidad: sale.cantidad})
+      .pipe(
+        map((response) => {
+          if (response.status == 401) {
+            console.log("Ha ocurrido un error en la respuesta: ", response);
+            throw new HttpErrorResponse({status: 401, statusText: "Desautorizado, probablemente el token ha expirado"});
+          }
+          return response.id;
         }),
         catchError((error: HttpErrorResponse) => {
           console.log("He capturado un error en la respuesta: ", error);
@@ -63,10 +88,10 @@ export class ApiService {
       )
   }
 
-  getSales(confirmed: boolean): Observable<Venta[]> {
+  getSales(): Observable<Venta[]> {
     const url = this.urlBaseApi + '/get_sales/';
     return this.http
-      .post<{ status: number; ventas: Venta[] }>(url, {token: localStorage.getItem('token'), confirmed})
+      .post<{ status: number; ventas: Venta[] }>(url, {token: localStorage.getItem('token')})
       .pipe(
         map((response) => {
           if (response.status != 200) {

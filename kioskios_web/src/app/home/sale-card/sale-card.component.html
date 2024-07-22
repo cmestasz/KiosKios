@@ -1,0 +1,13 @@
+<div>
+  <p>Fecha: {{ sale.fecha }}</p>
+  <p>Producto adquirido: {{ sale.producto.nombre }}</p>
+  <p>Cantidad comprada: {{ sale.cantidad }}</p>
+  <p>Precio pagado: S/. {{ sale.cantidad * sale.producto.precio }}</p>
+  @if (!confirmed) {
+    @if (user.tipo == 'DU') {
+      <button (click)="notifySale()" >Aceptar</button>
+    }
+  } @else {
+    <button (click)="getBoleta()" >Boleta</button>
+  }
+</div>

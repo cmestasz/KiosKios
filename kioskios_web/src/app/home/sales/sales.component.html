@@ -1,0 +1,16 @@
+<div>
+  <h2>Observa las ventas que has realizado y las que están pendientes</h2>
+  <div>
+    <h4>Ventas pendientes</h4>
+    @for (venta of noConfirmadas; track $index) {
+      <app-sale-card [sale]="venta" [confirmed]="false" ></app-sale-card>
+    }
+    
+  </div>
+  <div>
+    <h4>Ventas finalizadas</h4>
+    @for (venta of confirmadas; track $index) {
+      <app-sale-card [sale]="venta" [confirmed]="true" ></app-sale-card>
+    }
+  </div>
+</div>

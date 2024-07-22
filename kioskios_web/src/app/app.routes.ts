@@ -13,6 +13,8 @@ import { AddItemComponent } from './home/owner-home/add-item/add-item.component'
 import { UserGuard } from './home/user-guard';
 import { ShopDetailsComponent } from './home/shop-details/shop-details.component';
 import { OnSaleComponent } from './home/on-sale/on-sale.component';
+import { SalesComponent } from './home/sales/sales.component';
+import { SaleTicketComponent } from './home/sale-ticket/sale-ticket.component';
 
 export const routes: Routes = [
   {
@@ -35,6 +37,12 @@ export const routes: Routes = [
               },
               {
                 path: 'on-sale', component: OnSaleComponent, title: 'Concreta tu compra'
+              },
+              {
+                path: 'sales', component: SalesComponent, title: 'Administra tus ventas'
+              },
+              {
+                path: 'sale/ticket/:id', component: SaleTicketComponent, title: 'Observar boleta'
               }
             ]
           },
@@ -54,6 +62,12 @@ export const routes: Routes = [
               },
               {
                 path: 'shop/:id', component: ShopDetailsComponent, title: 'Ver detalles de la tienda'
+              },
+              {
+                path: 'sales', component: SalesComponent, title: 'Administra tus ventas'
+              },
+              {
+                path: 'sale/ticket/:id', component: SaleTicketComponent, title: 'Observar boleta'
               }
             ]
           }
