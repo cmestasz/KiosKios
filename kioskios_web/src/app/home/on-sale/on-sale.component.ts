@@ -4,6 +4,7 @@ import { SalesService } from '../../services/sales.service';
 import { EMPTY_SALE } from '../../constants';
 import { ApiService } from '../../services/api.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-on-sale',
@@ -19,7 +20,8 @@ export class OnSaleComponent implements OnInit{
   constructor(
     private salesService: SalesService,
     private api: ApiService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private router: Router
   ) {
     this.sale = EMPTY_SALE;
 
@@ -28,6 +30,9 @@ export class OnSaleComponent implements OnInit{
   ngOnInit(): void {
     this.salesService.getCurrentSale().subscribe(
       sale => {
+        if (!sale.usuario ) {
+          this.router.navigate(['/dashboard/user']);
+        }
         this.sale = sale;
         this.api.getQrByShop(this.sale.tiendaId).subscribe(
           url => {

@@ -16,12 +16,14 @@ from .serializers import (
 from rest_framework.parsers import MultiPartParser
 from django.utils.crypto import get_random_string
 
+def fields_error(form):
+    return {'status': 406, 'message': form.errors}
+
 MESSAGES = {
     'correct': {'status': 200, 'message': 'Correcto'},
     'created': {'status': 201, 'message': 'Creado'},
     'no_login': {'status': 401, 'message': 'No permitido (inicia sesión para continuar)'},
     'unallowed': {'status': 401, 'message': 'No permitido'},
-    'fields_error': {'status': 406, 'message': 'Error en los campos'},
     'wrong_password': {'status': 406, 'message': 'Contraseña incorrecta'}
 }
 
@@ -58,7 +60,7 @@ class IniciarSesionView(APIView):
                 response.set_cookie('user', user)
                 return response
             return Response(MESSAGES['wrong_password'])
-        return Response(MESSAGES['fields_error'])
+        return Response(fields_error(form))
 
     def post(self, request):
         return Response({'status': 200, 'campos': form_serializer(LoginForm())})
@@ -92,7 +94,7 @@ class CrearUsuarioView(APIView):
         if form.is_valid():
             form.save()
             return Response(MESSAGES['created'])
-        return Response(MESSAGES['fields_error'])
+        return Response(fields_error(form))
 
     def post(self, request):
         return Response({'status': 200, 'campos': form_serializer(UsuarioForm())})
@@ -109,7 +111,7 @@ class CrearDueñoView(APIView):
         if form.is_valid():
             form.save()
             return Response(MESSAGES['created'])
-        return Response(MESSAGES['fields_error'])
+        return Response(fields_error(form))
 
     def post(self, request):
         return Response({'status': 200, 'campos': form_serializer(DueñoForm())})
@@ -131,7 +133,7 @@ class CrearTiendaView(APIView):
             instance.dueno = get_user(request)
             instance.save()
             return Response(MESSAGES['created'])
-        return Response(MESSAGES['fields_error'])
+        return Response(fields_error(form))
 
     def post(self, request):
         id = request.data.get('id')
@@ -157,7 +159,7 @@ class CrearProductoView(APIView):
         if form.is_valid():
             form.save()
             return Response(MESSAGES['created'])
-        return Response(MESSAGES['fields_error'])
+        return Response(fields_error(form))
 
     def post(self, request):
         id = request.data.get('id')
@@ -327,7 +329,8 @@ class GetQRPorTiendaView(APIView):
 
     def post(self, request):
         tienda = Tienda.objects.get(id=request.data.get('id'))
-        return Response({'status': 200, 'qr': tienda.dueno.yape_qr.url})
+        print(tienda.dueno.yape_qr.url)
+        return Response({'status': 200, 'qr': 'http://localhost:8000/' +  tienda.dueno.yape_qr.url})
 
 
 class CrearTiendaAdminView(APIView):
@@ -338,7 +341,7 @@ class CrearTiendaAdminView(APIView):
         if form.is_valid():
             form.save()
             return Response(MESSAGES['created'])
-        return Response(MESSAGES['fields_error'])
+        return Response(fields_error(form))
 
     def get(self, request):
         return Response({'status': 200, 'campos': form_serializer(TiendaFormAdmin())})
@@ -352,7 +355,7 @@ class CrearProductoAdminView(APIView):
         if form.is_valid():
             form.save()
             return Response(MESSAGES['created'])
-        return Response(MESSAGES['fields_error'])
+        return Response(fields_error(form))
 
     def get(self, request):
         return Response({'status': 200, 'campos': form_serializer(ProductoFormAdmin())})

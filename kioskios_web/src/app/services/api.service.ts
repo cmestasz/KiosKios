@@ -17,7 +17,7 @@ export class ApiService {
   constructor(private http: HttpClient) {}
 
   getQrByShop(id: number): Observable<string> {
-    const url = this.urlBaseApi + '/get_sales/';
+    const url = this.urlBaseApi + '/get_qr_by_shop/';
     return this.http
       .post<{ status: number; qr: string }>(url, {token: localStorage.getItem('token'), id})
       .pipe(
@@ -124,26 +124,6 @@ export class ApiService {
       )
   }
 
-  getVentas(): Observable<Venta[]> {
-    const url = this.urlBaseApi + '/get_sales/';
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-      }),
-    };
-
-    return this.http
-      .get<{ status: number; ventas: Venta[] }>(url, httpOptions)
-      .pipe(
-        map((response) => {
-          if (response.status != 200) throw new HttpErrorResponse({status: 401, statusText: "Desautorizado, probablemente el token ha expirado"});
-          return response.ventas;
-        }),
-        catchError((error: HttpErrorResponse) => {
-          throw error;
-        })
-      )
-  }
 
   unauthUser(email: string): Observable<boolean> {
     const url = this.urlBaseApi + '/logout/';

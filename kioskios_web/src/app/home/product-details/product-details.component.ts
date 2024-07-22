@@ -20,8 +20,8 @@ import { Venta } from '../../models/venta';
 export class ProductDetailsComponent implements OnInit, AfterViewInit {
   product!: Producto;
   image!: SafeUrl;
-  user: User;
-  totalProducts: number;
+  user: User = EMPTY_USER;
+  totalProducts: number = 1;
   @ViewChild(LoaderFormComponent) loaderForm!: LoaderFormComponent;
   @ViewChild('buyButton') buyButton!: ElementRef<HTMLButtonElement>;
 
@@ -32,10 +32,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
     private sanitizer: DomSanitizer,
     private authService: AuthService,
     private salesService: SalesService
-  ) {
-    this.user = EMPTY_USER;
-    this.totalProducts = 1;
-  }
+  ) {}
 
   ngOnInit(): void {
     if (this.buyButton) {
@@ -57,8 +54,6 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
                 product => {
                   console.log("Una entrega de producto: ", product);
                   this.product = product;
-                  const segments = this.product.tienda.split('/');
-                  this.product.tienda = segments[segments.length - 2];
                   this.loadImage();
                 }
               );
@@ -109,11 +104,11 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
   }
   loadImage(): void {
     if (typeof this.product.imagen == 'string') {
+      console.log(this.product.imagen);
       this.api.getMedia(this.product.imagen).subscribe({
         next: (imageBlob) => {
           const objectURL = URL.createObjectURL(imageBlob);
           this.image = this.sanitizer.bypassSecurityTrustUrl(objectURL);
-          
           if (this.user.tipo == 'DU') {
             this.setOwnerPage();
           }
@@ -122,6 +117,12 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
           throw new Error(err);
         }
       });
+    }else {
+      console.log("La imagen ya es una safeUrl");
+      this.image = this.product.imagen;
+      if (this.user.tipo == 'DU') {
+        this.setOwnerPage();
+      }
     }
   }
 
