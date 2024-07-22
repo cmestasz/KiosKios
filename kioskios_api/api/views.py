@@ -229,7 +229,7 @@ class GetTiendasView(APIView):
 
     def post(self, request):
         if (get_user(request).tipo == 'DU'):
-            tiendas = Tienda.objects.filter(dueo=get_user(request))
+            tiendas = Tienda.objects.filter(dueno=get_user(request))
         else:
             tiendas = Tienda.objects.all()
         serializer = TiendaSerializer(
