@@ -18,7 +18,9 @@ from django.utils.crypto import get_random_string
 
 
 def fields_error(form):
-    return {'status': 406, 'message': form.errors}
+    errors = form.errors.as_data()
+    txt = "\n".join([f"{key}: {value[0].message}" for key, value in errors.items()])
+    return {'status': 406, 'message': txt}
 
 
 MESSAGES = {
