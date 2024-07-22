@@ -22,17 +22,17 @@ export class ApiService {
 
   }
 
-  putSale(sale: Venta): Observable<Response> {
+  putSale(sale: Venta): Observable<number> {
     const url = this.urlBaseApi + '/create_sale/';
     return this.http
-      .put<Response>(url, {token: localStorage.getItem('token'), producto: sale.producto.id, cantidad: sale.cantidad})
+      .put<{status:number, message: string, id: number}>(url, {token: localStorage.getItem('token'), producto: sale.producto.id, cantidad: sale.cantidad})
       .pipe(
         map((response) => {
           if (response.status == 401) {
             console.log("Ha ocurrido un error en la respuesta: ", response);
             throw new HttpErrorResponse({status: 401, statusText: "Desautorizado, probablemente el token ha expirado"});
           }
-          return response;
+          return response.id;
         }),
         catchError((error: HttpErrorResponse) => {
           console.log("He capturado un error en la respuesta: ", error);
