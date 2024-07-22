@@ -122,8 +122,10 @@ class CrearTiendaView(APIView):
         id = request.data.get('id')
         if (id):
             form = TiendaForm(request.data, instance=Tienda.objects.get(id=id))
+            print("estamos enviando una instancia")
         else:
             form = TiendaForm(request.data)
+            print("estamos enviando un nuevo objeto")
         if form.is_valid():
             instance = form.save(commit=False)
             instance.dueno = get_user(request)
@@ -135,8 +137,10 @@ class CrearTiendaView(APIView):
         id = request.data.get('id')
         if (id):
             form = TiendaForm(instance=Tienda.objects.get(id=id))
+            print("estamos enviando una instancia - form")
         else:
             form = TiendaForm()
+            print("estamos enviando un nuevo objeto - form")
         return Response({'status': 200, 'campos': form_serializer(form)})
 
 
@@ -250,18 +254,18 @@ class GetProductosView(APIView):
     permission_classes = [IsAuth]
 
     def post(self, request):
-        if is_user(request):
-            productos = Producto.objects.filter(
-                tienda__id=request.data.get('tienda'))
-        elif is_owner(request):
-            productos = Producto.objects.filter(
-                tienda__dueno=get_user(request))
-        else:
-            return Response(MESSAGES['unallowed'])
+        productos = Producto.objects.filter(tienda__id=request.data.get('tienda'))
         serializer = ProductoSerializer(
             productos, many=True, context={'request': request})
         return Response({'status': 200, 'productos': serializer.data})
 
+
+class EliminarProductoView(APIView):
+    permission_classes = [IsAuth, IsOwner]
+
+    def post(self, request):
+        Producto.objects.get(id=request.data.get('id')).delete()
+        return Response(MESSAGES['correct'])
 
 class GetProductoPorIdView(APIView):
     permission_classes = [IsAuth]
