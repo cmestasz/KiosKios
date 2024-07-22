@@ -150,6 +150,8 @@ class CrearProductoView(APIView):
     permission_classes = [IsAuth, IsOwner]
 
     def put(self, request):
+        # CORRECCION PARA TODOS LOS ARCHIVOS QUE SE SUBAN
+        request.FILES['imagen']._name = request.data.get('nombre') + '.png'
         id = request.data.get('id')
         if (id):
             form = ProductoForm(request.data, request.FILES,
