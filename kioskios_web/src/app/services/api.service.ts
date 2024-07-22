@@ -22,6 +22,12 @@ export class ApiService {
 
   }
 
+  getSaleTicket(id: number): Observable<Blob> {
+    const url = this.urlBaseApi + '/get_pdf_sale';
+    return this.http
+      .post(url, {token: localStorage.getItem('token'), id}, {responseType: 'blob'});
+  } 
+
   confirmSale(id: number): Observable<boolean> {
     const url = this.urlBaseApi + '/confirm_sale/';
     return this.http

@@ -21,6 +21,7 @@ export class SaleCardComponent {
   constructor (
     private api: ApiService,
     private authService: AuthService,
+    private router: Router
     
   ) {
     this.confimedEmitter = new EventEmitter<void>();
@@ -29,6 +30,14 @@ export class SaleCardComponent {
         this.user = user;
       }
     );
+  }
+
+  getBoleta(): void {
+    if (this.user.tipo == 'US') {
+      this.router.navigate(['/dashboard/user/sale/ticket/' + this.sale.id]);
+    } else {
+      this.router.navigate(['/dashboard/owner/sale/ticket/' + this.sale.id]);
+    }
   }
 
   notifySale() {

@@ -14,6 +14,7 @@ import { UserGuard } from './home/user-guard';
 import { ShopDetailsComponent } from './home/shop-details/shop-details.component';
 import { OnSaleComponent } from './home/on-sale/on-sale.component';
 import { SalesComponent } from './home/sales/sales.component';
+import { SaleTicketComponent } from './home/sale-ticket/sale-ticket.component';
 
 export const routes: Routes = [
   {
@@ -39,6 +40,9 @@ export const routes: Routes = [
               },
               {
                 path: 'sales', component: SalesComponent, title: 'Administra tus ventas'
+              },
+              {
+                path: 'sale/ticket/:id', component: SaleTicketComponent, title: 'Observar boleta'
               }
             ]
           },
@@ -61,6 +65,9 @@ export const routes: Routes = [
               },
               {
                 path: 'sales', component: SalesComponent, title: 'Administra tus ventas'
+              },
+              {
+                path: 'sale/ticket/:id', component: SaleTicketComponent, title: 'Observar boleta'
               }
             ]
           }
