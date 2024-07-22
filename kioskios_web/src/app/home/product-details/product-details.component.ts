@@ -88,6 +88,11 @@ export class ProductDetailsComponent implements OnInit {
     const segments = this.product.tienda.split('/');
     this.product.tienda = segments[segments.length - 2];
     this.loaderForm.loadFormWithData<Producto>(TYPE_FORMS.CREATE_PRODUCT, this.product);
+    this.loaderForm.formSubmitted.subscribe(
+      (response: Response) => {
+        this.router.navigate(['/dashboard/owner']);
+      }
+    );
   }
 
 }
