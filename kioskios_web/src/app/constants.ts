@@ -16,12 +16,13 @@ export const MODEL_URL = {
   VENTA: 'get_sales',
   TIENDAS: 'get_shops',
 }
-export type CategoryKey = 'BEB' | 'LIB' | 'SNA' | 'IMP' | 'ELE' | 'ASE' | 'OTR';
+export type CategoryKey = 'BEB' | 'LIB' | 'SNA' | 'IMP' | 'ELE' | 'ASE' | 'COM' | 'OTR';
 
 export const CATEGORY: {[key in CategoryKey]: string} = {
   BEB: 'Bebidas',
   LIB: 'Librería',
   SNA: 'Snacks',
+  COM: 'Comida',
   IMP: 'Impresiones',
   ELE: 'Electrónicos',
   ASE: 'Aseo',
