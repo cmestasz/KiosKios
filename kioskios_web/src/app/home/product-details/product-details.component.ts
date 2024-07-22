@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Producto } from '../../models/product';
 import { ApiService } from '../../services/api.service';
@@ -7,6 +7,8 @@ import { User } from '../../models/user';
 import { EMPTY_USER, TYPE_FORMS } from '../../constants';
 import { AuthService } from '../../services/auth.service';
 import { LoaderFormComponent } from '../../dinamic-form/loader-form/loader-form.component';
+import { SalesService } from '../../services/sales.service';
+import { Venta } from '../../models/venta';
 
 @Component({
   selector: 'app-product-details',
@@ -15,26 +17,30 @@ import { LoaderFormComponent } from '../../dinamic-form/loader-form/loader-form.
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.css'
 })
-export class ProductDetailsComponent implements OnInit {
+export class ProductDetailsComponent implements OnInit, AfterViewInit {
   product!: Producto;
   image!: SafeUrl;
   user: User;
-  totalProducts: number
+  totalProducts: number;
   @ViewChild(LoaderFormComponent) loaderForm!: LoaderFormComponent;
+  @ViewChild('buyButton') buyButton!: ElementRef<HTMLButtonElement>;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private api: ApiService,
     private sanitizer: DomSanitizer,
-    private authService: AuthService
+    private authService: AuthService,
+    private salesService: SalesService
   ) {
     this.user = EMPTY_USER;
     this.totalProducts = 1;
-
   }
 
   ngOnInit(): void {
+    if (this.buyButton) {
+      this.buyButton.nativeElement.disabled = true;
+    }
     this.totalProducts = 1;
     console.log("Iniciando componente de detalles");
 
@@ -51,6 +57,8 @@ export class ProductDetailsComponent implements OnInit {
                 product => {
                   console.log("Una entrega de producto: ", product);
                   this.product = product;
+                  const segments = this.product.tienda.split('/');
+                  this.product.tienda = segments[segments.length - 2];
                   this.loadImage();
                 }
               );
@@ -61,6 +69,13 @@ export class ProductDetailsComponent implements OnInit {
         );
       }
     );
+  }
+
+  ngAfterViewInit(): void {
+    if (this.buyButton) {
+      this.buyButton.nativeElement.disabled = false;
+      
+    }
   }
 
   addOne() {
@@ -74,7 +89,14 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   buy() : void {
-    this
+    const venta: Venta = {
+      usuario: this.user,
+      producto: this.product,
+      cantidad: this.totalProducts,
+      tiendaId: Number(this.product.tienda)
+    }
+    this.salesService.setCurrentSale(venta);
+    this.router.navigate(['/dashboard/user/on-sale']);
   }
 
 
@@ -91,6 +113,7 @@ export class ProductDetailsComponent implements OnInit {
         next: (imageBlob) => {
           const objectURL = URL.createObjectURL(imageBlob);
           this.image = this.sanitizer.bypassSecurityTrustUrl(objectURL);
+          
           if (this.user.tipo == 'DU') {
             this.setOwnerPage();
           }
@@ -104,8 +127,6 @@ export class ProductDetailsComponent implements OnInit {
 
   setOwnerPage(): void {
     this.product.imagen = this.image;
-    const segments = this.product.tienda.split('/');
-    this.product.tienda = segments[segments.length - 2];
     this.loaderForm.loadFormWithData<Producto>(TYPE_FORMS.CREATE_PRODUCT, this.product);
     this.loaderForm.formSubmitted.subscribe(
       (response: Response) => {

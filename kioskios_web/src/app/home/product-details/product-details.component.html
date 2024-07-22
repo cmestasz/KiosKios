@@ -10,7 +10,7 @@
     <button (click)="addOne()" >+</button>
   </div>
   <p>Precio a pagar: {{ totalProducts * product.precio }}</p>
-  <button (click)="buy()" >Comprar</button>
+  <button #buyButton (click)="buy()" >Comprar</button>
   <button (click)="backHome()" >Back</button>
   } @else {
     <loader-form />
