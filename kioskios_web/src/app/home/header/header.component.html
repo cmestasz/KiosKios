@@ -24,9 +24,7 @@
     @if (isMenuOpen) {
     <nav class="nav">
         <ul class="nav-list" id="nav-list">
-            @if (user.email) {
-                <li><a routerLink="/cart"><fa-icon [icon]="['fas', 'cart-shopping']"></fa-icon> Carrito</a></li>
-                
+            @if (user.email) {                
                 @if(user.tipo =='DU'){
                     <li><a routerLink="/register" class="register1">Ventas</a></li>
                     <li><a routerLink="/dashboard/owner" class="register1">Administrar</a></li>
