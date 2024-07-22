@@ -1,4 +1,5 @@
 import { User } from "./models/user";
+import { Venta } from "./models/venta";
 
 export const TYPE_FORMS = {
   CREATE_USER: "create_user",
@@ -28,3 +29,4 @@ export const CATEGORY: {[key in CategoryKey]: string} = {
 }
 
 export const EMPTY_USER = {} as User;
+export const EMPTY_SALE = {} as Venta;

@@ -12,6 +12,7 @@ import { AddShopComponent } from './home/owner-home/add-shop/add-shop.component'
 import { AddItemComponent } from './home/owner-home/add-item/add-item.component';
 import { UserGuard } from './home/user-guard';
 import { ShopDetailsComponent } from './home/shop-details/shop-details.component';
+import { OnSaleComponent } from './home/on-sale/on-sale.component';
 
 export const routes: Routes = [
   {
@@ -31,6 +32,9 @@ export const routes: Routes = [
               },
               {
                 path: 'shop/:id', component: ShopDetailsComponent, title: 'Ver detalles de la tienda'
+              },
+              {
+                path: 'on-sale', component: OnSaleComponent, title: 'Concreta tu compra'
               }
             ]
           },
