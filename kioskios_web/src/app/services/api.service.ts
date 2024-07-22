@@ -22,11 +22,15 @@ export class ApiService {
       .post<{ status: number; tiendas: Tienda[] }>(url, {token: localStorage.getItem('token')})
       .pipe(
         map((response) => {
-          if (response.status != 200) throw new HttpErrorResponse({status: 401, statusText: "Desautorizado, probablemente el token ha expirado"});
+          if (response.status != 200) {
+            console.log("Ha ocurrido un error en la respuesta: ", response);
+            throw new HttpErrorResponse({status: 401, statusText: "Desautorizado, probablemente el token ha expirado"});
+          }
           console.log("Enviando tiendas: ", response)
           return response.tiendas;
         }),
         catchError((error: HttpErrorResponse) => {
+          console.log("Ha ocurrido un error en la respuesta: ", error);
           throw error;
         })
       )

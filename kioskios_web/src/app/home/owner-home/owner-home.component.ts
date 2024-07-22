@@ -30,6 +30,7 @@ export class OwnerHomeComponent implements OnInit {
   ngOnInit(): void {
     console.log("Iniciando componente de propietario  ");
     this.apiService.getTiendas().subscribe( tiendas => {
+      console.log("TIendas obtenidas: ", tiendas);
       this.tiendas = tiendas;
     });
   
