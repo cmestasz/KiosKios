@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -24,7 +24,11 @@ export class DinamicFormComponent {
   isMultiple: boolean = false;
   selectedFiles: { [key: string]: File } = {};
 
-  constructor(private formBuilder: FormBuilder, private api: ApiService) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private api: ApiService,
+    private cdr: ChangeDetectorRef
+  ) {
     this.form = this.formBuilder.group({});
   }
 
@@ -53,6 +57,7 @@ export class DinamicFormComponent {
           this.form.get(key)?.setValue(valueToSet);
         }
       });
+      this.cdr.detectChanges();
     });
   }
 
