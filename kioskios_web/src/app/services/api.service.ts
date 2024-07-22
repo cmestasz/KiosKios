@@ -16,6 +16,26 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
+  getQrByShop(id: number): Observable<string> {
+    const url = this.urlBaseApi + '/get_sales/';
+    return this.http
+      .post<{ status: number; qr: string }>(url, {token: localStorage.getItem('token'), id})
+      .pipe(
+        map((response) => {
+          if (response.status != 200) {
+            console.log("Ha ocurrido un error en la respuesta: ", response);
+            throw new HttpErrorResponse({status: 401, statusText: "Desautorizado, probablemente el token ha expirado"});
+          }
+          console.log("Enviando qr: ", response)
+          return response.qr;
+        }),
+        catchError((error: HttpErrorResponse) => {
+          console.log("Ha ocurrido un error en la respuesta: ", error);
+          throw error;
+        })
+      )
+  }
+
   getSales(confirmed: boolean): Observable<Venta[]> {
     const url = this.urlBaseApi + '/get_sales/';
     return this.http
