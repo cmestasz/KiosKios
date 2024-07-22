@@ -6,11 +6,12 @@ import { LoaderFormComponent } from '../../dinamic-form/loader-form/loader-form.
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { AuthService } from '../../services/auth.service';
+import { ProductListComponent } from '../product-list/product-list.component';
 
 @Component({
   selector: 'app-shop-details',
   standalone: true,
-  imports: [LoaderFormComponent],
+  imports: [LoaderFormComponent, ProductListComponent],
   templateUrl: './shop-details.component.html',
   styleUrl: './shop-details.component.css'
 })
