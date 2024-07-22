@@ -6,6 +6,6 @@ export interface Tienda {
   descripcion: string;
   categoria: string;
   dueno: User;
-  // latitud: number;
-  // longitud: number;
+  latitud: number;
+  longitud: number;
 }
