@@ -42,7 +42,7 @@ class DBStorage(Storage):
             return False
 
     def url(self, name):
-        return f'{os.environ.get('SUPABASE_URL')}/storage/v1/object/sign/{name}'
+        return f'{os.environ.get('SUPABASE_URL')}/storage/v1/object/public/{name}'
 
     def size(self, name):
         return self.client.head_object(Bucket='media', Key=name)['ContentLength']
