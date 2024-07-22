@@ -4,9 +4,7 @@ import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontaweso
 import { faCartShopping, faMagnifyingGlass, faBars } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../models/user';
-import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { EMPTY_USER } from '../../constants';
 
 
 @Component({

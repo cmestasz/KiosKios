@@ -28,7 +28,7 @@ class ProductoSerializer(serializers.ModelSerializer):
 class VentaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Venta
-        fields = ['id', 'usuario', 'producto', 'fecha', 'cantidad']
+        fields = ['id', 'usuario', 'producto', 'fecha', 'cantidad', 'confirmado']
 
 
 def form_serializer(form: ModelForm):

@@ -72,6 +72,11 @@ export class AuthService {
     this.userSubject.next(this.user);
   }
 
+  clear() {
+    this.user = EMPTY_USER;
+    this.userSubject.next(this.user);
+  }
+
   signOut() {
     if (this.user) {
       this.api.unauthUser(this.user.email).subscribe(

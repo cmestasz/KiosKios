@@ -1,7 +1,8 @@
-import { Injectable } from "@angular/core";
+import { Inject, Injectable, PLATFORM_ID } from "@angular/core";
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from "@angular/router";
 import { AuthService } from "../services/auth.service";
 import { catchError, map, Observable, of, retry } from "rxjs";
+import { isPlatformBrowser } from "@angular/common";
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,8 @@ export class UserGuard implements CanActivate {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformid: object
   ) { }
 
   canActivate(
@@ -43,6 +45,11 @@ export class UserGuard implements CanActivate {
             return false;
           }
         } else {
+          if (isPlatformBrowser(this.platformid)) {
+            localStorage.clear();
+            this.authService.clear(); 
+          }
+          
           this.router.navigate(['/']);
           return false;
         }

@@ -84,7 +84,8 @@ export class ProductDetailsComponent implements OnInit {
       usuario: this.user,
       producto: this.product,
       cantidad: this.totalProducts,
-      tiendaId: Number(this.product.tienda)
+      tiendaId: Number(this.product.tienda),
+      confirmado: false
     }
     this.salesService.setCurrentSale(venta);
     this.router.navigate(['/dashboard/user/on-sale']);

@@ -26,11 +26,13 @@
         <ul class="nav-list" id="nav-list">
             @if (user.email) {                
                 @if(user.tipo =='DU'){
-                    <li><a routerLink="/register" class="register1">Ventas</a></li>
                     <li><a routerLink="/dashboard/owner" class="register1">Administrar</a></li>
+                    <li><a routerLink="/dashboard/owner/sales" class="register1">Ventas</a></li>
                 } @else if (user.tipo == 'US' ) {
+                    <li><a routerLink="/dashboard/user/sales" class="register1">Ventas</a></li>
                     <li><a routerLink="/dashboard/user"> Explorar</a></li>
                 }
+                
                 <li><a (click)="showSignOut()"> {{ user.email }}</a></li>
                 @if (showSignOutButton) {
                 <li><a (click)="signOut()" class="register">Cerrar Sesión</a></li>
