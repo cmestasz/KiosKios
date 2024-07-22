@@ -64,6 +64,21 @@ export class ApiService {
         })
       )
   }
+  getShopById(id: Number): Observable<Tienda> {
+    const url = this.urlBaseApi + '/get_shop_by_id/';
+    return this.http
+      .post<{ status: number; tienda: Tienda }>(url,{token: localStorage.getItem('token'), id})
+      .pipe(
+        map((response) => {
+          console.log("Resquest de tienda por id: ", response);
+          if (response.status != 200) throw new HttpErrorResponse({status: 401, statusText: "Desautorizado, probablemente el token ha expirado"});
+          return response.tienda;
+        }),
+        catchError((error: HttpErrorResponse) => {
+          throw error;
+        })
+      )
+  }
 
   getVentas(): Observable<Venta[]> {
     const url = this.urlBaseApi + '/get_sales/';

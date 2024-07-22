@@ -1,5 +1,6 @@
 <div>
   <h2>{{ tienda.nombre }}</h2>
+  <button (click)="loadShop()" >Ver detalles de la tienda</button>
   @for (product of products; track $index) {
     <app-product-card [product]="product" ></app-product-card>
   }
