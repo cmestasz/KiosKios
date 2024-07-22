@@ -346,7 +346,7 @@ class GetQRPorTiendaView(APIView):
     def post(self, request):
         tienda = Tienda.objects.get(id=request.data.get('id'))
         print(tienda.dueno.yape_qr.url)
-        return Response({'status': 200, 'qr': 'http://localhost:8000/' + tienda.dueno.yape_qr.url})
+        return Response({'status': 200, 'qr': tienda.dueno.yape_qr.url})
 
 
 class CrearTiendaAdminView(APIView):
