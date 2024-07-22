@@ -5,7 +5,7 @@ from .views import (
     GetProductosView, GetUsuarioPorCorreoView, GetVentasView, GetCategoriasProductosView,
     CrearTiendaAdminView, CrearProductoAdminView, GetUsuariosAdminView,
     GetTiendasAdminView, GetProductosAdminView, GetVentasAdminView, GetPDFVentaView, IniciarSesionGoogleView,
-    GetProductoPorIdView, GetTiendaPorIdView, GetQRPorTiendaView, EliminarProductoView
+    GetProductoPorIdView, GetTiendaPorIdView, GetQRPorTiendaView, EliminarProductoView, ConfirmarVentaView
 )
 from rest_framework import routers
 from .viewsets import UsuarioViewSet, TiendaViewSet, ProductoViewSet, VentaViewSet
@@ -27,6 +27,7 @@ urlpatterns = [
     path('create_shop/', CrearTiendaView.as_view(), name='create_shop'),
     path('create_product/', CrearProductoView.as_view(), name='create_product'),
     path('create_sale/', CrearVentaView.as_view(), name='create_sale'),
+    path('confirm_sale/', ConfirmarVentaView.as_view(), name='confirm_sale'),
     path('get_shops/', GetTiendasView.as_view(), name='get_shops'),
     path('get_shop_by_id/', GetTiendaPorIdView.as_view(), name='get_shop_by_id'),
     path('get_products/', GetProductosView.as_view(), name='get_products'),

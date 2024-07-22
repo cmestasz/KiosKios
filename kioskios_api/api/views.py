@@ -16,8 +16,10 @@ from .serializers import (
 from rest_framework.parsers import MultiPartParser
 from django.utils.crypto import get_random_string
 
+
 def fields_error(form):
     return {'status': 406, 'message': form.errors}
+
 
 MESSAGES = {
     'correct': {'status': 200, 'message': 'Correcto'},
@@ -215,6 +217,16 @@ class CrearVentaView(APIView):
         return Response({**MESSAGES['created'], 'id': venta.id})
 
 
+class ConfirmarVentaView(APIView):
+    permission_classes = [IsAuth, IsOwner]
+
+    def put(self, request):
+        venta = Venta.objects.get(id=request.data.get('id'))
+        venta.confirmado = True
+        venta.save()
+        return Response(MESSAGES['correct'])
+
+
 class GetPDFVentaView(APIView):
     permission_classes = [IsAuth]
 
@@ -258,7 +270,8 @@ class GetProductosView(APIView):
     permission_classes = [IsAuth]
 
     def post(self, request):
-        productos = Producto.objects.filter(tienda__id=request.data.get('tienda'))
+        productos = Producto.objects.filter(
+            tienda__id=request.data.get('tienda'))
         serializer = ProductoSerializer(
             productos, many=True, context={'request': request})
         return Response({'status': 200, 'productos': serializer.data})
@@ -270,6 +283,7 @@ class EliminarProductoView(APIView):
     def post(self, request):
         Producto.objects.get(id=request.data.get('id')).delete()
         return Response(MESSAGES['correct'])
+
 
 class GetProductoPorIdView(APIView):
     permission_classes = [IsAuth]
@@ -332,7 +346,7 @@ class GetQRPorTiendaView(APIView):
     def post(self, request):
         tienda = Tienda.objects.get(id=request.data.get('id'))
         print(tienda.dueno.yape_qr.url)
-        return Response({'status': 200, 'qr': 'http://localhost:8000/' +  tienda.dueno.yape_qr.url})
+        return Response({'status': 200, 'qr': 'http://localhost:8000/' + tienda.dueno.yape_qr.url})
 
 
 class CrearTiendaAdminView(APIView):
