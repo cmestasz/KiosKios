@@ -1,6 +1,9 @@
 import { User } from "./user";
 
 export interface Venta {
-  user: User;
+  usuario: User;
   fecha: Date;
+  producto: string;
+  confirmed: boolean;
+  cantidad: number;
 }

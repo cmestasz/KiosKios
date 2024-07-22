@@ -4,7 +4,13 @@
   <h4>{{ product.nombre }}</h4>
   <p>{{ product.categoria }}</p>
   <p>{{ product.precio }}</p>
-  <button>Add to Cart</button>
+  <div>
+    <button (click)="minusOne()" >-</button>
+    <p >{{ totalProducts }}</p>
+    <button (click)="addOne()" >+</button>
+  </div>
+  <p>Precio a pagar: {{ totalProducts * product.precio }}</p>
+  <button (click)="buy()" >Comprar</button>
   <button (click)="backHome()" >Back</button>
   } @else {
     <loader-form />

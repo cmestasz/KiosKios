@@ -19,6 +19,7 @@ export class ProductDetailsComponent implements OnInit {
   product!: Producto;
   image!: SafeUrl;
   user: User;
+  totalProducts: number
   @ViewChild(LoaderFormComponent) loaderForm!: LoaderFormComponent;
 
   constructor(
@@ -29,9 +30,12 @@ export class ProductDetailsComponent implements OnInit {
     private authService: AuthService
   ) {
     this.user = EMPTY_USER;
+    this.totalProducts = 1;
+
   }
 
   ngOnInit(): void {
+    this.totalProducts = 1;
     console.log("Iniciando componente de detalles");
 
     this.authService.getUser().subscribe(
@@ -57,8 +61,23 @@ export class ProductDetailsComponent implements OnInit {
         );
       }
     );
-
   }
+
+  addOne() {
+    this.totalProducts++;
+  }
+
+  minusOne() {
+    if (this.totalProducts > 1) {
+      this.totalProducts--;
+    }
+  }
+
+  buy() : void {
+    this
+  }
+
+
   backHome(): void {
     if (this.user.tipo == 'US') {
       this.router.navigate(['/dashboard/user']);

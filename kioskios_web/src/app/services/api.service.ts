@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Observable, catchError, map, of } from 'rxjs';
+import { Observable, ObservableLike, catchError, map, of } from 'rxjs';
 import { FormField } from '../models/form-field';
 import { Producto } from '../models/product';
 import { User } from '../models/user';
@@ -15,6 +15,26 @@ export class ApiService {
   private urlBaseApi: string = 'http://localhost:8000/api';
 
   constructor(private http: HttpClient) {}
+
+  getSales(confirmed: boolean): Observable<Venta[]> {
+    const url = this.urlBaseApi + '/get_sails/';
+    return this.http
+      .post<{ status: number; ventas: Venta[] }>(url, {token: localStorage.getItem('token'), confirmed})
+      .pipe(
+        map((response) => {
+          if (response.status != 200) {
+            console.log("Ha ocurrido un error en la respuesta: ", response);
+            throw new HttpErrorResponse({status: 401, statusText: "Desautorizado, probablemente el token ha expirado"});
+          }
+          console.log("Enviando ventas: ", response)
+          return response.ventas;
+        }),
+        catchError((error: HttpErrorResponse) => {
+          console.log("Ha ocurrido un error en la respuesta: ", error);
+          throw error;
+        })
+      )
+  }
 
   getTiendas(): Observable<Tienda[]> {
     const url = this.urlBaseApi + '/get_shops/';
