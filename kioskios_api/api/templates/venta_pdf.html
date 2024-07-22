@@ -1,39 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>{% if titulo %}{{ titulo }}{% else %}PDF{% endif %}</title>
-    </head>
-    <body>
-      <div class="wrapper">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if titulo %}{{ titulo }}{% else %}PDF{% endif %}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .wrapper {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .header {
+            margin-bottom: 20px;
+        }
+        .header .title {
+            font-size: 18px;
+            color: #555;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .details {
+            margin-bottom: 20px;
+        }
+        .details p {
+            font-size: 16px;
+            color: #333;
+            margin: 5px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        table th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+        table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .total {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: right;
+            margin-top: 20px;
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>Boleta Electrónica</h1>
         <div class="header">
-          <p class="title">Venta #{{ titulo }}</p>
+            <p class="title">Venta #{{ titulo }}</p>
         </div>
         <div class="details">
-          <p><strong>Cliente:</strong> {{ usuario }} </p>
-          <p><strong>Fecha:</strong> {{ fecha | date:"d/m/Y" }} </p>
-          <table>
-            <thead>
-              <tr>
-                <th>Producto</th>
-                <th>Precio</th>
-                <th>Cantidad</th>
-                <th>Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{{ producto }}</td>
-                <td>S/. {{ precio }}</td>
-                <td>{{ cantidad }}</td>
-                <td>S/. {{ total }}</td>
-              </tr>
+            <p><strong>Cliente:</strong> {{ usuario }}</p>
+            <p><strong>Fecha:</strong> {{ fecha | date:"d/m/Y" }}</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Precio</th>
+                        <th>Cantidad</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ producto }}</td>
+                        <td>S/. {{ precio }}</td>
+                        <td>{{ cantidad }}</td>
+                        <td>S/. {{ total }}</td>
+                    </tr>
+                </tbody>
             </table>
-            </tbody>
-          <p></p>
         </div>
-      </div>
-
-    </body>
+        <p class="total">Total Pagado: S/. {{ total }}</p>
+    </div>
+</body>
 </html>

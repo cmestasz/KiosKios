@@ -25,3 +25,21 @@
     justify-content: space-between;
     align-items: center;
 }
+
+.title-main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    column-gap: 4px;
+    row-gap: 4px;
+}
+.title-main h1{
+    font-weight: bold;
+    text-transform:uppercase;
+    font-size: 40px;
+    display: flex;
+    justify-content: center;
+    pointer-events: painted;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
