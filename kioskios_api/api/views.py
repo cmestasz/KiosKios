@@ -108,11 +108,11 @@ class CrearDueñoView(APIView):
     parser_classes = [MultiPartParser]
 
     def put(self, request):
-        request.FILES['yape_qr']._name = request.data.get('email') + '.png'
         print(request.FILES['yape_qr'].__dict__)
         form = DueñoForm(request.data, request.FILES)
         print(form.errors)
         if form.is_valid():
+            request.FILES['yape_qr']._name = request.data.get('email') + '.png'
             form.save()
             return Response(MESSAGES['created'])
         return Response(fields_error(form))
@@ -154,8 +154,6 @@ class CrearProductoView(APIView):
     permission_classes = [IsAuth, IsOwner]
 
     def put(self, request):
-        # CORRECCION PARA TODOS LOS ARCHIVOS QUE SE SUBAN
-        request.FILES['imagen']._name = request.data.get('nombre') + '.png'
         id = request.data.get('id')
         if (id):
             form = ProductoForm(request.data, request.FILES,
@@ -163,6 +161,8 @@ class CrearProductoView(APIView):
         else:
             form = ProductoForm(request.data, request.FILES)
         if form.is_valid():
+            # CORRECCION PARA TODOS LOS ARCHIVOS QUE SE SUBAN
+            request.FILES['imagen']._name = request.data.get('nombre') + '.png'
             form.save()
             return Response(MESSAGES['created'])
         return Response(fields_error(form))
