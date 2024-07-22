@@ -3,7 +3,6 @@
   <h4>{{ tienda.nombre }}</h4>
   <p>{{ tienda.categoria }}</p>
   <p>{{ tienda.descripcion }}</p>
-  <p> {{ tienda.dueno }} </p>
   <app-product-list [tienda]="tienda" />
   <button (click)="backHome()" >Back</button>
   } @else {

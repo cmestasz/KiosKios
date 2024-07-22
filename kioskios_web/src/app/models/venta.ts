@@ -9,5 +9,5 @@ export interface Venta {
   producto: Producto;
   confirmed?: boolean;
   cantidad: number;
-  tiendaId?: number;
+  tiendaId: number;
 }
