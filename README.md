@@ -63,12 +63,10 @@ Puedes ver una demostración en vivo de KiosKios en: [https://kios-kios.vercel.a
 
 ## Autores
 
-- <nombre_1>
-- <nombre_2>
-- <nombre_3>
+- Dolly Yadhira Mollo Chuquicaña
+- Christian Raul Mestas Zegarra
+- Luis Gustavo Sequeiros Condori
 
 ## Licencia
 
 Este proyecto es software propietario y su uso está restringido. Todos los derechos reservados.
-
-```
