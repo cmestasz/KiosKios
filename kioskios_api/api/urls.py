@@ -5,7 +5,7 @@ from .views import (
     GetProductosView, GetUsuarioPorCorreoView, GetVentasView, GetCategoriasProductosView,
     CrearTiendaAdminView, CrearProductoAdminView, GetUsuariosAdminView,
     GetTiendasAdminView, GetProductosAdminView, GetVentasAdminView, GetPDFVentaView, IniciarSesionGoogleView,
-    GetProductoPorIdView, GetTiendaPorIdView
+    GetProductoPorIdView, GetTiendaPorIdView, GetQRPorTiendaView
 )
 from rest_framework import routers
 from .viewsets import UsuarioViewSet, TiendaViewSet, ProductoViewSet, VentaViewSet
@@ -38,6 +38,7 @@ urlpatterns = [
     path('get_product_categories/', GetCategoriasProductosView.as_view(),
          name='get_product_categories'),
     path('get_pdf_sale', GetPDFVentaView.as_view(), name='get_pdf_sale'),
+    path('get_qr_by_shop/', GetQRPorTiendaView.as_view(), name='get_qr_by_shop'),
     path('create_shop_admin/', CrearTiendaAdminView.as_view(),
          name='create_shop_admin'),
     path('create_product_admin/', CrearProductoAdminView.as_view(),

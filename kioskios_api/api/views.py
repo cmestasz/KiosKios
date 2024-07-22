@@ -318,6 +318,14 @@ class GetCategoriasProductosView(APIView):
         return Response({'status': 200, 'productos': json_productos})
 
 
+class GetQRPorTiendaView(APIView):
+    permission_classes = [IsAuth]
+
+    def post(self, request):
+        tienda = Tienda.objects.get(id=request.data.get('id'))
+        return Response({'status': 200, 'qr': tienda.dueno.yape_qr.url})
+
+
 class CrearTiendaAdminView(APIView):
     permission_classes = [IsAuth, IsAdmin]
 
