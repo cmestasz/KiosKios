@@ -27,7 +27,7 @@ export class AddShopComponent implements AfterViewInit{
     this.loaderForm.createForm(TYPE_FORMS.CREATE_SHOP);
     this.loaderForm.formSubmitted.subscribe(() => {
       console.log("Redirigiendo a la vista owner");
-      this.router.navigate(['/owner']);
+      this.router.navigate(['/dashboard/owner']);
     });
     this.addButton.nativeElement.disabled = false;
   }
