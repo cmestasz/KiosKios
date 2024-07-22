@@ -5,7 +5,7 @@ export interface Tienda {
   nombre: string;
   descripcion: string;
   categoria: string;
-  dueno: User;
+  qr?: string;
   latitud: number;
   longitud: number;
 }
