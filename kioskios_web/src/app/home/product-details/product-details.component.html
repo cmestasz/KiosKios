@@ -17,8 +17,8 @@
             <p class="quantity-input"  >{{ totalProducts }}</p>
             <button (click)="addOne()" >+</button>
           </div>
-          <p style="font-size: 20px;" >Precio a pagar: {{ totalProducts * product.precio }}</p>
-          <div class="product-category">Categoría: {{ product.categoria }}</div>
+          <p style="font-size: 20px;" >Precio a pagar: S/ {{ totalProducts * product.precio }}</p>
+          <div class="product-category">Categoría: {{ categoria }}</div>
           <div class="buttons">
             <button  class="add-to-cart" #buyButton (click)="buy()" >Comprar</button>
             <button class="back" (click)="backHome()" >Back</button>

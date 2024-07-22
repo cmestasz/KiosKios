@@ -4,7 +4,7 @@ import { Producto } from '../../models/product';
 import { ApiService } from '../../services/api.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { User } from '../../models/user';
-import { EMPTY_USER, TYPE_FORMS } from '../../constants';
+import { CATEGORY, CategoryKey, EMPTY_USER, TYPE_FORMS } from '../../constants';
 import { AuthService } from '../../services/auth.service';
 import { LoaderFormComponent } from '../../dinamic-form/loader-form/loader-form.component';
 import { SalesService } from '../../services/sales.service';
@@ -22,6 +22,7 @@ export class ProductDetailsComponent implements OnInit {
   image!: SafeUrl;
   user: User = EMPTY_USER;
   totalProducts: number = 1;
+  categoria: string  = '';
   @ViewChild(LoaderFormComponent) loaderForm!: LoaderFormComponent;
   @ViewChild('buyButton') buyButton!: ElementRef<HTMLButtonElement>;
 
@@ -54,6 +55,8 @@ export class ProductDetailsComponent implements OnInit {
                 product => {
                   console.log("Una entrega de producto: ", product);
                   this.product = product;
+                  this.categoria = CATEGORY[this.product.categoria as CategoryKey];
+                  console.log("Valor de la categoría: ", this.categoria);
                   this.loadImage();
                   if (this.buyButton) {
                     this.buyButton.nativeElement.disabled = false;
