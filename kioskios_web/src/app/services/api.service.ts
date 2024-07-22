@@ -17,7 +17,7 @@ export class ApiService {
   constructor(private http: HttpClient) {}
 
   getSales(confirmed: boolean): Observable<Venta[]> {
-    const url = this.urlBaseApi + '/get_sails/';
+    const url = this.urlBaseApi + '/get_sales/';
     return this.http
       .post<{ status: number; ventas: Venta[] }>(url, {token: localStorage.getItem('token'), confirmed})
       .pipe(
