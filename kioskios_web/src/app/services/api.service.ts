@@ -13,9 +13,9 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class ApiService {
-  //private urlBaseApi: string = 'http://localhost:8000/api';
-  private urlBaseApi: string = 'https://kios-kios-api.vercel.app/api';
-  private urlMediaApi: string = 'https://kios-kios-api.vercel.app/media';
+  private urlBaseApi: string = 'http://localhost:8000/api';
+  // private urlBaseApi: string = 'https://kios-kios-api.vercel.app/api';
+  // private urlMediaApi: string = 'https://kios-kios-api.vercel.app/media';
 
   constructor(
     private http: HttpClient,

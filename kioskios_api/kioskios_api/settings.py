@@ -21,10 +21,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('secret_key')
+SECRET_KEY = 'django-insecure-fase987nhvroq475f9jlriwdxng26rftihjyoimjguf43q8'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     'localhost',
@@ -37,10 +37,10 @@ CORS_ALLOW_HEADERS = (
     "content-type"
 )
 
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SECURE_HSTS_SECONDS = 60
+# SECURE_SSL_REDIRECT = True
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
+# SECURE_HSTS_SECONDS = 60
 
 STORAGES = {
     'default': {
@@ -108,6 +108,7 @@ WSGI_APPLICATION = 'kioskios_api.wsgi.app'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+'''
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -129,7 +130,6 @@ DATABASES = {
     'PORT': '5432',
   }
 }
-'''
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
