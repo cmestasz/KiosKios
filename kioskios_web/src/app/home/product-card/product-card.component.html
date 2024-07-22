@@ -1,6 +1,8 @@
-<div (click)="viewProduct()">
-  <img [src]="image" alt="ImageProduct">
-  <h4>{{ product.nombre }}</h4>
-  <p>{{ product.categoria }}</p>
-  <p>{{ product.precio }}</p>
+<div class='product-card' (click)="viewProduct()">
+  <img src= '{{ product.imagen }}' alt="ImageProduct" class='imagenProducto'>
+  <h4 class='product-name'>{{ product.nombre }}</h4>
+  <p class='product-name'>{{ product.categoria }}</p>
+  <p class='product-price'>${{ product.precio }}</p>
+  <a routerLink="/on-sale" class="add-to-cart">Añadir al carrito</a>
+
 </div>

@@ -1,7 +1,12 @@
-<div>
-  <h2>{{ tienda.nombre }}</h2>
-  <button (click)="loadShop()" >Ver detalles de la tienda</button>
-  @for (product of products; track $index) {
-    <app-product-card [product]="product" ></app-product-card>
-  }
+<div class='container'>
+  <div class="encabezado">
+    <h2 class="title">{{ tienda.nombre }}</h2>
+    <button class="button" (click)="loadShop()" >Ver detalles de la tienda</button>  
+  </div><br><br>
+  <div class='product-grid'>
+        @for (product of products; track $index) {
+          <app-product-card [product]="product" ></app-product-card>
+        }         
+  </div>
+  
 </div>
