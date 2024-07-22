@@ -5,7 +5,7 @@ from .views import (
     GetProductosView, GetUsuarioPorCorreoView, GetVentasView, GetCategoriasProductosView,
     CrearTiendaAdminView, CrearProductoAdminView, GetUsuariosAdminView,
     GetTiendasAdminView, GetProductosAdminView, GetVentasAdminView, GetPDFVentaView, IniciarSesionGoogleView,
-     GetProductoPorIdView
+    GetProductoPorIdView, GetTiendaPorIdView
 )
 from rest_framework import routers
 from .viewsets import UsuarioViewSet, TiendaViewSet, ProductoViewSet, VentaViewSet
@@ -19,8 +19,6 @@ router.register(r'ventas', VentaViewSet)
 
 
 urlpatterns = [
-    path('rest/', include(router.urls)),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('login/', IniciarSesionView.as_view(), name='login'),
     path('google_login/', IniciarSesionGoogleView.as_view(), name='google_login'),
     path('logout/', CerrarSessionView.as_view(), name='logout'),
@@ -30,8 +28,10 @@ urlpatterns = [
     path('create_product/', CrearProductoView.as_view(), name='create_product'),
     path('create_sale/', CrearVentaView.as_view(), name='create_sale'),
     path('get_shops/', GetTiendasView.as_view(), name='get_shops'),
+    path('get_shop_by_id/', GetTiendaPorIdView.as_view(), name='get_shop_by_id'),
     path('get_products/', GetProductosView.as_view(), name='get_products'),
-    path('get_product_by_id/', GetProductoPorIdView.as_view(), name='get_product_by_id'),
+    path('get_product_by_id/', GetProductoPorIdView.as_view(),
+         name='get_product_by_id'),
     path('get_user_by_email/', GetUsuarioPorCorreoView.as_view(),
          name='get_user_by_email'),
     path('get_sales/', GetVentasView.as_view(), name='get_sales'),

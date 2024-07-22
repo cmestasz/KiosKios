@@ -237,6 +237,15 @@ class GetTiendasView(APIView):
         return Response({'status': 200, 'tiendas': serializer.data})
 
 
+class GetTiendaPorIdView(APIView):
+    permission_classes = [IsAuth]
+
+    def post(self, request):
+        tienda = Tienda.objects.get(id=request.data.get('id'))
+        serializer = TiendaSerializer(tienda, context={'request': request})
+        return Response({'status': 200, 'tienda': serializer.data})
+
+
 class GetProductosView(APIView):
     permission_classes = [IsAuth]
 
