@@ -208,7 +208,7 @@ class CrearVentaView(APIView):
     def put(self, request):
         venta = Venta.objects.create(
             usuario=get_user(request),
-            producto=request.data.get('producto'),
+            producto=Producto.objects.get(id=request.data.get('producto')),
             cantidad=request.data.get('cantidad')
         )
         venta.save()

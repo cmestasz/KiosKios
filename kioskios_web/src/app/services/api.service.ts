@@ -8,32 +8,34 @@ import { EMPTY_USER } from '../constants';
 import { Tienda } from '../models/tienda';
 import { Venta } from '../models/venta';
 import { Response } from '../models/response';
+import { Router } from '@angular/router';
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
   private urlBaseApi: string = 'http://localhost:8000/api';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router
+  ) {
+
+  }
 
   putSale(sale: Venta): Observable<Response> {
     const url = this.urlBaseApi + '/create_sale/';
-    const reFactorySale = {
-      producto: sale.producto.id,
-      cantidad: sale.cantidad
-    }
     return this.http
-      .put<Response>(url, {token: localStorage.getItem('token'), reFactorySale})
+      .put<Response>(url, {token: localStorage.getItem('token'), producto: sale.producto.id, cantidad: sale.cantidad})
       .pipe(
         map((response) => {
-          if (response.status != 200) {
+          if (response.status == 401) {
             console.log("Ha ocurrido un error en la respuesta: ", response);
             throw new HttpErrorResponse({status: 401, statusText: "Desautorizado, probablemente el token ha expirado"});
           }
           return response;
         }),
         catchError((error: HttpErrorResponse) => {
-          console.log("Ha ocurrido un error en la respuesta: ", error);
+          console.log("He capturado un error en la respuesta: ", error);
           throw error;
         })
       )
@@ -220,5 +222,6 @@ export class ApiService {
   getMedia(url: string): Observable<Blob> {
     return this.http.get(url, { responseType: 'blob' });
   }
+
 
 }
