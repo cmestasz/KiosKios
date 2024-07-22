@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -24,7 +24,11 @@ export class DinamicFormComponent {
   isMultiple: boolean = false;
   selectedFiles: { [key: string]: File } = {};
 
-  constructor(private formBuilder: FormBuilder, private api: ApiService) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private api: ApiService,
+    private cdr: ChangeDetectorRef
+  ) {
     this.form = this.formBuilder.group({});
   }
 
@@ -37,7 +41,29 @@ export class DinamicFormComponent {
     });
   }
 
-  buildForm() {
+  loadSchemaWithData<T extends { [key: string]: any }>(model: string, data: T): void {
+    this.model = model;
+    this.form = this.formBuilder.group({});
+    this.api.getFormSchema(model).subscribe((fieldsReceived) => {
+      this.fields = fieldsReceived;
+      this.buildForm();
+      this.form.addControl('id', this.formBuilder.control(null, Validators.required));
+      Object.keys(this.form.controls).forEach((key) => {
+        console.log("trabajando con esta llave: ", key);
+        if (key in data) {
+          const value = data[key];
+          console.log("Objeto que se configurará: ", data[key]);
+          const valueToSet = value && typeof value === 'object' && 'id' in value ? value['id'] : value;
+          this.form.get(key)?.setValue(valueToSet);
+        }
+      });
+      this.cdr.detectChanges();
+    });
+  }
+
+
+
+  buildForm(): void {
     for (const field of this.fields) {
       let control;
       if (field.attributes?.['type'] == 'file') {

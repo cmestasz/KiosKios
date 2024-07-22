@@ -99,7 +99,7 @@ class TiendaFormAdmin(TiendaForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['dueño'].queryset = Usuario.objects.filter(
+        self.fields['dueno'].queryset = Usuario.objects.filter(
             tipo=Usuario.Types.DUEÑO)
 
 

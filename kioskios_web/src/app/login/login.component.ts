@@ -30,9 +30,9 @@ export class LoginComponent implements AfterViewInit {
         if (response.user && response.token) {
           this.authService.signIn(response.user, response.token);
           if (response?.['user']?.['tipo'] == 'US') {
-            this.router.navigate(['/user']);
+            this.router.navigate(['/dashboard/user']);
           } else {
-            this.router.navigate(['/owner']);
+            this.router.navigate(['/dashboard/owner']);
           }
         }
 

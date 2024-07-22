@@ -3,9 +3,9 @@ import { User } from "./user";
 export interface Tienda {
   id: number;
   nombre: string;
-  descripción: string;
+  descripcion: string;
   categoria: string;
-  dueño: User;
-  // latitud: number;
-  // longitud: number;
+  qr?: string;
+  latitud: number;
+  longitud: number;
 }

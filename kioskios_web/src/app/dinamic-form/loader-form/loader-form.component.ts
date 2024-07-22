@@ -34,5 +34,19 @@ export class LoaderFormComponent {
       console.log("El componente no se ha podido cargar correctamente");
     }
   }
+  loadFormWithData<T extends {[key: string]: any}>(typeForm: string, data: T): void {
+    if(this.componentRef)
+      this.componentRef.destroy();
+    this.componentRef = this.viewContainer.createComponent(DinamicFormComponent);
+    if(this.componentRef && this.componentRef.instance){
+      this.componentRef.instance.loadSchemaWithData<T>(typeForm, data);
+      this.componentRef.instance.formSubmitted.subscribe((response: Response) => {
+        console.log("reemitiendo el evento");
+        this.formSubmitted.emit(response);
+      });
+    }else{
+      console.log("El componente no se ha podido cargar correctamente");
+    }
+  }
 
 }

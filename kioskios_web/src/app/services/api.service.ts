@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Observable, catchError, map, of } from 'rxjs';
+import { Observable, ObservableLike, catchError, map, of } from 'rxjs';
 import { FormField } from '../models/form-field';
 import { Producto } from '../models/product';
 import { User } from '../models/user';
@@ -8,6 +8,7 @@ import { EMPTY_USER } from '../constants';
 import { Tienda } from '../models/tienda';
 import { Venta } from '../models/venta';
 import { Response } from '../models/response';
+import { Router } from '@angular/router';
 @Injectable({
   providedIn: 'root',
 })
@@ -16,7 +17,71 @@ export class ApiService {
   private urlBaseApi: string = 'https://kios-kios-api.vercel.app/api';
   private urlMediaApi: string = 'https://kios-kios-api.vercel.app/media';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router
+  ) {
+
+  }
+
+  putSale(sale: Venta): Observable<Response> {
+    const url = this.urlBaseApi + '/create_sale/';
+    return this.http
+      .put<Response>(url, {token: localStorage.getItem('token'), producto: sale.producto.id, cantidad: sale.cantidad})
+      .pipe(
+        map((response) => {
+          if (response.status == 401) {
+            console.log("Ha ocurrido un error en la respuesta: ", response);
+            throw new HttpErrorResponse({status: 401, statusText: "Desautorizado, probablemente el token ha expirado"});
+          }
+          return response;
+        }),
+        catchError((error: HttpErrorResponse) => {
+          console.log("He capturado un error en la respuesta: ", error);
+          throw error;
+        })
+      )
+  }
+
+  getQrByShop(id: number): Observable<string> {
+    const url = this.urlBaseApi + '/get_qr_by_shop/';
+    return this.http
+      .post<{ status: number; qr: string }>(url, {token: localStorage.getItem('token'), id})
+      .pipe(
+        map((response) => {
+          if (response.status != 200) {
+            console.log("Ha ocurrido un error en la respuesta: ", response);
+            throw new HttpErrorResponse({status: 401, statusText: "Desautorizado, probablemente el token ha expirado"});
+          }
+          console.log("Enviando qr: ", response)
+          return response.qr;
+        }),
+        catchError((error: HttpErrorResponse) => {
+          console.log("Ha ocurrido un error en la respuesta: ", error);
+          throw error;
+        })
+      )
+  }
+
+  getSales(confirmed: boolean): Observable<Venta[]> {
+    const url = this.urlBaseApi + '/get_sales/';
+    return this.http
+      .post<{ status: number; ventas: Venta[] }>(url, {token: localStorage.getItem('token'), confirmed})
+      .pipe(
+        map((response) => {
+          if (response.status != 200) {
+            console.log("Ha ocurrido un error en la respuesta: ", response);
+            throw new HttpErrorResponse({status: 401, statusText: "Desautorizado, probablemente el token ha expirado"});
+          }
+          console.log("Enviando ventas: ", response)
+          return response.ventas;
+        }),
+        catchError((error: HttpErrorResponse) => {
+          console.log("Ha ocurrido un error en la respuesta: ", error);
+          throw error;
+        })
+      )
+  }
 
   getTiendas(): Observable<Tienda[]> {
     const url = this.urlBaseApi + '/get_shops/';
@@ -24,11 +89,15 @@ export class ApiService {
       .post<{ status: number; tiendas: Tienda[] }>(url, {token: localStorage.getItem('token')})
       .pipe(
         map((response) => {
-          if (response.status != 200) throw new HttpErrorResponse({status: 401, statusText: "Desautorizado, probablemente el token ha expirado"});
+          if (response.status != 200) {
+            console.log("Ha ocurrido un error en la respuesta: ", response);
+            throw new HttpErrorResponse({status: 401, statusText: "Desautorizado, probablemente el token ha expirado"});
+          }
           console.log("Enviando tiendas: ", response)
           return response.tiendas;
         }),
         catchError((error: HttpErrorResponse) => {
+          console.log("Ha ocurrido un error en la respuesta: ", error);
           throw error;
         })
       )
@@ -52,7 +121,7 @@ export class ApiService {
   }
 
   getProductById(id: Number): Observable<Producto> {
-    const url = this.urlBaseApi + '/get_producto_por_id/';
+    const url = this.urlBaseApi + '/get_product_by_id/';
     return this.http
       .post<{ status: number; producto: Producto }>(url,{token: localStorage.getItem('token'), id})
       .pipe(
@@ -66,27 +135,22 @@ export class ApiService {
         })
       )
   }
-
-  getVentas(): Observable<Venta[]> {
-    const url = this.urlBaseApi + '/get_sales/';
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-      }),
-    };
-
+  getShopById(id: Number): Observable<Tienda> {
+    const url = this.urlBaseApi + '/get_shop_by_id/';
     return this.http
-      .get<{ status: number; ventas: Venta[] }>(url, httpOptions)
+      .post<{ status: number; tienda: Tienda }>(url,{token: localStorage.getItem('token'), id})
       .pipe(
         map((response) => {
+          console.log("Resquest de tienda por id: ", response);
           if (response.status != 200) throw new HttpErrorResponse({status: 401, statusText: "Desautorizado, probablemente el token ha expirado"});
-          return response.ventas;
+          return response.tienda;
         }),
         catchError((error: HttpErrorResponse) => {
           throw error;
         })
       )
   }
+
 
   unauthUser(email: string): Observable<boolean> {
     const url = this.urlBaseApi + '/logout/';
@@ -125,9 +189,9 @@ export class ApiService {
       );
   }
 
-  postForm(formtoSend: FormData, to: string): Observable<any> {
+  postForm(formtoSend: FormData, to: string): Observable<Response> {
     const url = this.urlBaseApi + `/${to}/`;
-    return this.http.put<FormData>(url, formtoSend);
+    return this.http.put<Response>(url, formtoSend);
   }
 
   getFormSchema(formToGet: string): Observable<FormField[]> {
@@ -160,5 +224,6 @@ export class ApiService {
   getMedia(url: string): Observable<Blob> {
     return this.http.get(url, { responseType: 'blob' });
   }
+
 
 }

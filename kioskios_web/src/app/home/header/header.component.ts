@@ -2,7 +2,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { Router, RouterLink} from '@angular/router';
 import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCartShopping, faMagnifyingGlass, faBars } from '@fortawesome/free-solid-svg-icons';
-import { AuthService, getUserLocal } from '../../services/auth.service';
+import { AuthService } from '../../services/auth.service';
 import { User } from '../../models/user';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -27,7 +27,7 @@ export class HeaderComponent implements OnInit{
     private router: Router
   ){
     library.addIcons(faCartShopping, faMagnifyingGlass);
-    this.user = getUserLocal();
+    this.user = this.authService.getUserLocal();
   }
   @HostListener('window:resize', ['$event'])
   onResize(event: Event) {

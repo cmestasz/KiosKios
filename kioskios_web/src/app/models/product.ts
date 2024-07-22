@@ -1,4 +1,5 @@
-import { CategoryKey } from "../constants";
+import { SafeUrl } from "@angular/platform-browser";
+import { Tienda } from "./tienda";
 
 export interface Producto {
   id: number;
@@ -7,5 +8,7 @@ export interface Producto {
   precio: number;
   stock: number;
   categoria: string;
-  imagen: string;
+  imagen: string | SafeUrl;
+  tienda: string;
+  tiendaModel: Tienda
 }

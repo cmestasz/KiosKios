@@ -86,18 +86,22 @@ export class AuthService {
         });
     }
   }
-
-}
-
-export function getUserLocal(): User {
-  const userData = localStorage.getItem('user');
-  let user: User = EMPTY_USER;
-  try {
-    if (userData) {
-      user = JSON.parse(userData);      
+  getUserLocal(): User {
+    if (isPlatformBrowser(this.platformid)) {
+      const userData = localStorage.getItem('user');
+    let user: User = EMPTY_USER;
+    try {
+      if (userData) {
+        user = JSON.parse(userData);      
+      }
+    }catch(err){
+      throw new Error("No se pudo parsear el usuario");
     }
-  }catch(err){
-    throw new Error("No se pudo parsear el usuario");
+    return user;
+    }
+    return EMPTY_USER;
   }
-  return user;
+
+  
 }
+

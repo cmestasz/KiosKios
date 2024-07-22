@@ -4,6 +4,10 @@
     @switch (field.tipoCampo) {
       @case ('input') {
         @if (field.attributes?.['type'] == 'file') {
+          @if (form.get('imagen')?.value) {
+            <img [src]="form.get('imagen')?.value" alt="Imagen actual" style="width: 10%;">
+            <p>Imagen actual</p>
+          }
           <input [type]="field.attributes?.['type']" (change)="imageInputPicked($event, field.name)"
                [formControlName]="field.name"
                [attr.placeholder]="field.attributes?.['placeholder'] || field.name"

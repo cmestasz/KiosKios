@@ -16,12 +16,16 @@ from .serializers import (
 from rest_framework.parsers import MultiPartParser
 from django.utils.crypto import get_random_string
 
+
+def fields_error(form):
+    return {'status': 406, 'message': form.errors}
+
+
 MESSAGES = {
     'correct': {'status': 200, 'message': 'Correcto'},
     'created': {'status': 201, 'message': 'Creado'},
     'no_login': {'status': 401, 'message': 'No permitido (inicia sesión para continuar)'},
     'unallowed': {'status': 401, 'message': 'No permitido'},
-    'fields_error': {'status': 406, 'message': 'Error en los campos'},
     'wrong_password': {'status': 406, 'message': 'Contraseña incorrecta'}
 }
 
@@ -58,7 +62,7 @@ class IniciarSesionView(APIView):
                 response.set_cookie('user', user)
                 return response
             return Response(MESSAGES['wrong_password'])
-        return Response(MESSAGES['fields_error'])
+        return Response(fields_error(form))
 
     def post(self, request):
         return Response({'status': 200, 'campos': form_serializer(LoginForm())})
@@ -92,7 +96,7 @@ class CrearUsuarioView(APIView):
         if form.is_valid():
             form.save()
             return Response(MESSAGES['created'])
-        return Response(MESSAGES['fields_error'])
+        return Response(fields_error(form))
 
     def post(self, request):
         return Response({'status': 200, 'campos': form_serializer(UsuarioForm())})
@@ -109,7 +113,7 @@ class CrearDueñoView(APIView):
         if form.is_valid():
             form.save()
             return Response(MESSAGES['created'])
-        return Response(MESSAGES['fields_error'])
+        return Response(fields_error(form))
 
     def post(self, request):
         return Response({'status': 200, 'campos': form_serializer(DueñoForm())})
@@ -119,32 +123,56 @@ class CrearTiendaView(APIView):
     permission_classes = [IsAuth, IsOwner]
 
     def put(self, request):
-        form = TiendaForm(request.data)
+        id = request.data.get('id')
+        if (id):
+            form = TiendaForm(request.data, instance=Tienda.objects.get(id=id))
+            print("estamos enviando una instancia")
+        else:
+            form = TiendaForm(request.data)
+            print("estamos enviando un nuevo objeto")
         if form.is_valid():
             instance = form.save(commit=False)
-            instance.dueño = get_user(request)
+            instance.dueno = get_user(request)
             instance.save()
             return Response(MESSAGES['created'])
-        return Response(MESSAGES['fields_error'])
+        return Response(fields_error(form))
 
     def post(self, request):
-        return Response({'status': 200, 'campos': form_serializer(TiendaForm())})
+        id = request.data.get('id')
+        if (id):
+            form = TiendaForm(instance=Tienda.objects.get(id=id))
+            print("estamos enviando una instancia - form")
+        else:
+            form = TiendaForm()
+            print("estamos enviando un nuevo objeto - form")
+        return Response({'status': 200, 'campos': form_serializer(form)})
 
 
 class CrearProductoView(APIView):
     permission_classes = [IsAuth, IsOwner]
 
     def put(self, request):
-        form = ProductoForm(request.data, request.FILES)
+        # CORRECCION PARA TODOS LOS ARCHIVOS QUE SE SUBAN
+        request.FILES['imagen']._name = request.data.get('nombre') + '.png'
+        id = request.data.get('id')
+        if (id):
+            form = ProductoForm(request.data, request.FILES,
+                                instance=Producto.objects.get(id=id))
+        else:
+            form = ProductoForm(request.data, request.FILES)
         if form.is_valid():
             form.save()
             return Response(MESSAGES['created'])
-        return Response(MESSAGES['fields_error'])
+        return Response(fields_error(form))
 
     def post(self, request):
-        form = ProductoForm()
+        id = request.data.get('id')
+        if (id):
+            form = ProductoForm(instance=Producto.objects.get(id=id))
+        else:
+            form = ProductoForm()
         form.fields['tienda'].queryset = Tienda.objects.filter(
-            dueño=get_user(request))
+            dueno=get_user(request))
         return Response({'status': 200, 'campos': form_serializer(form)})
 
 
@@ -182,11 +210,21 @@ class CrearVentaView(APIView):
     def put(self, request):
         venta = Venta.objects.create(
             usuario=get_user(request),
-            producto=request.data.get('producto'),
+            producto=Producto.objects.get(id=request.data.get('producto')),
             cantidad=request.data.get('cantidad')
         )
         venta.save()
         return Response({**MESSAGES['created'], 'id': venta.id})
+
+
+class ConfirmarVentaView(APIView):
+    permission_classes = [IsAuth, IsOwner]
+
+    def put(self, request):
+        venta = Venta.objects.get(id=request.data.get('id'))
+        venta.confirmado = True
+        venta.save()
+        return Response(MESSAGES['correct'])
 
 
 class GetPDFVentaView(APIView):
@@ -211,7 +249,7 @@ class GetTiendasView(APIView):
 
     def post(self, request):
         if (get_user(request).tipo == 'DU'):
-            tiendas = Tienda.objects.filter(dueño=get_user(request))
+            tiendas = Tienda.objects.filter(dueno=get_user(request))
         else:
             tiendas = Tienda.objects.all()
         serializer = TiendaSerializer(
@@ -219,21 +257,32 @@ class GetTiendasView(APIView):
         return Response({'status': 200, 'tiendas': serializer.data})
 
 
+class GetTiendaPorIdView(APIView):
+    permission_classes = [IsAuth]
+
+    def post(self, request):
+        tienda = Tienda.objects.get(id=request.data.get('id'))
+        serializer = TiendaSerializer(tienda, context={'request': request})
+        return Response({'status': 200, 'tienda': serializer.data})
+
+
 class GetProductosView(APIView):
     permission_classes = [IsAuth]
 
     def post(self, request):
-        if is_user(request):
-            productos = Producto.objects.filter(
-                tienda__id=request.data.get('tienda'))
-        elif is_owner(request):
-            productos = Producto.objects.filter(
-                tienda__dueño=get_user(request))
-        else:
-            return Response(MESSAGES['unallowed'])
+        productos = Producto.objects.filter(
+            tienda__id=request.data.get('tienda'))
         serializer = ProductoSerializer(
             productos, many=True, context={'request': request})
         return Response({'status': 200, 'productos': serializer.data})
+
+
+class EliminarProductoView(APIView):
+    permission_classes = [IsAuth, IsOwner]
+
+    def post(self, request):
+        Producto.objects.get(id=request.data.get('id')).delete()
+        return Response(MESSAGES['correct'])
 
 
 class GetProductoPorIdView(APIView):
@@ -269,7 +318,7 @@ class GetVentasView(APIView):
             ventas = Venta.objects.filter(usuario=get_user(request))
         elif is_owner(request):
             ventas = Venta.objects.filter(
-                producto__tienda__dueño=get_user(request))
+                producto__tienda__dueno=get_user(request))
         else:
             return Response(MESSAGES['unallowed'])
         serializer = VentaSerializer(
@@ -291,6 +340,15 @@ class GetCategoriasProductosView(APIView):
         return Response({'status': 200, 'productos': json_productos})
 
 
+class GetQRPorTiendaView(APIView):
+    permission_classes = [IsAuth]
+
+    def post(self, request):
+        tienda = Tienda.objects.get(id=request.data.get('id'))
+        print(tienda.dueno.yape_qr.url)
+        return Response({'status': 200, 'qr': 'http://localhost:8000/' + tienda.dueno.yape_qr.url})
+
+
 class CrearTiendaAdminView(APIView):
     permission_classes = [IsAuth, IsAdmin]
 
@@ -299,7 +357,7 @@ class CrearTiendaAdminView(APIView):
         if form.is_valid():
             form.save()
             return Response(MESSAGES['created'])
-        return Response(MESSAGES['fields_error'])
+        return Response(fields_error(form))
 
     def get(self, request):
         return Response({'status': 200, 'campos': form_serializer(TiendaFormAdmin())})
@@ -313,7 +371,7 @@ class CrearProductoAdminView(APIView):
         if form.is_valid():
             form.save()
             return Response(MESSAGES['created'])
-        return Response(MESSAGES['fields_error'])
+        return Response(fields_error(form))
 
     def get(self, request):
         return Response({'status': 200, 'campos': form_serializer(ProductoFormAdmin())})

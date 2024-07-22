@@ -9,15 +9,24 @@ import { Observable, catchError } from 'rxjs';
 })
 export class AuthInterceptorService implements HttpInterceptor {
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+
+  ) {
+
+  }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    console.log("Interceptando este error: ", req);
+    
     return next.handle(req).pipe(
       catchError((error: HttpErrorResponse) => {
-        console.log("Interceptando error de autenticación");
+        console.log("Interceptando error: ", error);
         if(error.status === 401) {
+          
           const returnUrl = this.router.url;
+          
+          localStorage.removeItem('user');
+          localStorage.removeItem('token');
           this.router.navigate(['/login'], { queryParams: {returnUrl} })
         }
         throw error;
