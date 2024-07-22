@@ -2,6 +2,8 @@
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
+    display: flex;
+    justify-content: space-between;
 }
 .product-details {
     display: flex;
@@ -14,8 +16,8 @@
 }
 .product-image {
     flex: 1;
-    max-width: 400px;
-    width: 400px;
+    max-width: 350px;
+    width: 350px;
 }
 .product-image img {
     border-radius: 10px;
@@ -104,4 +106,13 @@
 .back:hover {
     background-color: #676aff;
     transform: scale(1.10);
+}
+
+.form-container {
+    background-color: rgb(233, 233, 233);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
 }

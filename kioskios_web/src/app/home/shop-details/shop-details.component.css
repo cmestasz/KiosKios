@@ -48,3 +48,11 @@
 .store-info button:hover {
     background-color: #c0392b;
 }
+.form-container {
+    background-color: rgb(233, 233, 233);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+}
