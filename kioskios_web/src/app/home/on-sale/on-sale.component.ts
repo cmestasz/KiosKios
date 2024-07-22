@@ -62,7 +62,7 @@ export class OnSaleComponent implements OnInit, AfterViewInit{
     this.api.putSale(this.sale).subscribe(
       response => {
         alert("Compra exitosa, espera mientras el vendedor la confirma");
-        this.router.navigate(['/dashboard/user/ventas']);
+        this.router.navigate(['/dashboard/user/sales']);
       }
     );
   }
