@@ -4,6 +4,6 @@
     <h3>Paga a este QR y haga CLICK en continuar</h3>
     <img [src]="qr" alt="Qr del propietario">
     <p>Se le notificará al propietario acerca de tu venta, espera mientras confirma la venta</p>
-    <button>Continuar</button>
+    <button #continuebtn (click)="putVenta()">Continuar</button>
   </div>
 </div>
