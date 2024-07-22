@@ -18,3 +18,17 @@ class DBStorage(Storage):
     def _save(name, content):
         DBStorage.client.storage.from_('media').upload(name, content)
         return name
+    
+    def delete(name):
+        DBStorage.client.storage.from_('media').remove(name)
+
+    def exists(name):
+        return DBStorage.client.storage.from_('media').get_public_url(name) is not None
+    
+    def url(name):
+        return DBStorage.client.storage.from_('media').get_public_url(name)
+    
+    def size(name):
+        return DBStorage.client.storage.from_('media').download(name).size
+    
+
