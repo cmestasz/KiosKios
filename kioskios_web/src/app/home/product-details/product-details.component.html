@@ -1,30 +1,35 @@
-<div class="container">
-  @if (user.tipo == 'US') {
-  <div class="product-details">
-    
-      <div class="product-image">
-        <img src='{{ product.imagen }}' alt="ImageProduct">
-      </div>
-
-      <div class="product-info">
-        <h1 class="product-title">{{ product.nombre }}</h1>
-        <p class="product-description">{{ product.descripcion }}</p>
-        <div class="product-price">S/{{ product.precio }}</div>
-
-        <div class="product-quantity">
-          <button (click)="minusOne()" >-</button>
-          <p class="quantity-input"  >{{ totalProducts }}</p>
-          <button (click)="addOne()" >+</button>
+@if (user.tipo == 'US') {
+  <div class="container">
+    <div class="product-details">
+      
+        <div class="product-image">
+          <img src='{{ product.imagen }}' alt="ImageProduct">
         </div>
-        <p style="font-size: 20px;" >Precio a pagar: {{ totalProducts * product.precio }}</p>
-        <div class="product-category">Categoría: {{ product.categoria }}</div>
-        <div class="buttons">
-          <button  class="add-to-cart" #buyButton (click)="buy()" >Comprar</button>
-          <button class="back" (click)="backHome()" >Back</button>
+
+        <div class="product-info">
+          <h1 class="product-title">{{ product.nombre }}</h1>
+          <p class="product-description">{{ product.descripcion }}</p>
+          <div class="product-price">S/{{ product.precio }}</div>
+
+          <div class="product-quantity">
+            <button (click)="minusOne()" >-</button>
+            <p class="quantity-input"  >{{ totalProducts }}</p>
+            <button (click)="addOne()" >+</button>
+          </div>
+          <p style="font-size: 20px;" >Precio a pagar: {{ totalProducts * product.precio }}</p>
+          <div class="product-category">Categoría: {{ product.categoria }}</div>
+          <div class="buttons">
+            <button  class="add-to-cart" #buyButton (click)="buy()" >Comprar</button>
+            <button class="back" (click)="backHome()" >Back</button>
+          </div>
         </div>
-      </div>
+    </div>
   </div>
   }@else{
-    <loader-form />
+    <div style="display:flex;flex-direction:column; align-items: center;justify-content:center;">
+      <div class="form-container" >
+        <loader-form />
+      </div>
+    </div>
   }
-</div>
+
