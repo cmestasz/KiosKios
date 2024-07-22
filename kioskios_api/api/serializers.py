@@ -1,31 +1,31 @@
 from django import forms
 from django.forms import ModelForm
 from django.core import validators
-from rest_framework import serializers, viewsets
+from rest_framework import serializers
 from .models import Usuario, Tienda, Producto, Venta
 
 
-class UsuarioSerializer(serializers.HyperlinkedModelSerializer):
+class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usuario
         fields = ['id', 'username', 'email', 'password', 'telefono', 'tipo', 'yape_qr']
 
 
-class TiendaSerializer(serializers.HyperlinkedModelSerializer):
+class TiendaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tienda
         fields = ['id', 'nombre', 'descripcion',
                   'categoria', 'dueño', 'latitud', 'longitud']
 
 
-class ProductoSerializer(serializers.HyperlinkedModelSerializer):
+class ProductoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Producto
         fields = ['id', 'nombre', 'descripcion',
                   'precio', 'imagen', 'tienda', 'stock', 'categoria']
 
 
-class VentaSerializer(serializers.HyperlinkedModelSerializer):
+class VentaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Venta
         fields = ['id', 'usuario', 'producto', 'fecha', 'cantidad']
