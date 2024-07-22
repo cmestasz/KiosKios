@@ -126,7 +126,7 @@ class CrearTiendaView(APIView):
             form = TiendaForm(request.data)
         if form.is_valid():
             instance = form.save(commit=False)
-            instance.dueño = get_user(request)
+            instance.dueno = get_user(request)
             instance.save()
             return Response(MESSAGES['created'])
         return Response(MESSAGES['fields_error'])
@@ -162,7 +162,7 @@ class CrearProductoView(APIView):
         else:
             form = ProductoForm()
         form.fields['tienda'].queryset = Tienda.objects.filter(
-            dueño=get_user(request))
+            dueno=get_user(request))
         return Response({'status': 200, 'campos': form_serializer(form)})
 
 
@@ -229,7 +229,7 @@ class GetTiendasView(APIView):
 
     def post(self, request):
         if (get_user(request).tipo == 'DU'):
-            tiendas = Tienda.objects.filter(dueño=get_user(request))
+            tiendas = Tienda.objects.filter(dueo=get_user(request))
         else:
             tiendas = Tienda.objects.all()
         serializer = TiendaSerializer(
@@ -255,7 +255,7 @@ class GetProductosView(APIView):
                 tienda__id=request.data.get('tienda'))
         elif is_owner(request):
             productos = Producto.objects.filter(
-                tienda__dueño=get_user(request))
+                tienda__dueno=get_user(request))
         else:
             return Response(MESSAGES['unallowed'])
         serializer = ProductoSerializer(
@@ -296,7 +296,7 @@ class GetVentasView(APIView):
             ventas = Venta.objects.filter(usuario=get_user(request))
         elif is_owner(request):
             ventas = Venta.objects.filter(
-                producto__tienda__dueño=get_user(request))
+                producto__tienda__dueno=get_user(request))
         else:
             return Response(MESSAGES['unallowed'])
         serializer = VentaSerializer(

@@ -15,7 +15,7 @@ class TiendaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tienda
         fields = ['id', 'nombre', 'descripcion',
-                  'categoria', 'dueño', 'latitud', 'longitud']
+                  'categoria', 'dueno', 'latitud', 'longitud']
 
 
 class ProductoSerializer(serializers.ModelSerializer):

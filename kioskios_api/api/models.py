@@ -58,7 +58,7 @@ class Tienda(models.Model):
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField()
     categoria = models.CharField(max_length=100)
-    dueño = models.ForeignKey(Usuario, on_delete=models.CASCADE, limit_choices_to={
+    dueno = models.ForeignKey(Usuario, on_delete=models.CASCADE, limit_choices_to={
                               'tipo': Usuario.Types.DUEÑO})
     latitud = models.DecimalField(max_digits=9, decimal_places=6)
     longitud = models.DecimalField(max_digits=9, decimal_places=6)
