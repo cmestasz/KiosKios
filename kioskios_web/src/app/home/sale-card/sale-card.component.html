@@ -1,13 +1,15 @@
-<div>
-  <p>Fecha: {{ sale.fecha }}</p>
-  <p>Producto adquirido: {{ sale.producto.nombre }}</p>
-  <p>Cantidad comprada: {{ sale.cantidad }}</p>
-  <p>Precio pagado: S/. {{ sale.cantidad * sale.producto.precio }}</p>
-  @if (!confirmed) {
-    @if (user.tipo == 'DU') {
-      <button (click)="notifySale()" >Aceptar</button>
+<div class="body">
+  <div class="report-container">
+    <p><span class="highlight">Fecha:</span> {{ sale.fecha }}</p>
+    <p><span class="highlight">Producto adquirido:</span> {{ sale.producto.nombre }}</p>
+    <p><span class="highlight">Cantidad comprada:</span> {{ sale.cantidad }}</p>
+    <p><span class="highlight">Precio pagado:</span> S/. <span class="amount">{{ sale.cantidad * sale.producto.precio }}</span></p>
+    @if (!confirmed) {
+      @if (user.tipo == 'DU') {
+        <button (click)="notifySale()" class="button" >Aceptar</button>
+      }
+    } @else {
+      <button (click)="getBoleta()" class="button">Boleta</button>
     }
-  } @else {
-    <button (click)="getBoleta()" >Boleta</button>
-  }
+  </div>
 </div>
