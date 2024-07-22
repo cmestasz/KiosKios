@@ -42,6 +42,15 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SECURE_HSTS_SECONDS = 60
 
+STORAGES = {
+    'default': {
+        "BACKEND": "kioskios_api.db_storage.DBStorage",
+    },
+    'staticfiles': {
+        "BACKEND": "kioskios_api.db_storage.DBStorage",
+    }
+}
+
 # Application definition
 
 INSTALLED_APPS = [
