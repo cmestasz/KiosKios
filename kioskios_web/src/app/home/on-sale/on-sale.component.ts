@@ -5,6 +5,7 @@ import { EMPTY_SALE } from '../../constants';
 import { ApiService } from '../../services/api.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { response } from 'express';
 
 @Component({
   selector: 'app-on-sale',
@@ -58,7 +59,12 @@ export class OnSaleComponent implements OnInit, AfterViewInit{
   }
 
   putVenta(): void {
-
+    this.api.putSale(this.sale).subscribe(
+      response => {
+        alert("Compra exitosa, espera mientras el vendedor la confirma");
+        this.router.navigate(['/dashboard/user/ventas']);
+      }
+    );
   }
 
 }

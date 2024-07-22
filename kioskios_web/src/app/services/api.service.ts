@@ -16,6 +16,29 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
+  putSale(sale: Venta): Observable<Response> {
+    const url = this.urlBaseApi + '/create_sale/';
+    const reFactorySale = {
+      producto: sale.producto.id,
+      cantidad: sale.cantidad
+    }
+    return this.http
+      .put<Response>(url, {token: localStorage.getItem('token'), reFactorySale})
+      .pipe(
+        map((response) => {
+          if (response.status != 200) {
+            console.log("Ha ocurrido un error en la respuesta: ", response);
+            throw new HttpErrorResponse({status: 401, statusText: "Desautorizado, probablemente el token ha expirado"});
+          }
+          return response;
+        }),
+        catchError((error: HttpErrorResponse) => {
+          console.log("Ha ocurrido un error en la respuesta: ", error);
+          throw error;
+        })
+      )
+  }
+
   getQrByShop(id: number): Observable<string> {
     const url = this.urlBaseApi + '/get_qr_by_shop/';
     return this.http
@@ -162,9 +185,9 @@ export class ApiService {
       );
   }
 
-  postForm(formtoSend: FormData, to: string): Observable<any> {
+  postForm(formtoSend: FormData, to: string): Observable<Response> {
     const url = this.urlBaseApi + `/${to}/`;
-    return this.http.put<FormData>(url, formtoSend);
+    return this.http.put<Response>(url, formtoSend);
   }
 
   getFormSchema(formToGet: string): Observable<FormField[]> {
