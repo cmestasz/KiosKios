@@ -7,7 +7,7 @@ class DBStorage(Storage):
 
     def __init__(self, option=None):
         url = os.environ.get('SUPABASE_URL')
-        key = os.environ.get('DB_PASSWORD')
+        key = os.environ.get('SUPABASE_SERVICE_ROLE_KEY')
         options = ClientOptions(
             postgrest_client_timeout=7000,
             storage_client_timeout=7000
