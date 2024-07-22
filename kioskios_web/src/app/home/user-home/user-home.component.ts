@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService, getUserLocal } from '../../services/auth.service';
+import { AuthService,  } from '../../services/auth.service';
 import { User } from '../../models/user';
 import { EMPTY_USER } from '../../constants';
 import { filter, map, Observable, tap } from 'rxjs';
@@ -20,13 +20,14 @@ export class UserHomeComponent implements OnInit {
   user: User;
   tiendas: Tienda[] = [];
   constructor(
-    private api: ApiService
+    private api: ApiService,
+    private authService: AuthService
   ) {
     this.user = EMPTY_USER;
   }
 
   ngOnInit(): void {
-    this.user = getUserLocal();
+    this.user = this.authService.getUserLocal();
     this.api.getTiendas().subscribe(
       tiendas => {
         this.tiendas = tiendas;

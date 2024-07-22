@@ -6,7 +6,7 @@ import { ApiService } from '../../services/api.service';
 import { Tienda } from '../../models/tienda';
 import { User } from '../../models/user';
 import { EMPTY_USER } from '../../constants';
-import { AuthService, getUserLocal } from '../../services/auth.service';
+import { AuthService } from '../../services/auth.service';
 import { filter } from 'rxjs';
 import { ProductListComponent } from '../product-list/product-list.component';
 
