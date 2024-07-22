@@ -19,7 +19,8 @@ from django.utils.crypto import get_random_string
 
 def fields_error(form):
     errors = form.errors.as_data()
-    txt = "\n".join([f"{key}: {value[0].message}" for key, value in errors.items()])
+    txt = "\n".join(
+        [f"{key}: {value[0].message}" for key, value in errors.items()])
     return {'status': 406, 'message': txt}
 
 
@@ -108,11 +109,14 @@ class CrearDueñoView(APIView):
     parser_classes = [MultiPartParser]
 
     def put(self, request):
+        try:
+            request.FILES['yape_qr']._name = request.data.get('nombre') + '.png'
+        except:
+            pass
         print(request.FILES['yape_qr'].__dict__)
         form = DueñoForm(request.data, request.FILES)
         print(form.errors)
         if form.is_valid():
-            request.FILES['yape_qr']._name = request.data.get('email') + '.png'
             form.save()
             return Response(MESSAGES['created'])
         return Response(fields_error(form))
@@ -155,14 +159,17 @@ class CrearProductoView(APIView):
 
     def put(self, request):
         id = request.data.get('id')
+        # CORRECCION PARA TODOS LOS ARCHIVOS QUE SE SUBAN
+        try:
+            request.FILES['imagen']._name = request.data.get('nombre') + '.png'
+        except:
+            pass
         if (id):
             form = ProductoForm(request.data, request.FILES,
                                 instance=Producto.objects.get(id=id))
         else:
             form = ProductoForm(request.data, request.FILES)
         if form.is_valid():
-            # CORRECCION PARA TODOS LOS ARCHIVOS QUE SE SUBAN
-            request.FILES['imagen']._name = request.data.get('nombre') + '.png'
             form.save()
             return Response(MESSAGES['created'])
         return Response(fields_error(form))
